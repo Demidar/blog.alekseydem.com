@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Blog - Aleksey Dem{% endblock %}</title>
+        {% block stylesheets %}{% endblock %}
+    </head>
+    <body>
+        <div class="layout">
+            <header class="layout__header-container">
+
+            </header>
+            <div class="layout__body-container">
+                <div class="layout__content">
+                    {% block body %}{% endblock %}
+                </div>
+                <div class="layout__side"></div>
+            </div>
+            <footer class="layout__footer-container">
+
+            </footer>
+        </div>
+        {% block javascripts %}{% endblock %}
+    </body>
+</html>
