@@ -15,7 +15,5 @@
         "watch": "encore dev --watch",
         "build": "encore production --progress"
     },
-    "dependencies": {
-        "metro4-dist": "^4.3.7"
-    }
+    "dependencies": {}
 }
