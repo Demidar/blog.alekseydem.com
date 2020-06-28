@@ -1,7 +1,2 @@
-@import '~metro4-dist/css/metro-all.css';
-
-@import './variables/variables';
-
-body {
-    background-color: $theme-background-color;
-}
+@import './globals';
+@import './blocks/blocks';

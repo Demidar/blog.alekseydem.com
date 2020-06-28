@@ -1,10 +1,12 @@
-<header class="header-block">
-    <div class="header-block__logo">
-        <div class="logo">
-            Aleksey Dem
+<header class="header">
+    <div class="header__container">
+        <div class="header__logo">
+            <div class="logo">
+                <div class="logo__title">Aleksey Dem</div>
+            </div>
         </div>
-    </div>
-    <div class="header-block__nav">
-        {{ render(controller('App\\Controller\\LayoutController::renderHeaderNav')) }}
+        <div class="header__nav">
+            {{ render(controller('App\\Controller\\LayoutController::renderHeaderNav')) }}
+        </div>
     </div>
 </header>

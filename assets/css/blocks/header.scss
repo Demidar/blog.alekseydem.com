@@ -1,0 +1,18 @@
+@import './../variables/variables';
+@import './../mixins/container';
+
+.header {
+  background-color: $theme-light;
+  &__container {
+    @include container;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  &__logo {
+    margin-right: 25px;
+  }
+  &__nav {
+
+  }
+}

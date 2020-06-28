@@ -1,0 +1,11 @@
+@import '../variables/variables';
+
+.logo {
+  height: 50px;
+  display: flex;
+  align-items: center;
+  &__title {
+    font-family: $font-family-title-primary;
+    font-size: 1.6em;
+  }
+}

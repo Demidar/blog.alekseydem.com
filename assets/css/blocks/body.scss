@@ -1,0 +1,15 @@
+@import './../mixins/container';
+
+.body {
+  display: flex;
+  flex-direction: column;
+  &_horizontal {
+    flex-direction: row;
+  }
+  &_container {
+    @include container;
+  }
+  &__content {
+    width: 100%;
+  }
+}
