@@ -2,11 +2,11 @@
     <div class="header__container">
         <div class="header__logo">
             <div class="logo">
-                <div class="logo__title">Aleksey Dem</div>
+                <h1 class="logo__title">Aleksey Dem's Blog</h1>
             </div>
         </div>
         <div class="header__nav">
-            {{ render(controller('App\\Controller\\LayoutController::renderHeaderNav')) }}
+            {{ render_esi(controller('App\\Controller\\Partial\\LayoutController::renderHeaderNav')) }}
         </div>
     </div>
 </header>
