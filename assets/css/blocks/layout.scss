@@ -1,13 +1,13 @@
 @import './../mixins/container';
 
 .layout {
+  min-height: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
   &__header {
-
   }
   &__body {
-
   }
   &__footer {
-
   }
 }

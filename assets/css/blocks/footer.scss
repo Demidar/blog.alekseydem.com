@@ -1,0 +1,10 @@
+@import './../mixins/mixins';
+@import './../variables/variables';
+
+.footer {
+  background-color: $theme-light;
+  padding: 20px 0;
+  &__container {
+    @include container;
+  }
+}
