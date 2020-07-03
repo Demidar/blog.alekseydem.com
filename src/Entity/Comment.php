@@ -30,7 +30,7 @@ class Comment
     private $children;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="text")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="comments")
      */
     private $owner;
 
