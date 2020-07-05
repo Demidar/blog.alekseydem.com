@@ -1,0 +1,6 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block page_content %}
+    <h4>You are: {{ app.user.username }}</h4>
+    <p>Roles: {{ app.user.roles|join(', ') }}.</p>
+{% endblock %}

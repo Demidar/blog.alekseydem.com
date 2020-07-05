@@ -7,6 +7,8 @@ use App\Entity\Comment;
 use App\Entity\Section;
 use App\Entity\Tag;
 use App\Entity\User;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
@@ -20,7 +22,7 @@ class DashboardController extends AbstractDashboardController
      */
     public function index(): Response
     {
-        return parent::index();
+        return $this->render('admin/dashboard/index.html.twig');
     }
 
     public function configureDashboard(): Dashboard
@@ -33,6 +35,7 @@ class DashboardController extends AbstractDashboardController
     public function configureMenuItems(): iterable
     {
         return [
+            MenuItem::linktoUrl('Home', 'fa fa-home', '/'),
             MenuItem::linktoDashboard('Dashboard', 'fa fa-home'),
 
             MenuItem::section('Blog'),
@@ -45,5 +48,12 @@ class DashboardController extends AbstractDashboardController
             MenuItem::linkToCrud('Users', 'fa fa-user', User::class),
         ];
         // yield MenuItem::linkToCrud('The Label', 'icon class', EntityClass::class);
+    }
+
+    public function configureAssets(): Assets
+    {
+        return parent::configureAssets()
+            ->addJsFile('https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js')
+        ;
     }
 }

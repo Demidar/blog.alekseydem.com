@@ -1,0 +1,48 @@
+# dump a .png graph of a workflow.
+# Replace the "workflow_name" variable to desired name. dot command - http://www.graphviz.org/
+#
+# workflow_name=article_publishing; ./bin/console workflow:dump $workflow_name | dot -Tpng -o docs/${workflow_name}.png
+
+framework:
+    workflows:
+        article_publishing:
+            type: state_machine
+            audit_trail:
+                enabled: '%kernel.debug%'
+            marking_store:
+                type: method
+                property: status
+            supports:
+                - App\Entity\Article
+            initial_marking: draft
+            places:
+                - draft
+                - inReview
+                - rejected
+                - published
+                - hidden
+            transitions:
+                written:
+                    from: draft
+                    to: inReview
+                publish:
+                    from: inReview
+                    to: published
+                edit:
+                    from: published
+                    to: published
+                reject:
+                    from: inReview
+                    to: rejected
+                edit_rejected:
+                    from: rejected
+                    to: draft
+                publish_rejected:
+                    from: rejected
+                    to: published
+                hide_published:
+                    from: published
+                    to: hidden
+                show_published:
+                    from: hidden
+                    to: published

@@ -1,3 +1,5 @@
 import '../css/app.scss';
+import FroalaEditor from 'froala-editor';
 
-console.log('Hello Webpack Encore! Edit me in assets/js/app.js');
+let editors = new FroalaEditor('.textarea-wysiwyg textarea');
+console.log(editors);

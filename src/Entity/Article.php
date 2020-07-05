@@ -6,6 +6,7 @@ use App\Repository\ArticleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity(repositoryClass=ArticleRepository::class)
@@ -21,6 +22,7 @@ class Article
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="articles")
+     * @Gedmo\Blameable(on="create")
      */
     private $owner;
 
@@ -36,6 +38,7 @@ class Article
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Gedmo\Slug(fields={"title"})
      */
     private $slug;
 
@@ -46,11 +49,13 @@ class Article
 
     /**
      * @ORM\Column(type="datetime")
+     * @Gedmo\Timestampable(on="create")
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     * @Gedmo\Timestampable(on="update")
      */
     private $updatedAt;
 
@@ -85,6 +90,11 @@ class Article
         $this->tags = new ArrayCollection();
         $this->images = new ArrayCollection();
         $this->files = new ArrayCollection();
+    }
+
+    public static function getPossibleStatuses(): array
+    {
+        return ['published', 'hidden'];
     }
 
     public function getId(): ?int
