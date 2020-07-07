@@ -16,11 +16,22 @@
                 {{ include('layout/header.html.twig') }}
             </div>
             <div class="layout__body">
+                <div class="flash-messages">
+                    {% for label, message in app.flashes %}
+                        {% for message in messages %}
+                            <div class="flash-messages__item flash-messages__item_{{ label }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+                </div>
                 <div class="body body_horizontal body_container">
+                    <div class="body__side">
+                        {% block side %}{% endblock %}
+                    </div>
                     <div class="body__content">
                         {% block body %}{% endblock %}
                     </div>
-                    {{ include('layout/side.html.twig') }}
                 </div>
             </div>
             <footer class="layout__footer">

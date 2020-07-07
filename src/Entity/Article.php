@@ -43,9 +43,12 @@ class Article
     private $slug;
 
     /**
+     * workflow: setting initial marking 'draft' manually.
+     * https://github.com/symfony/symfony/issues/37421
+     *
      * @ORM\Column(type="string", length=255)
      */
-    private $status;
+    private $status = 'draft';
 
     /**
      * @ORM\Column(type="datetime")

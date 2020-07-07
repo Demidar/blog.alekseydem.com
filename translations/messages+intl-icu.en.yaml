@@ -1,0 +1,6 @@
+dems.blog: Dem's blog
+workflow.entity-is-not-whitelisted: This entity is not whitelisted
+workflow.entity-not-found: Entity did not found
+workflow.transiton-not-allowed: Transition does not allowed
+workflow.transition-success: Transition completed succesfully
+homepage: Homepage

@@ -1,0 +1,27 @@
+@import './../variables/variables';
+
+.list {
+  margin-block-start: 0;
+  margin-block-end: 0;
+  margin: 20px;
+  &_no-dot {
+    padding-inline-start: 0;
+    list-style-type: none;
+  }
+
+  &__item {
+
+  }
+
+  &__item-link {
+    display: block;
+    padding: 15px;
+    text-decoration: none;
+  }
+
+  &__item-title {
+    font-family: $font-family-text;
+    font-weight: 700;
+    color: $theme-link;
+  }
+}

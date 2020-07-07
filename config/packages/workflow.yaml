@@ -7,8 +7,7 @@ framework:
     workflows:
         article_publishing:
             type: state_machine
-            audit_trail:
-                enabled: '%kernel.debug%'
+            audit_trail: '%kernel.debug%'
             marking_store:
                 type: method
                 property: status
@@ -46,3 +45,41 @@ framework:
                 show_published:
                     from: hidden
                     to: published
+        user_statuses:
+            type: state_machine
+            audit_trail: '%kernel.debug%'
+            marking_store:
+                type: method
+                property: status
+            supports:
+                - App\Entity\User
+            initial_marking: active
+            places:
+                - active
+                - blocked
+            transitions:
+                block:
+                    from: active
+                    to: blocked
+                activate:
+                    from: blocked
+                    to: active
+        showhide_status:
+            type: state_machine
+            audit_trail: '%kernel.debug%'
+            marking_store:
+                type: method
+                property: status
+            supports:
+                - App\Entity\Section
+            initial_marking: visible
+            places:
+                - visible
+                - invisible
+            transitions:
+                show:
+                    from: invisible
+                    to: visible
+                hide:
+                    from: visible
+                    to: invisible

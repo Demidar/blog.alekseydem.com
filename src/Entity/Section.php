@@ -6,9 +6,14 @@ use App\Repository\SectionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use App\Entity\Closure\SectionClosure;
 
 /**
  * @ORM\Entity(repositoryClass=SectionRepository::class)
+ *
+ * @Gedmo\Tree(type="closure")
+ * @Gedmo\TreeClosure(class=SectionClosure::class)
  */
 class Section
 {
@@ -20,6 +25,8 @@ class Section
     private $id;
 
     /**
+     * @Gedmo\TreeParent()
+     * @Gedmo\SortableGroup()
      * @ORM\ManyToOne(targetEntity=Section::class, inversedBy="children")
      */
     private $parent;
@@ -37,7 +44,7 @@ class Section
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $status;
+    private $status = 'visible';
 
     /**
      * @ORM\OneToMany(targetEntity=Article::class, mappedBy="section")
@@ -46,13 +53,47 @@ class Section
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Gedmo\SortablePosition()
      */
     private $position;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $language = 'en';
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     * @Gedmo\TreeLevel()
+     */
+    private $level;
+
+    /**
+     * @var SectionClosure[]
+     */
+    private $closures;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Gedmo\Slug(fields={"title"})
+     */
+    private $slug;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $text;
 
     public function __construct()
     {
         $this->children = new ArrayCollection();
         $this->articles = new ArrayCollection();
+        $this->closures = new ArrayCollection();
+    }
+
+    public function __toString(): string
+    {
+        return $this->getTitle() ?? '';
     }
 
     public function getId(): ?int
@@ -166,6 +207,59 @@ class Section
     public function setPosition(?int $position): self
     {
         $this->position = $position;
+
+        return $this;
+    }
+
+    public function getLanguage(): string
+    {
+        return $this->language;
+    }
+
+    public function setLanguage($language): self
+    {
+        $this->language = $language;
+
+        return $this;
+    }
+
+    public function getLevel(): ?int
+    {
+        return $this->level;
+    }
+
+    public function setLevel($level): self
+    {
+        $this->level = $level;
+
+        return $this;
+    }
+
+    public function addClosure(SectionClosure $closure)
+    {
+        $this->closures[] = $closure;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function getText(): ?string
+    {
+        return $this->text;
+    }
+
+    public function setText(?string $text): self
+    {
+        $this->text = $text;
 
         return $this;
     }

@@ -1,0 +1,15 @@
+{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
+{# @var field \EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto #}
+{# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
+
+<span title="{{ field.value }}">
+    {{ field.formattedValue|nl2br|raw }}
+</span>
+{% for transition in workflow_transitions(entity.instance) %}
+    <form action="{{ path('admin_workflow_apply') }}" method="POST">
+        <input type="hidden" name="id" value="{{ entity.instance.id }}">
+        <input type="hidden" name="entityName" value="{{ entity.name }}">
+        <input type="hidden" name="transition" value="{{ transition.name }}">
+        <input type="submit" value="{{ transition.name|trans([], 'workflow') }}">
+    </form>
+{% endfor %}

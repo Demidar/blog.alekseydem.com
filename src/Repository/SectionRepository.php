@@ -3,8 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Section;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\QueryBuilder;
+use Gedmo\Tree\Entity\Repository\ClosureTreeRepository;
 
 /**
  * @method Section|null find($id, $lockMode = null, $lockVersion = null)
@@ -12,39 +13,54 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Section[]    findAll()
  * @method Section[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class SectionRepository extends ServiceEntityRepository
+class SectionRepository extends ClosureTreeRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(EntityManagerInterface $em)
     {
-        parent::__construct($registry, Section::class);
+        parent::__construct($em, $em->getClassMetadata(Section::class));
     }
 
-    // /**
-    //  * @return Section[] Returns an array of Section objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @return Section[]
+     */
+    public function findAllPublic(): array
     {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('s.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $qb = $this->createQueryBuilder('s');
 
-    /*
-    public function findOneBySomeField($value): ?Section
+        $this->applyFilter($qb);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function findPublic($slug): ?Section
     {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
+        $qb = $this->createQueryBuilder('s')
+            ->andWhere('s.slug = :slug')
+            ->setParameter('slug', $slug)
+        ;
+
+        $this->applyFilter($qb, 's');
+
+        return $qb->getQuery()->getOneOrNullResult();
+    }
+
+    /**
+     * @return Section[]
+     */
+    public function getRootSections(): array
+    {
+        $qb = $this->getRootNodesQueryBuilder('position', 'asc');
+
+        $this->applyFilter($qb, 'node');
+
+        return $qb->getQuery()->getResult();
+    }
+
+    private function applyFilter(QueryBuilder $qb, $sectionAlias = 's'): void
+    {
+        $qb
+            ->andWhere(sprintf('%s.status = :status', $sectionAlias))
+            ->setParameter('status', 'visible')
         ;
     }
-    */
 }

@@ -3,7 +3,7 @@
 .nav {
   display: flex;
   align-items: center;
-  &__element {
+  &__item {
     display: flex;
     align-items: center;
     height: 50px;
@@ -13,6 +13,6 @@
     color: $theme-link;
     text-decoration: none;
   }
-  &__title {
+  &__item-title {
   }
 }

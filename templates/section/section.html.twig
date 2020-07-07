@@ -1,0 +1,22 @@
+{# @var \App\Entity\Section section #}
+{# @var \App\Model\Link[] breadcrumbs #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ section.title }} - {{ parent() }}{% endblock %}
+
+{% block side %}
+    <ul class="list list_no-dot">
+        {% for childSection in section.children %}
+            <li class="list__item"><a class="list__item-link" href="{{ path('section', {slug: childSection.slug}) }}"><span class="list__item-title">{{ childSection.title }}</span></a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}
+
+{% block body %}
+    {% include 'partial/_breadcrumbs.html.twig' with {'breadcrumbs': breadcrumbs} only %}
+    <div class="section">
+        <h2>{{ section.title }}</h2>
+        <p>{{ section.text|raw }}</p>
+    </div>
+{% endblock %}
