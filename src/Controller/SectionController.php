@@ -32,10 +32,13 @@ class SectionController extends AbstractController
             return new Response(null, 404);
         }
 
+        $sectionChildren = $this->sectionRepository->findChildrenPublic($section->getId());
+
         $breadcrumbs = $this->breadcrumbs->getBreadcrumbsForSection($section);
 
         return $this->render('section/section.html.twig', [
             'section' => $section,
+            'sectionChildren' => $sectionChildren,
             'breadcrumbs' => $breadcrumbs
         ]);
     }

@@ -32,7 +32,7 @@ class SectionRepository extends ClosureTreeRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function findPublic($slug): ?Section
+    public function findPublic(string $slug): ?Section
     {
         $qb = $this->createQueryBuilder('s')
             ->andWhere('s.slug = :slug')
@@ -42,6 +42,21 @@ class SectionRepository extends ClosureTreeRepository
         $this->applyFilter($qb, 's');
 
         return $qb->getQuery()->getOneOrNullResult();
+    }
+
+    /**
+     * @return Section[]
+     */
+    public function findChildrenPublic(int $id): array
+    {
+        $qb = $this->createQueryBuilder('s')
+            ->andWhere('s.parent = :id')
+            ->setParameter('id', $id)
+        ;
+
+        $this->applyFilter($qb, 's');
+
+        return $qb->getQuery()->getResult();
     }
 
     /**

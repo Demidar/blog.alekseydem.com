@@ -1,4 +1,5 @@
 {# @var \App\Entity\Section section #}
+{# @var \App\Entity\Section[] sectionChildren #}
 {# @var \App\Model\Link[] breadcrumbs #}
 
 {% extends 'base.html.twig' %}
@@ -7,7 +8,7 @@
 
 {% block side %}
     <ul class="list list_no-dot">
-        {% for childSection in section.children %}
+        {% for childSection in sectionChildren %}
             <li class="list__item"><a class="list__item-link" href="{{ path('section', {slug: childSection.slug}) }}"><span class="list__item-title">{{ childSection.title }}</span></a></li>
         {% endfor %}
     </ul>

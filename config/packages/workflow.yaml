@@ -72,6 +72,7 @@ framework:
                 property: status
             supports:
                 - App\Entity\Section
+                - App\Entity\Comment
             initial_marking: visible
             places:
                 - visible
