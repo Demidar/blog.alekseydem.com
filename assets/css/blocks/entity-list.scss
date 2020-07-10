@@ -1,0 +1,16 @@
+@import './../variables/variables';
+
+.entity-list {
+  margin: 20px 0;
+  &__item {
+    border-top: 2px solid $theme-light;
+    border-radius: 2px;
+  }
+  &__item-title {
+    font-family: $font-family-text;
+    font-weight: 400;
+  }
+  &__item-link {
+
+  }
+}

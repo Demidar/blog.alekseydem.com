@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Article;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -19,32 +20,35 @@ class ArticleRepository extends ServiceEntityRepository
         parent::__construct($registry, Article::class);
     }
 
-    // /**
-    //  * @return Article[] Returns an array of Article objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function findPublic(string $slug): ?Article
     {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('a.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
+        $qb = $this->createQueryBuilder('a')
+            ->andWhere('a.slug = :slug')
+            ->setParameter('slug', $slug)
         ;
-    }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Article
+        $this->applyFilter($qb, 'a');
+
+        return $qb->getQuery()->getOneOrNullResult();
+    }
+
+    public function findAllPublishedBySection($sectionId)
     {
-        return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
+        $qb = $this->createQueryBuilder('a')
+            ->andWhere('a.section = :section')
+            ->setParameter('section', $sectionId)
+        ;
+
+        $this->applyFilter($qb, 'a');
+
+        return $qb->getQuery()->getResult();
+    }
+
+    private function applyFilter(QueryBuilder $qb, $articleAlias = 'a'): void
+    {
+        $qb
+            ->andWhere(sprintf('%s.status = :status', $articleAlias))
+            ->setParameter('status', 'published')
         ;
     }
-    */
 }

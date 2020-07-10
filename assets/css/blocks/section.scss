@@ -1,0 +1,11 @@
+@import './../variables/variables';
+@import './../mixins/mixins';
+
+.section {
+  &__title {
+    @include font-title-primary;
+  }
+  &__text {
+
+  }
+}

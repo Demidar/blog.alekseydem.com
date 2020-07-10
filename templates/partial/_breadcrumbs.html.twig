@@ -2,7 +2,9 @@
 <div class="breadcrumbs">
     {% for breadcrumbsItem in breadcrumbs %}
         <div class="breadcrumbs__item">
-            <a class="breadcrumbs__link" href="{{ breadcrumbsItem.url }}"><span class="breadcrumbs__title">{{ breadcrumbsItem.title }}</span></a>
+            <a class="breadcrumbs__link" href="{{ breadcrumbsItem.url }}">
+                <span class="breadcrumbs__title">{{ breadcrumbsItem.title }}</span>
+            </a>
             {% if not loop.last %}
                 >
             {% endif %}

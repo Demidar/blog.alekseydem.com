@@ -1,18 +1,35 @@
 @import './../mixins/container';
 
 .body {
-  display: flex;
-  flex-direction: column;
-  &_horizontal {
-    flex-direction: row;
-  }
-  &_container {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  &__container {
     @include container;
+    display: flex;
+    flex-direction: column;
+    &_horizontal-till-md {
+      flex-direction: row;
+    }
+  }
+  &__breadcrumbs {
+
   }
   &__content {
     width: 100%;
   }
   &__side {
     width: 400px;
+  }
+}
+
+@media screen {
+  @media (max-width: $breakpoint-md) {
+    .body {
+      &__container {
+        &_horizontal-till-md {
+          flex-direction: column;
+        }
+      }
+    }
   }
 }

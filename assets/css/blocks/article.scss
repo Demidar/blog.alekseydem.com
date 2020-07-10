@@ -1,0 +1,8 @@
+@import './../variables/variables';
+@import './../mixins/mixins';
+
+.article {
+  &__title {
+    @include font-title-primary;
+  }
+}

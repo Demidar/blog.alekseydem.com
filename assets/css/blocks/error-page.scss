@@ -1,0 +1,10 @@
+@import "./../variables/variables";
+
+.error-page {
+  &__title {
+    font-family: $font-family-title-primary;
+  }
+  &__description {
+    font-family: $font-family-text;
+  }
+}

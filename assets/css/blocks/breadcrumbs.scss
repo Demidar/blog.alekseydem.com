@@ -2,8 +2,10 @@
 
 .breadcrumbs {
   display: flex;
+  flex-wrap: wrap;
+  margin: 20px 0;
   &__item {
-    margin: 20px 0;
+    margin: 5px 0;
   }
   &__link {
     margin: 0 10px;

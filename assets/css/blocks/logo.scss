@@ -7,6 +7,9 @@
     text-decoration: none;
     display: flex;
     align-items: center;
+    &:hover {
+      background-color: $theme-light-darker;
+    }
   }
   &__title {
     color: $theme-color;

@@ -1,0 +1,6 @@
+@import "./../variables/variables";
+
+@mixin font-title-primary {
+  font-family: $font-family-title-primary;
+  letter-spacing: 1.2px;
+}

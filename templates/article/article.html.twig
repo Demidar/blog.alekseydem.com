@@ -1,0 +1,15 @@
+{# @var \App\Entity\Article article #}
+{# @var \App\Model\Link[] breadcrumbs #}
+
+{% extends "base.html.twig" %}
+
+{% block breadcrumbs %}
+    {% include 'partial/_breadcrumbs.html.twig' with {'breadcrumbs': breadcrumbs} only %}
+{% endblock %}
+
+{% block body %}
+    <div class="article">
+        <h2 class="article__title">{{ article.title }}</h2>
+        <div class="article__text">{{ article.text|raw }}</div>
+    </div>
+{% endblock %}

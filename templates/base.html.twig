@@ -2,11 +2,10 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <title>{% block title %}Aleksey Dem's Blog{% endblock %}</title>
         {% block stylesheets %}
-            <link href="https://fonts.googleapis.com/css?family=Montserrat:400,400i,700,700i|Roboto:400,400i,700,700i&display=swap&subset=cyrillic" rel="stylesheet">
+            <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;1,400;1,700&family=Roboto:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
             {{ encore_entry_link_tags('app') }}
         {% endblock %}
     </head>
@@ -25,12 +24,19 @@
                         {% endfor %}
                     {% endfor %}
                 </div>
-                <div class="body body_horizontal body_container">
-                    <div class="body__side">
-                        {% block side %}{% endblock %}
+                <div class="body">
+                    <div class="body__container">
+                        <div class="body__breadcrumbs">
+                            {% block breadcrumbs %}{% endblock %}
+                        </div>
                     </div>
-                    <div class="body__content">
-                        {% block body %}{% endblock %}
+                    <div class="body__container body__container_horizontal-till-md">
+                        <div class="body__side">
+                            {% block side %}{% endblock %}
+                        </div>
+                        <div class="body__content">
+                            {% block body %}{% endblock %}
+                        </div>
                     </div>
                 </div>
             </div>

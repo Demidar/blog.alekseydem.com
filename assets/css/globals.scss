@@ -4,14 +4,15 @@
   box-sizing: border-box;
 }
 
-html {
-  height: 100%;
-}
-
 body {
-  min-height: 100%;
-  display: grid;
-  grid-template-rows: 1fr auto;
   margin: 0;
   background-color: $theme-background-color;
+  font-family: $font-family-text;
+}
+
+a {
+  color: $theme-link;
+  &:visited {
+    color: $theme-visited-link;
+  }
 }

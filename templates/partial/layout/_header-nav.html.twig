@@ -1,9 +1,14 @@
 {# @var \App\Entity\Section[] sections #}
 
-<nav class="nav">
-    {% for section in sections %}
-        <a href="{{ path('section', {slug: section.slug}) }}" class="nav__item">
-            <span class="nav__item-title">{{ section.title }}</span>
-        </a>
-    {% endfor %}
-</nav>
+<div class="nav">
+    <div class="nav__panel">
+        {% for section in sections %}
+            <a href="{{ path('section', {slug: section.slug}) }}" class="nav__item">
+                <span class="nav__item-title">{{ section.title }}</span>
+            </a>
+        {% endfor %}
+    </div>
+    <div class="nav__button">
+        <i class="nav__button-icon far fa-caret-square-down"></i>
+    </div>
+</div>

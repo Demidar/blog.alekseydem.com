@@ -2,24 +2,27 @@
 
 namespace App\Controller;
 
-use App\Entity\Section;
+use App\Repository\ArticleRepository;
 use App\Repository\SectionRepository;
 use App\Service\Breadcrumbs;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 class SectionController extends AbstractController
 {
     private $sectionRepository;
     private $breadcrumbs;
+    private $articleRepository;
 
     public function __construct(
         SectionRepository $sectionRepository,
+        ArticleRepository $articleRepository,
         Breadcrumbs $breadcrumbs
     ) {
         $this->sectionRepository = $sectionRepository;
         $this->breadcrumbs = $breadcrumbs;
+        $this->articleRepository = $articleRepository;
     }
 
     /**
@@ -29,16 +32,19 @@ class SectionController extends AbstractController
     {
         $section = $this->sectionRepository->findPublic($slug);
         if (!$section) {
-            return new Response(null, 404);
+            throw new NotFoundHttpException();
         }
 
         $sectionChildren = $this->sectionRepository->findChildrenPublic($section->getId());
+
+        $articles = $this->articleRepository->findAllPublishedBySection($section->getId());
 
         $breadcrumbs = $this->breadcrumbs->getBreadcrumbsForSection($section);
 
         return $this->render('section/section.html.twig', [
             'section' => $section,
             'sectionChildren' => $sectionChildren,
+            'articles' => $articles,
             'breadcrumbs' => $breadcrumbs
         ]);
     }

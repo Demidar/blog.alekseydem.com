@@ -7,9 +7,17 @@
     @include container;
     display: flex;
     flex-direction: row;
-    align-items: center;
+    justify-content: space-between;
+    @media screen {
+      @media (max-width: $breakpoint-md) {
+        flex-wrap: wrap;
+      }
+      @media (max-width: $breakpoint-sm) {
+      }
+    }
   }
   &__logo {
+    flex-shrink: 0;
     margin-right: 25px;
   }
   &__nav {

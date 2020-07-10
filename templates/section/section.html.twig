@@ -1,6 +1,7 @@
 {# @var \App\Entity\Section section #}
 {# @var \App\Entity\Section[] sectionChildren #}
 {# @var \App\Model\Link[] breadcrumbs #}
+{# @var \App\Entity\Article[] articles #}
 
 {% extends 'base.html.twig' %}
 
@@ -14,10 +15,22 @@
     </ul>
 {% endblock %}
 
-{% block body %}
+{% block breadcrumbs %}
     {% include 'partial/_breadcrumbs.html.twig' with {'breadcrumbs': breadcrumbs} only %}
+{% endblock %}
+
+{% block body %}
     <div class="section">
-        <h2>{{ section.title }}</h2>
-        <p>{{ section.text|raw }}</p>
+        <h2 class="section__title">{{ section.title }}</h2>
+        <div class="section__text">{{ section.text|raw }}</div>
+    </div>
+    <div class="entity-list">
+        {% for article in articles %}
+            <div class="entity-list__item">
+                <h4 class="entity-list__item-title">
+                    <a class="entity-list__item-link" href="{{ path('article', {slug: article.slug}) }}">{{ article.title }}</a>
+                </h4>
+            </div>
+        {% endfor %}
     </div>
 {% endblock %}

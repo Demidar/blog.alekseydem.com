@@ -41,7 +41,7 @@ class AppFixtures extends CustomFixture
         $users = $this->getReferencesByPrefix(User::class);
         $articles = $this->getReferencesByPrefix(Article::class);
 
-        for ($i = 0; $i < 180; $i++) {
+        for ($i = 0; $i < 300; $i++) {
             $comments = $this->getReferencesByPrefix(Comment::class);
             /** @var Article $article */
             $article = $this->faker->randomElement($articles);
@@ -82,7 +82,7 @@ class AppFixtures extends CustomFixture
 
     private function loadTags(ObjectManager $manager)
     {
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 30; $i++) {
             $tag = new Tag();
             $tag->setTag($this->faker->word);
 
@@ -95,16 +95,16 @@ class AppFixtures extends CustomFixture
 
     private function loadSections(ObjectManager $manager): void
     {
-        for ($i = 0; $i < 50; $i++) {
+        for ($i = 0; $i < 80; $i++) {
             $sections = $this->getReferencesByPrefix(Section::class);
 
             $section = new Section();
             $section->setTitle($this->faker->sentence(3));
             $section->setSlug($this->faker->unique()->slug);
-            $section->setStatus($this->faker->randomElement(['visible', 'invisible']));
+            $section->setStatus($this->faker->randomElement(['visible', 'visible', 'visible', 'invisible']));
             $section->setText($this->faker->optional(0.3)->text);
             $section->setLanguage($this->faker->randomElement(['en', 'en', 'ru', 'de']));
-            $section->setParent($this->faker->optional(0.8)->randomElement($sections));
+            $section->setParent($this->faker->optional(0.9)->randomElement($sections));
 
             $this->addReference(Section::class.':'.$i, $section);
 
@@ -118,12 +118,20 @@ class AppFixtures extends CustomFixture
         $users = $this->getReferencesByPrefix(User::class);
         $sections = $this->getReferencesByPrefix(Section::class);
 
-        for ($i = 0; $i < 120; $i++) {
+        for ($i = 0; $i < 300; $i++) {
+            $text = '';
+            $paragraphCount = random_int(2, 12);
+            for ($paragraphNum = 0; $paragraphNum < $paragraphCount; $paragraphNum++) {
+                $text .= '<p>';
+                $text .= $this->faker->paragraph;
+                $text .= '</p>';
+            }
+
             $article = new Article();
             $article->setSection($this->faker->randomElement($sections));
             $article->setTitle($this->faker->sentence(5));
-            $article->setText($this->faker->realText(700));
-            $article->setStatus($this->faker->randomElement(['published', 'published', 'hidden', 'rejected', 'inReview', 'draft']));
+            $article->setText($text);
+            $article->setStatus($this->faker->randomElement(['published', 'published', 'published', 'hidden', 'rejected', 'inReview', 'draft']));
             $article->setSlug($this->faker->unique()->slug);
             $article->setOwner($this->faker->randomElement($users));
             $article->setCreatedAt($this->faker->dateTimeBetween('-500 days', 'now'));

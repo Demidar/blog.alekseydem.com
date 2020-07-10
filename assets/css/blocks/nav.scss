@@ -1,18 +1,72 @@
 @import "./../variables/variables";
 
 .nav {
+  height: 50px;
   display: flex;
-  align-items: center;
-  &__item {
+  justify-content: space-between;
+  align-items: flex-start;
+  overflow: hidden;
+  &_unfix-height {
+    height: initial;
+  }
+  &__panel {
     display: flex;
-    align-items: center;
+    flex-wrap: wrap;
+  }
+  &__button {
+    flex-shrink: 0;
+    height: 50px;
+    padding: 0 20px;
+    cursor: pointer;
+    display: none;
+    &:hover {
+      background-color: $theme-light-darker;
+    }
+    &_show {
+      display: flex;
+      align-items: center;
+    }
+  }
+  &__button-icon {
+    color: $theme-color;
+    font-size: 2.2em;
+  }
+  &__item {
     height: 50px;
     padding: 15px;
     font-family: $font-family-text;
     font-weight: 700;
     color: $theme-link;
     text-decoration: none;
+    &:visited {
+      color: $theme-link;
+    }
+    &:hover {
+      background-color: $theme-light-darker;
+    }
   }
   &__item-title {
+  }
+}
+
+@media screen {
+  @media (max-width: $breakpoint-md) {
+    .nav {
+      width: 100%;
+      &__item {
+        padding-left: 0;
+        padding-right: 30px;
+      }
+    }
+  }
+  @media (max-width: $breakpoint-sm) {
+    .nav {
+      &__panel {
+        flex-direction: column;
+      }
+      &__item {
+        padding-right: 0;
+      }
+    }
   }
 }
