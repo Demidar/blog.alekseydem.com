@@ -7,6 +7,8 @@ use App\Entity\Comment;
 use App\Entity\Section;
 use App\Entity\Tag;
 use App\Entity\User;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -29,6 +31,13 @@ class DashboardController extends AbstractDashboardController
     {
         return Dashboard::new()
             ->setTitle('Blog')
+        ;
+    }
+
+    public function configureActions(): Actions
+    {
+        return parent::configureActions()
+            ->add(Crud::PAGE_INDEX, Action::DETAIL)
         ;
     }
 

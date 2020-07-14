@@ -2,13 +2,19 @@
 
 namespace App\Entity;
 
+use App\Entity\Closure\CommentClosure;
 use App\Repository\CommentRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=CommentRepository::class)
+ *
+ * @Gedmo\Tree(type="closure")
+ * @Gedmo\TreeClosure(class=CommentClosure::class)
  */
 class Comment
 {
@@ -20,6 +26,7 @@ class Comment
     private $id;
 
     /**
+     * @Gedmo\TreeParent()
      * @ORM\ManyToOne(targetEntity=Comment::class, inversedBy="children")
      */
     private $parent;
@@ -60,9 +67,21 @@ class Comment
      */
     private $article;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     * @Gedmo\TreeLevel()
+     */
+    private $level;
+
+    /**
+     * @var CommentClosure[]
+     */
+    private $closures;
+
     public function __construct()
     {
         $this->children = new ArrayCollection();
+        $this->closures = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -113,12 +132,12 @@ class Comment
         return $this;
     }
 
-    public function getOwner(): ?User
+    public function getOwner(): ?UserInterface
     {
         return $this->owner;
     }
 
-    public function setOwner(?User $owner): self
+    public function setOwner(?UserInterface $owner): self
     {
         $this->owner = $owner;
 
@@ -183,5 +202,22 @@ class Comment
         $this->article = $article;
 
         return $this;
+    }
+
+    public function getLevel(): ?int
+    {
+        return $this->level;
+    }
+
+    public function setLevel($level): self
+    {
+        $this->level = $level;
+
+        return $this;
+    }
+
+    public function addClosure(CommentClosure $closure): void
+    {
+        $this->closures[] = $closure;
     }
 }

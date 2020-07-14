@@ -1,5 +1,6 @@
 {# @var \App\Entity\Article article #}
 {# @var \App\Model\Link[] breadcrumbs #}
+{# @var \Symfony\Component\Form\FormView createCommentForm #}
 
 {% extends "base.html.twig" %}
 
@@ -11,5 +12,33 @@
     <div class="article">
         <h2 class="article__title">{{ article.title }}</h2>
         <div class="article__text">{{ article.text|raw }}</div>
+        <div class="article__date">{{ article.createdAt|format_datetime() }}</div>
+        <div class="article__date">{{ article.updatedAt|format_datetime() }}</div>
+    </div>
+    <div class="delimiter"></div>
+    <div class="comments">
+        {% if article.comments is not empty %}
+            <h3 class="comments__title">{{ "comments.title"|trans }}:</h3>
+            <div class="comments__list">
+                {% for comment in article.comments %}
+                    <div class="comment comments__item-container">
+                        <div class="comment__author-photo">{# TODO #}</div>
+                        <div class="comment__author">{{ comment.owner.username }}</div>
+                        <div class="comment__text">{{ comment.text }}</div>
+                        <div class="comment__date">{{ comment.createdAt|date() }}</div>
+                        <div class="comment__date">{{ comment.updatedAt|date() }}</div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="comments__no-comments">{{ "comments.missing"|trans }}</div>
+        {% endif %}
+        <div class="delimiter"></div>
+        <div class="comments__form-container">
+            <div class="form-container">
+                <div class="form-container__title">{{ "comments.leave-one"|trans }}:</div>
+                {{ form(createCommentForm) }}
+            </div>
+        </div>
     </div>
 {% endblock %}

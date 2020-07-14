@@ -26,7 +26,7 @@ class SectionController extends AbstractController
     }
 
     /**
-     * @Route("/section/{slug}", name="section")
+     * @Route("/{_locale<%app.supported_locales%>}/section/{slug}", name="section")
      */
     public function section($slug)
     {

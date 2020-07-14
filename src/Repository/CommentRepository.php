@@ -2,9 +2,11 @@
 
 namespace App\Repository;
 
+use App\Entity\Article;
 use App\Entity\Comment;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\QueryBuilder;
+use Gedmo\Tree\Entity\Repository\ClosureTreeRepository;
 
 /**
  * @method Comment|null find($id, $lockMode = null, $lockVersion = null)
@@ -12,39 +14,34 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Comment[]    findAll()
  * @method Comment[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class CommentRepository extends ServiceEntityRepository
+class CommentRepository extends ClosureTreeRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(EntityManagerInterface $em)
     {
-        parent::__construct($registry, Comment::class);
+        parent::__construct($em, $em->getClassMetadata(Comment::class));
     }
 
-    // /**
-    //  * @return Comment[] Returns an array of Comment objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @return Comment[]
+     */
+    public function findAllVisibleCommentsOfArticle(Article $article)
     {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
+        $qb = $this->createQueryBuilder('c')
+            ->andWhere('c.article = :article')
+            ->join('c.owner', 'o')
+            ->setParameter('article', $article->getId())
         ;
-    }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Comment
+        $this->applyFilter($qb, 'c');
+
+        return $qb->getQuery()->getResult();
+    }
+
+    private function applyFilter(QueryBuilder $qb, $commentAlias = 'c'): void
     {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
+        $qb
+            ->andWhere(sprintf('%s.status = :status', $commentAlias))
+            ->setParameter('status', 'visible')
         ;
     }
-    */
 }

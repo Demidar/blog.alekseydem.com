@@ -1,0 +1,8 @@
+form:
+  constraint:
+    password-too-big: 'Your password should be less than {{ limit }} or equal characters'
+    password-too-small: >-
+      {count, plural,
+        =1      {Password is too short. It should have at least an one character.}
+        other   {Password is too short. It should have at least { limit } characters.}
+      }

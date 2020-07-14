@@ -32,13 +32,14 @@ class Article
     private $title;
 
     /**
+     * @Gedmo\Translatable()
      * @ORM\Column(type="text")
      */
     private $text;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Gedmo\Slug(fields={"title"})
+     * @Gedmo\Slug(fields={"title"}, updatable=false)
      */
     private $slug;
 
@@ -87,17 +88,17 @@ class Article
      */
     private $files;
 
+    /**
+     * @Gedmo\Locale()
+     */
+    private $locale;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
         $this->tags = new ArrayCollection();
         $this->images = new ArrayCollection();
         $this->files = new ArrayCollection();
-    }
-
-    public static function getPossibleStatuses(): array
-    {
-        return ['published', 'hidden'];
     }
 
     public function getId(): ?int
@@ -320,5 +321,10 @@ class Article
         }
 
         return $this;
+    }
+
+    public function setTranslatableLocale($locale): void
+    {
+        $this->locale = $locale;
     }
 }

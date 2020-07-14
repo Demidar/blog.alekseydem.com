@@ -3,9 +3,10 @@ export function navButton() {
     window.addEventListener('resize', navButtonFn);
 
     function navButtonFn() {
-        let panelWidth = document.querySelector('.nav__panel').clientWidth;
         let navButton = document.querySelector('.nav__button');
         let navItems = document.querySelectorAll('.nav__item');
+
+        let panelWidth = document.querySelector('.nav__panel').clientWidth;
 
         let panelItemsWidth = 0;
 
@@ -28,15 +29,14 @@ export function navExpander() {
     let initialHeight = nav.clientHeight;
 
     navButton.addEventListener('click', () => {
-        let isFixedHeight = nav.clientHeight === initialHeight;
-        if (isFixedHeight) {
+        if (nav.clientHeight === initialHeight) {
             nav.classList.add('nav_unfix-height');
-            navButtonIcon.classList.remove('fa-caret-square-down');
-            navButtonIcon.classList.add('fa-caret-square-up');
+            navButtonIcon.classList.remove('fa-chevron-circle-down');
+            navButtonIcon.classList.add('fa-chevron-circle-up');
         } else {
             nav.classList.remove('nav_unfix-height');
-            navButtonIcon.classList.remove('fa-caret-square-up');
-            navButtonIcon.classList.add('fa-caret-square-down');
+            navButtonIcon.classList.remove('fa-chevron-circle-up');
+            navButtonIcon.classList.add('fa-chevron-circle-down');
         }
     });
 }

@@ -2,6 +2,7 @@
 
 namespace App\Controller\Partial;
 
+use App\Form\LanguageSwitcherFormType;
 use App\Repository\SectionRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,5 +24,16 @@ class LayoutController extends AbstractController
         return $this->render('partial/layout/_header-nav.html.twig', [
             'sections' => $sections
         ]);
+    }
+
+    public function renderLanguageSwitcher(): Response
+    {
+        $form = $this->createForm(LanguageSwitcherFormType::class);
+
+        $response = $this->render('partial/layout/_language-switcher.html.twig', [
+            'form' => $form->createView()
+        ]);
+
+        return $response;
     }
 }

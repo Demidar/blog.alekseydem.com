@@ -1,6 +1,16 @@
 dems.blog: Блог Dem
-workflow.entity-is-not-whitelisted: Эта сущность отсутствует в белом списке
-workflow.entity-not-found: Сущность не найдена
-workflow.transiton-not-allowed: Невозможно совершить переход на целевое состояние
-workflow.transition-success: Переход выполнен успешно
+workflow:
+  entity-is-not-whitelisted: Эта сущность отсутствует в белом списке
+  entity-not-found: Сущность не найдена
+  transiton-not-allowed: Невозможно совершить переход на целевое состояние
+  transition-success: Переход выполнен успешно
 homepage: Главная
+comments:
+  title: Комментарии
+  missing: Комментариев еще нет... будь первым!
+  leave-one: Оставить комментарий
+form:
+  username: Имя пользователя
+  password: Пароль
+  a-comment: Комментарий
+  send: Отправить

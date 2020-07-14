@@ -7,6 +7,11 @@
                 </a>
             </div>
         </div>
-        {{ render_esi(controller('App\\Controller\\Partial\\LayoutController::renderHeaderNav')) }}
+        <div class="header__language-switcher">
+            {{ render_esi(controller('App\\Controller\\Partial\\LayoutController::renderLanguageSwitcher')) }}
+        </div>
+        <div class="header__nav">
+            {{ render_esi(controller('App\\Controller\\Partial\\LayoutController::renderHeaderNav')) }}
+        </div>
     </div>
 </header>

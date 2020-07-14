@@ -1,0 +1,86 @@
+@import './../variables/variables';
+
+.form {
+  &__text, &__password {
+    &-widget {
+      width: 100%;
+      font-size: 1.2em;
+      padding: 5px;
+      border: 2px solid $theme;
+      border-radius: 4px;
+      font-family: $font-family-text;
+    }
+  }
+  &__submit {
+    &-widget {
+      padding: 10px;
+      background-color: $theme-light;
+      border: 1px solid $theme;
+      border-radius: 4px;
+      font-family: $font-family-text;
+      font-size: 1.2em;
+      cursor: pointer;
+    }
+  }
+  &__textarea {
+    &-widget {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      resize: vertical;
+      padding: 5px;
+      border: 2px solid $theme;
+      border-radius: 4px;
+      font-family: $font-family-text;
+      font-size: 1.2em;
+      min-height: 140px;
+    }
+  }
+  &__checkbox {
+    &-row {
+      display: flex;
+      align-items: center;
+    }
+    &-widget {
+      padding-left: 10px;
+      width: 2em;
+      height: 2em;
+    }
+  }
+  &__select {
+    &-widget {
+      &_lang-switcher {
+        border: none;
+        background-color: transparent;
+        height: 50px;
+        font-size: 1.2em;
+        cursor: pointer;
+      }
+    }
+  }
+
+
+
+  &__label {
+    display: block;
+    padding: 5px 20px 5px 0;
+    color: gray;
+  }
+  &__row {
+    margin: 15px 0;
+    &_lang-switcher {
+      margin: 0;
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+      &:hover {
+        background-color: #e0d9d9;
+      }
+    }
+  }
+  &__icon {
+    &_globe {
+      font-size: 25px;
+    }
+  }
+}

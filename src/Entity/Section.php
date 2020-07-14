@@ -37,6 +37,7 @@ class Section
     private $children;
 
     /**
+     * @Gedmo\Translatable()
      * @ORM\Column(type="string", length=255)
      */
     private $title;
@@ -58,9 +59,9 @@ class Section
     private $position;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @Gedmo\Locale()
      */
-    private $language = 'en';
+    private $locale;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
@@ -75,11 +76,12 @@ class Section
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Gedmo\Slug(fields={"title"})
+     * @Gedmo\Slug(fields={"title"}, updatable=false)
      */
     private $slug;
 
     /**
+     * @Gedmo\Translatable()
      * @ORM\Column(type="text", nullable=true)
      */
     private $text;
@@ -211,18 +213,6 @@ class Section
         return $this;
     }
 
-    public function getLanguage(): string
-    {
-        return $this->language;
-    }
-
-    public function setLanguage($language): self
-    {
-        $this->language = $language;
-
-        return $this;
-    }
-
     public function getLevel(): ?int
     {
         return $this->level;
@@ -235,7 +225,7 @@ class Section
         return $this;
     }
 
-    public function addClosure(SectionClosure $closure)
+    public function addClosure(SectionClosure $closure): void
     {
         $this->closures[] = $closure;
     }
@@ -262,5 +252,20 @@ class Section
         $this->text = $text;
 
         return $this;
+    }
+
+    public function setLocale($locale): void
+    {
+        $this->locale = $locale;
+    }
+
+    public function getLocale(): ?string
+    {
+        return $this->locale;
+    }
+
+    public function setTranslatableLocale($locale): void
+    {
+        $this->locale = $locale;
     }
 }

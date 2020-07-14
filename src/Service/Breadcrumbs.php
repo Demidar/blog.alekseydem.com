@@ -32,7 +32,7 @@ class Breadcrumbs
     public function getBreadcrumbsForSection(Section $section): array
     {
         /** @var Section[] $sections */
-        $sections = $this->sectionRepository->getPath($section);
+        $sections = $this->sectionRepository->getSectionPath($section);
 
         $breadcrumbs = array_map(function ($section) {
             return $this->getSectionLink($section);
