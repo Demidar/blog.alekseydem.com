@@ -1,0 +1,58 @@
+{% trans_default_domain 'admin' %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>{% block title %}Admin Panel - Aleksey Dem's Blog{% endblock %}</title>
+    {% block stylesheets %}
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,700;1,400;1,700&family=Roboto:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+        {{ encore_entry_link_tags('admin') }}
+    {% endblock %}
+</head>
+<body>
+<div class="layout">
+    <div class="layout__header">
+        <header class="header">
+            <div class="header__container">
+                <div class="header__logo">
+                    <div class="logo">
+                        <a class="logo__link" href="{{ path('admin_dashboard') }}">
+                            <span class="logo__title">{{ 'logo'|trans }}</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+    </div>
+    <div class="layout__body">
+        <div class="flash-messages">
+            {% for label, message in app.flashes %}
+                {% for message in messages %}
+                    <div class="flash-messages__item flash-messages__item_{{ label }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+        <div class="body">
+            <div class="body__container body__container_horizontal-till-md">
+                <div class="body__side">
+                    {{ render_esi(controller('App\\Admin\\Controller\\Partial\\Layout::renderSide')) }}
+                </div>
+                <div class="body__content">
+                    {% block body %}{% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="layout__footer">
+        {{ include('@admin/layout/footer.html.twig') }}
+    </footer>
+</div>
+{% block javascripts %}
+    {{ encore_entry_script_tags('admin') }}
+{% endblock %}
+</body>
+</html>
