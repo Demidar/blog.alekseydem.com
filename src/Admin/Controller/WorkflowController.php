@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Admin\Controller;
 
 use App\Entity\Article;
 use App\Entity\Section;
@@ -8,14 +8,12 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Workflow\Registry;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-/**
- * @Route("/admin")
- */
-class AdminController extends AbstractController
+class WorkflowController extends AbstractController
 {
     private $workflowRegistry;
     private $entityManager;
@@ -41,6 +39,9 @@ class AdminController extends AbstractController
      */
     public function applyWorkflow(Request $request)
     {
+        if (!$this->isGranted('ROLE_ADMIN')) {
+            throw new AccessDeniedHttpException();
+        }
         $id = $request->request->get('id');
         $entityName = $request->request->get('entityName');
         $transition = $request->request->get('transition');
