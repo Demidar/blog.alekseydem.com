@@ -124,6 +124,9 @@ Mainly 'class' attributes were added.
                 {{- label|trans(label_translation_parameters, translation_domain)|raw -}}
             {%- endif -%}
         {%- endif -%}
+        {% if required -%}
+            <span class="form__label-required"> *</span>
+        {%- endif -%}
         </{{ element|default('label') }}>
     {%- endif -%}
 {%- endblock form_label -%}

@@ -1,10 +1,14 @@
 dems.blog: Блог Dem
+main-title: Блог Алексея Dem
 homepage: Главная
 author: Автор
-register: Регистрация
-login: Вход
-if-has-account-login: Уже есть аккаунт? <a href={loginUrl}>Войди здесь</a>!
 
+auth:
+  register: Регистрация
+  if-has-account-login: Уже есть аккаунт? <a href={loginUrl}>Войди здесь</a>!
+  already-signed-in: Вы уже вошли как {username}. <a href={logoutUrl}>Нажмите здесь, чтобы выйти</a>.
+  signing-in: Вход
+  join: Войти
 workflow:
   entity-is-not-whitelisted: Эта сущность отсутствует в белом списке
   entity-not-found: Сущность не найдена
@@ -19,6 +23,8 @@ form:
   password: Пароль
   a-comment: Комментарий
   send: Отправить
+  login: Войти
+  register: Зарегистрироваться
 article:
   created-at: Написан
   updated-at: Обновлен

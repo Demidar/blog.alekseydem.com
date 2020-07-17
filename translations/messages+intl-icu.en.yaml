@@ -1,10 +1,14 @@
 dems.blog: Dem's blog
+main-title: Aleksey Dem's Blog
 homepage: Homepage
 author: Author
-register: Register
-login: Login
-if-has-account-login: Already have an account? <a href={loginUrl}>Sign in here</a>!
 
+auth:
+  register: Register
+  if-has-account-login: Already have an account? <a href={loginUrl}>Sign in here</a>!
+  already-signed-in: You are logged in as {username}. <a href={logoutUrl}>Logout here</a>.
+  signing-in: Signing in
+  join: Join
 workflow:
   entity-is-not-whitelisted: This entity is not whitelisted
   entity-not-found: Entity did not found
@@ -19,6 +23,8 @@ form:
   password: Password
   a-comment: Comment
   send: Send
+  login: Sign In
+  register: Register
 article:
   created-at: Written
   updated-at: Updated

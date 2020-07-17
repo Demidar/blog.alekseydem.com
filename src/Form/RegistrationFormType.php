@@ -23,8 +23,12 @@ class RegistrationFormType extends AbstractType
                 'label' => 'form.username',
                 'validation_groups' => 'register',
                 'constraints' => [
+                    new Length([
+                        'min' => 3,
+                        'minMessage' => 'form.constraint.common.too-small'
+                    ]),
                     new NotBlank([
-                        'message' => 'form.constraint.username-not-blank'
+                        'message' => 'form.constraint.common.is-blank'
                     ])
                 ]
             ])
@@ -35,16 +39,13 @@ class RegistrationFormType extends AbstractType
                 'mapped' => false,
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'form.constraint.password-not-blank',
+                        'message' => 'form.constraint.common.is-blank',
                     ]),
                     new Length([
-                        'min' => 50,
-                        //'minMessage' => 'Your password should be at least {{ limit }} characters',
-                        'minMessage' => 'form.constraint.password-too-small',
-                        // max length allowed by Symfony for security reasons
+                        'min' => 5,
+                        'minMessage' => 'form.constraint.common.too-small',
                         'max' => 100,
-                        //'maxMessage' => 'form.constraint.password-too-big',
-                        //'maxMessage' => 'Your password should be less than {{ limit }} or equal characters'
+                        'maxMessage' => 'form.constraint.common.too-big',
                     ]),
                 ],
             ])
@@ -56,7 +57,9 @@ class RegistrationFormType extends AbstractType
 //                    ]),
 //                ],
 //            ])
-            ->add('register', SubmitType::class)
+            ->add('register', SubmitType::class, [
+                'label' => 'form.register'
+            ])
         ;
     }
 

@@ -34,6 +34,7 @@ class LanguageSwitcherFormType extends AbstractType
             ->setAction($this->urlGenerator->generate('language-switcher'))
             ->setMethod('POST')
             ->add('lang', ChoiceType::class, [
+                'translation_domain' => false,
                 'label' => false,
                 'attr' => ['onChange' => 'this.form.submit()'],
                 'choices' => $choices,

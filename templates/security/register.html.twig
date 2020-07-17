@@ -7,9 +7,9 @@
         <div>{{ flashError }}</div>
     {% endfor %}
 
-    <h1>{{"register"|trans}}</h1>
+    <h1>{{"auth.register"|trans}}</h1>
 
     {{ form(registrationForm) }}
 
-    <p>{{ "if-has-account-login"|trans({loginUrl: path('app_login')})|raw }}</p>
+    <p>{{ "auth.if-has-account-login"|trans({loginUrl: path('app_login')})|raw }}</p>
 {% endblock %}

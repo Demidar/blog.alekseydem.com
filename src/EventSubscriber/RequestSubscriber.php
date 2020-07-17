@@ -62,10 +62,9 @@ class RequestSubscriber implements EventSubscriberInterface
 
     public function settingDoctrineFilters(RequestEvent $event): void
     {
-        if (!$event->getRequest()->hasPreviousSession()) {
-            return;
-        }
-
+//        if (!$event->getRequest()->hasPreviousSession()) {
+//            return;
+//        }
         $filters = $this->em->getFilters();
 
         $user = $this->security->getUser();
@@ -77,7 +76,7 @@ class RequestSubscriber implements EventSubscriberInterface
 
         if (!$user || !$this->authorizationChecker->isGranted('ROLE_ADMIN')) {
             $filters->enable('section')->setParameter('status', 'visible');
-            $filters->enable('article')->setParameter('status', 'public');
+            $filters->enable('article')->setParameter('status', 'published');
             if ($userId) {
                 $filters->getFilter('article')->setParameter('ownerId', $userId);
             }
@@ -87,8 +86,8 @@ class RequestSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            // must be registered before (i.e. with a higher priority than) the default Locale listener
             KernelEvents::REQUEST => [
+                // must be registered before (i.e. with a higher priority than) the default Locale listener
                 ['determineLocale', 20],
                 ['settingDoctrineFilters']
             ]

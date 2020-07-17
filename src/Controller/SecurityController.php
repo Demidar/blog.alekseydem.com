@@ -7,6 +7,7 @@ use App\Form\LoginFormType;
 use App\Form\RegistrationFormType;
 use App\Security\LoginFormAuthenticator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,23 +17,42 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
 {
+
+
     /**
      * @Route("/{_locale<%app.supported_locales%>}/login", name="app_login")
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        $form = $this->createForm(LoginFormType::class);
+        $form = $this->createForm(LoginFormType::class, [
+            'username' => $authenticationUtils->getLastUsername()
+        ]);
 
-        // get the login error if there is one
-        // $error = $authenticationUtils->getLastAuthenticationError();
-        // last username entered by the user
-        // $lastUsername = $authenticationUtils->getLastUsername();
+        if ($error = $authenticationUtils->getLastAuthenticationError()) {
+            $form->addError(new FormError($error->getMessage()));
+        }
 
-        // return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
         return $this->render('security/login.html.twig', [
             'form' => $form->createView()
         ]);
     }
+
+    /**
+     * @Route("/login", name="app_login")
+     */
+//    public function login(AuthenticationUtils $authenticationUtils): Response
+//    {
+//        // if ($this->getUser()) {
+//        //     return $this->redirectToRoute('target_path');
+//        // }
+//
+//        // get the login error if there is one
+//        $error = $authenticationUtils->getLastAuthenticationError();
+//        // last username entered by the user
+//        $lastUsername = $authenticationUtils->getLastUsername();
+//
+//        return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
+//    }
 
     /**
      * @Route("/{_locale<%app.supported_locales%>}/register", name="app_register")
