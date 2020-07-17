@@ -1,0 +1,11 @@
+.comment {
+  &__author {
+    font-weight: bold;
+  }
+  &__text {
+    margin: 10px 0;
+  }
+  &__date {
+    text-align: right;
+  }
+}

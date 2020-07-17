@@ -1,0 +1,48 @@
+@import './../variables/variables';
+
+.header-link {
+  height: 50px;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  text-decoration: none;
+  &:visited {
+    color: $theme-link;
+  }
+  &:hover {
+    background-color: $theme-light-darker;
+  }
+
+  &__title {
+    font-family: $font-family-text;
+    font-weight: 700;
+    color: $theme-link;
+    &_usual-type {
+      color: $theme-color;
+      font-weight: normal;
+    }
+  }
+  &__is-hidden-title {
+    font-size: 0.8em;
+    opacity: 0.5;
+  }
+  &__icon {
+    font-size: 20px;
+    color: $theme-color;
+    padding-right: 3px;
+  }
+}
+
+@media screen {
+  @media (max-width: $breakpoint-md) {
+    .header-link {
+      padding-left: 0;
+      padding-right: 30px;
+    }
+  }
+  @media (max-width: $breakpoint-sm) {
+    .header-link {
+      padding-right: 0;
+    }
+  }
+}

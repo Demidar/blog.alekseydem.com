@@ -22,6 +22,7 @@ class Article
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="articles")
+     * @ORM\JoinColumn(name="owner_id", referencedColumnName="id")
      * @Gedmo\Blameable(on="create")
      */
     private $owner;

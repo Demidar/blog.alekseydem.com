@@ -25,96 +25,58 @@ class SectionRepository extends ClosureTreeRepository
     }
 
     /**
-     * combination with parent::getPathQuery() and parent::getPath()
-     * with applying filters and translation hints
+     * parent::getPath() with applying translation hints
      *
      * @param Section $section
      * @return Section[]
      */
-    public function getSectionPath(Section $section): array
+    public function getSectionPathWithLocale(Section $section): array
     {
-        $meta = $this->getClassMetadata();
-        $config = $this->listener->getConfiguration($this->_em, $meta->name);
-        $closureMeta = $this->_em->getClassMetadata($config['closure']);
-
-        $dql = "SELECT c, node FROM {$closureMeta->name} c";
-        $dql .= " INNER JOIN c.ancestor node";
-        $dql .= " WHERE c.descendant = :node";
-        $dql .= " AND node.status = :status"; // here are status setting!
-        $dql .= " ORDER BY c.depth DESC";
-        $q = $this->_em->createQuery($dql);
-        $q->setParameters(['node' => $section, 'status' => 'visible']);
-
         return array_map(static function (AbstractClosure $closure) {
             return $closure->getAncestor();
-        }, $this->applyHints($q)->getResult());
+        }, $this->applyHints($this->getPathQuery($section))->getResult());
     }
 
-    /**
-     * @return Section[]
-     */
-    public function findAllPublic(): array
-    {
-        $qb = $this->createQueryBuilder('s');
-
-        return $this->apply($qb, 's')->getResult();
-    }
-
-    public function findForAdmin(int $id, string $locale): ?Section
+    public function findWithLocaleById(int $id, ?string $locale = null, bool $fallback = true): ?Section
     {
         $qb = $this->createQueryBuilder('s')
             ->andWhere('s.id = :id')
             ->setParameter('id', $id);
 
-        return $this->applyHints($qb->getQuery(), false, $locale)->getOneOrNullResult();
+        return $this->applyHints($qb->getQuery(), $fallback, $locale)->getOneOrNullResult();
     }
 
-    public function findPublic(string $slug): ?Section
+    public function findWithLocaleBySlug(string $slug, ?string $locale = null, bool $fallback = true): ?Section
     {
         $qb = $this->createQueryBuilder('s')
             ->andWhere('s.slug = :slug')
             ->setParameter('slug', $slug)
         ;
 
-        return $this->apply($qb, 's')->getOneOrNullResult();
+        return $this->applyHints($qb->getQuery(), $fallback, $locale)->getOneOrNullResult();
     }
 
     /**
      * @return Section[]
      */
-    public function findChildrenPublic(int $id): array
+    public function findChildrenWithLocale(int $id): array
     {
         $qb = $this->createQueryBuilder('s')
             ->andWhere('s.parent = :id')
             ->setParameter('id', $id)
         ;
 
-        return $this->apply($qb, 's')->getResult();
+        return $this->applyHints($qb->getQuery())->getResult();
     }
 
     /**
      * @return Section[]
      */
-    public function getRootSections(): array
+    public function getRootSectionsWithLocale(): array
     {
         $qb = $this->getRootNodesQueryBuilder('position', 'asc');
 
-        return $this->apply($qb, 'node')->getResult();
-    }
-
-    private function apply(QueryBuilder $qb, $sectionAlias = 's'): Query
-    {
-        return $this->applyHints($this->applyFilter($qb, $sectionAlias)->getQuery());
-    }
-
-    private function applyFilter(QueryBuilder $qb, $sectionAlias = 's'): QueryBuilder
-    {
-        $qb
-            ->andWhere(sprintf('%s.status = :status', $sectionAlias))
-            ->setParameter('status', 'visible')
-        ;
-
-        return $qb;
+        return $this->applyHints($qb->getQuery())->getResult();
     }
 
     private function applyHints(Query $query, bool $withFallback = true, ?string $locale = null): Query

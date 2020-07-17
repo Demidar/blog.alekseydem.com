@@ -5,4 +5,23 @@
   &__title {
     @include font-title-primary;
   }
+  &__title-not-published {
+    font-style: italic;
+    opacity: 0.8;
+  }
+  &__text {
+    line-height: 1.5;
+  }
+  &__spacer {
+    margin: 20px 0;
+    &_align-right {
+      text-align: right;
+    }
+  }
+  &__date {
+    margin: 5px 0;
+  }
+  &__bold {
+    font-weight: bold;
+  }
 }

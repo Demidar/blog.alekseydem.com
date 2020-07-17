@@ -3,10 +3,9 @@
 {% block title %}Log in! - {{ parent() }}{% endblock %}
 
 {% block body %}
-<form method="post">
-    {% if error %}
-        <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
+{#    {% if error %}#}
+{#        <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>#}
+{#    {% endif %}#}
 
     {% if app.user %}
         <div>
@@ -14,24 +13,24 @@
         </div>
     {% endif %}
 
-    <h1>Please sign in</h1>
-    <label for="inputUsername">Username</label>
-    <input type="text" value="{{ last_username }}" name="username" id="inputUsername" required autofocus>
-    <label for="inputPassword">Password</label>
-    <input type="password" name="password" id="inputPassword" required>
+    <h1>Signing in</h1>
+    {{ form(form) }}
+{#    <label for="inputUsername">Username</label>#}
+{#    <input type="text" value="{{ last_username }}" name="username" id="inputUsername" required autofocus>#}
+{#    <label for="inputPassword">Password</label>#}
+{#    <input type="password" name="password" id="inputPassword" required>#}
 
-    <input type="hidden" name="_csrf_token"
-           value="{{ csrf_token('authenticate') }}"
-    >
+{#    <input type="hidden" name="_csrf_token"#}
+{#           value="{{ csrf_token('authenticate') }}"#}
+{#    >#}
 
-    <div>
-        <label>
-            <input type="checkbox" name="_remember_me"> Remember me
-        </label>
-    </div>
+{#    <div>#}
+{#        <label>#}
+{#            <input type="checkbox" name="_remember_me"> Remember me#}
+{#        </label>#}
+{#    </div>#}
 
-    <button type="submit">
-        Sign in
-    </button>
-</form>
+{#    <button type="submit">#}
+{#        Sign in#}
+{#    </button>#}
 {% endblock %}

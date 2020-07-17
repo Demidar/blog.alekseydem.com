@@ -5,6 +5,10 @@
   &__title {
     @include font-title-primary;
   }
+  &__is-hidden-title {
+    opacity: 0.8;
+    font-style: italic;
+  }
   &__text {
 
   }

@@ -10,10 +10,22 @@
 
 {% block body %}
     <div class="article">
-        <h2 class="article__title">{{ article.title }}</h2>
+        <h2 class="article__title">
+            {{ article.title }}
+            {% if article.status != 'published' %}
+                <span class="article__title-not-published">({{ ('place.' ~ article.status)|trans({}, 'workflow') }})</span>
+            {% endif %}
+        </h2>
+        <div class="article__spacer">
+            <div class="article__author"><span class="article__bold">{{ "author"|trans() }}:</span> {{ article.owner.username }}</div>
+        </div>
         <div class="article__text">{{ article.text|raw }}</div>
-        <div class="article__date">{{ article.createdAt|format_datetime() }}</div>
-        <div class="article__date">{{ article.updatedAt|format_datetime() }}</div>
+        <div class="article__spacer article__spacer_align-right">
+            <div class="article__date"><span class="article__bold">{{ "article.created-at"|trans }}:</span> {{ article.createdAt|format_datetime() }}</div>
+            {% if article.createdAt != article.updatedAt %}
+                <div class="article__date"><span class="article__bold">{{ "article.updated-at"|trans }}:</span> {{ article.updatedAt|format_datetime() }}</div>
+            {% endif %}
+        </div>
     </div>
     <div class="delimiter"></div>
     <div class="comments">
@@ -23,10 +35,9 @@
                 {% for comment in article.comments %}
                     <div class="comment comments__item-container">
                         <div class="comment__author-photo">{# TODO #}</div>
-                        <div class="comment__author">{{ comment.owner.username }}</div>
+                        <div class="comment__author"><span class="comment__bold">{{ comment.owner.username }}</span></div>
                         <div class="comment__text">{{ comment.text }}</div>
-                        <div class="comment__date">{{ comment.createdAt|date() }}</div>
-                        <div class="comment__date">{{ comment.updatedAt|date() }}</div>
+                        <div class="comment__date">{{ comment.createdAt|format_datetime() }}</div>
                     </div>
                 {% endfor %}
             </div>

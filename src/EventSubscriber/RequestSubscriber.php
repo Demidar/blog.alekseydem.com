@@ -2,6 +2,7 @@
 
 namespace App\EventSubscriber;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -9,20 +10,34 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\User\UserInterface;
 
-class LocaleSubscriber implements EventSubscriberInterface
+class RequestSubscriber implements EventSubscriberInterface
 {
     private $supportedLocales;
     private $router;
+    private $em;
+    private $authorizationChecker;
+    private $security;
 
-    public function __construct(string $bound_supportedLocales, RouterInterface $router)
-    {
+    public function __construct(
+        string $bound_supportedLocales,
+        RouterInterface $router,
+        EntityManagerInterface $em,
+        AuthorizationCheckerInterface $authorizationChecker,
+        Security $security
+    ) {
         $supportedLocalesRegex = $bound_supportedLocales;
         $this->supportedLocales = explode('|', $supportedLocalesRegex);
         $this->router = $router;
+        $this->em = $em;
+        $this->authorizationChecker = $authorizationChecker;
+        $this->security = $security;
     }
 
-    public function onKernelRequest(RequestEvent $event)
+    public function determineLocale(RequestEvent $event): void
     {
         $request = $event->getRequest();
 
@@ -45,11 +60,38 @@ class LocaleSubscriber implements EventSubscriberInterface
         }
     }
 
+    public function settingDoctrineFilters(RequestEvent $event): void
+    {
+        if (!$event->getRequest()->hasPreviousSession()) {
+            return;
+        }
+
+        $filters = $this->em->getFilters();
+
+        $user = $this->security->getUser();
+        if ($user instanceof UserInterface) {
+            $userId = $user->getId();
+        } else {
+            $userId = null;
+        }
+
+        if (!$user || !$this->authorizationChecker->isGranted('ROLE_ADMIN')) {
+            $filters->enable('section')->setParameter('status', 'visible');
+            $filters->enable('article')->setParameter('status', 'public');
+            if ($userId) {
+                $filters->getFilter('article')->setParameter('ownerId', $userId);
+            }
+        }
+    }
+
     public static function getSubscribedEvents()
     {
         return [
             // must be registered before (i.e. with a higher priority than) the default Locale listener
-            KernelEvents::REQUEST => [['onKernelRequest', 20]]
+            KernelEvents::REQUEST => [
+                ['determineLocale', 20],
+                ['settingDoctrineFilters']
+            ]
         ];
     }
 

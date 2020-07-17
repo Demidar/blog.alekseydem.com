@@ -1,3 +1,13 @@
+place:
+  draft: Черновик
+  inReview: На рассмотрении
+  rejected: Отклонен
+  published: Опубликован
+  hidden: Скрыт
+  active: Активен
+  blocked: Заблокирован
+  visible: Видимый
+  invisible: Скрыт
 edit: Редактировать
 show_published: Опубликовать
 hide_published: Скрыть

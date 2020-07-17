@@ -10,6 +10,12 @@
         <div class="header__language-switcher">
             {{ render_esi(controller('App\\Controller\\Partial\\LayoutController::renderLanguageSwitcher')) }}
         </div>
+        <div class="header__join-link">
+            <a href="{{ path('app_register') }}" class="header-link">
+                <span class="header-link__icon fas fa-sign-in-alt"></span>
+                <span class="header-link__title header-link__title_usual-type">Join</span>
+            </a>
+        </div>
         <div class="header__nav">
             {{ render_esi(controller('App\\Controller\\Partial\\LayoutController::renderHeaderNav')) }}
         </div>

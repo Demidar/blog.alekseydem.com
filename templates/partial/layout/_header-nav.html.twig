@@ -3,8 +3,11 @@
 <div class="nav">
     <div class="nav__panel">
         {% for section in sections %}
-            <a href="{{ path('section', {slug: section.slug}) }}" class="nav__item">
-                <span class="nav__item-title">{{ section.title }}</span>
+            <a href="{{ path('section', {slug: section.slug}) }}" class="header-link">
+                <span class="header-link__title">{{ section.title }}</span>
+                {% if section.status == 'invisible' -%}
+                    <span class="header-link__is-hidden-title">({{ ('place.' ~ section.status)|trans({}, 'workflow') }})</span>
+                {%- endif -%}
             </a>
         {% endfor %}
     </div>

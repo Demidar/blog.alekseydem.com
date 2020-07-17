@@ -4,7 +4,7 @@ export function navButton() {
 
     function navButtonFn() {
         let navButton = document.querySelector('.nav__button');
-        let navItems = document.querySelectorAll('.nav__item');
+        let navItems = document.querySelectorAll('.nav .header-link');
 
         let panelWidth = document.querySelector('.nav__panel').clientWidth;
 

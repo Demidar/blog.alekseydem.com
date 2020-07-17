@@ -32,7 +32,7 @@ class Breadcrumbs
     public function getBreadcrumbsForSection(Section $section): array
     {
         /** @var Section[] $sections */
-        $sections = $this->sectionRepository->getSectionPath($section);
+        $sections = $this->sectionRepository->getSectionPathWithLocale($section);
 
         $breadcrumbs = array_map(function ($section) {
             return $this->getSectionLink($section);
@@ -77,6 +77,9 @@ class Breadcrumbs
     {
         $link = new Link();
         $link->title = $section->getTitle();
+        if ($section->getStatus() !== 'visible') {
+            $link->title .= ' ('.$this->translator->trans('place.'.$section->getStatus(), [], 'workflow').')';
+        }
         $link->url = $this->urlGenerator->generate('section', ['slug' => $section->getSlug()]);
         return $link;
     }
@@ -85,6 +88,9 @@ class Breadcrumbs
     {
         $link = new Link();
         $link->title = $article->getTitle();
+        if ($article->getStatus() !== 'published') {
+            $link->title .= ' ('.$this->translator->trans('place.'.$article->getStatus(), [], 'workflow').')';
+        }
         $link->url = $this->urlGenerator->generate('article', ['slug' => $article->getSlug()]);
         return $link;
     }

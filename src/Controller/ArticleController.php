@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\Comment;
 use App\Form\CreateCommentFormType;
 use App\Repository\ArticleRepository;
-use App\Repository\CommentRepository;
 use App\Service\Breadcrumbs;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -15,16 +14,13 @@ class ArticleController extends AbstractController
 {
     private $articleRepository;
     private $breadcrumbs;
-    private $commentRepository;
 
     public function __construct(
         ArticleRepository $articleRepository,
-        CommentRepository $commentRepository,
         Breadcrumbs $breadcrumbs
     ) {
         $this->articleRepository = $articleRepository;
         $this->breadcrumbs = $breadcrumbs;
-        $this->commentRepository = $commentRepository;
     }
 
     /**
@@ -32,7 +28,7 @@ class ArticleController extends AbstractController
      */
     public function article($slug)
     {
-        $article = $this->articleRepository->findPublicWithComments($slug);
+        $article = $this->articleRepository->findWithLocaleWithComments($slug);
         if (!$article) {
             throw new NotFoundHttpException();
         }

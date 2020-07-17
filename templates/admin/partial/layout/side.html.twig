@@ -1,0 +1,7 @@
+{# @var menu \App\Model\Link[] #}
+
+<ul class="list list_no-dot">
+    {% for menuItem in menu %}
+        <li class="list__item"><a class="list__item-link" href="{{ menuItem.url }}"><span class="list__item-title">{{ menuItem.title }}</span></a></li>
+    {% endfor %}
+</ul>

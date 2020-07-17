@@ -6,7 +6,6 @@ use App\Entity\Article;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr;
-use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Gedmo\Translatable\Query\TreeWalker\TranslationWalker;
 use Gedmo\Translatable\TranslatableListener;
@@ -19,69 +18,57 @@ use Gedmo\Translatable\TranslatableListener;
  */
 class ArticleRepository extends ServiceEntityRepository
 {
-    private $commentRepository;
-
     public function __construct(
-        ManagerRegistry $registry,
-        CommentRepository $commentRepository
+        ManagerRegistry $registry
     ) {
         parent::__construct($registry, Article::class);
-        $this->commentRepository = $commentRepository;
     }
 
-    public function findPublic(string $slug): ?Article
+    public function findWithLocaleBuSlug(string $slug): ?Article
     {
         $qb = $this->createQueryBuilder('a')
             ->andWhere('a.slug = :slug')
             ->setParameter('slug', $slug)
         ;
 
-        $this->applyFilter($qb, 'a');
-
         return $this->applyHints($qb->getQuery())->getOneOrNullResult();
     }
 
-    public function findPublicWithComments(string $slug): ?Article
+    public function findWithLocaleWithComments(string $slug): ?Article
     {
         $qb = $this->createQueryBuilder('a')
-            ->addSelect('c', 'o')
+            ->addSelect('o', 'c', 'co')
             ->andWhere('a.slug = :slug')
+            ->leftJoin('a.owner', 'o')
             ->leftJoin('a.comments', 'c', Expr\Join::WITH, 'c.status = :commentStatus')
-            ->leftJoin('c.owner', 'o')
+            ->leftJoin('c.owner', 'co')
             ->setParameter('slug', $slug)
             ->setParameter('commentStatus', 'visible')
         ;
 
-        $this->applyFilter($qb, 'a');
-
         return $this->applyHints($qb->getQuery())->getOneOrNullResult();
     }
 
-    public function findAllPublishedBySection($sectionId)
+    public function findAllWithLocaleBySection($sectionId)
     {
         $qb = $this->createQueryBuilder('a')
             ->andWhere('a.section = :section')
             ->setParameter('section', $sectionId)
         ;
 
-        $this->applyFilter($qb, 'a');
-
         return $this->applyHints($qb->getQuery())->getResult();
     }
 
-    private function applyFilter(QueryBuilder $qb, $articleAlias = 'a'): void
+    private function applyHints(Query $query, bool $withFallback = true, ?string $locale = null): Query
     {
-        $qb
-            ->andWhere(sprintf('%s.status = :status', $articleAlias))
-            ->setParameter('status', 'published')
-        ;
-    }
+        $query->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, TranslationWalker::class);
 
-    private function applyHints(Query $query): Query
-    {
-        $query->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, TranslationWalker::class)
-            ->setHint(TranslatableListener::HINT_FALLBACK, 1)
-        ;
+        if ($withFallback) {
+            $query->setHint(TranslatableListener::HINT_FALLBACK, 1);
+        }
+        if ($locale) {
+            $query->setHint(TranslatableListener::HINT_TRANSLATABLE_LOCALE, $locale);
+        }
 
         return $query;
     }

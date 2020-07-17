@@ -53,8 +53,9 @@
         border: none;
         background-color: transparent;
         height: 50px;
-        font-size: 1.2em;
         cursor: pointer;
+        font-family: $font-family-text;
+        font-size: $font-size-text;
       }
     }
   }

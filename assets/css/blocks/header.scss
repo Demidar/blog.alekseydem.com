@@ -6,18 +6,35 @@
   &__container {
     @include container;
     display: flex;
-    @media screen {
-      @media (max-width: $breakpoint-md) {
-        flex-wrap: wrap;
-      }
-      @media (max-width: $breakpoint-sm) {
-      }
-    }
   }
   &__logo {
     flex-shrink: 0;
   }
   &__nav {
+    flex-grow: 1;
+  }
+  &__join-link {
+    height: 50px;
+    display: flex;
+    font-family: $font-family-text;
+    font-weight: 700;
+    color: $theme-link;
+    text-decoration: none;
+    &:visited {
+      color: $theme-link;
+    }
+    &:hover {
+      background-color: $theme-light-darker;
+    }
+  }
+}
 
+@media screen {
+  @media (max-width: $breakpoint-lg) {
+    .header {
+      &__container {
+        flex-wrap: wrap;
+      }
+    }
   }
 }

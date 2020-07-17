@@ -19,7 +19,7 @@ class LayoutController extends AbstractController
 
     public function renderHeaderNav(): Response
     {
-        $sections = $this->sectionRepository->getRootSections();
+        $sections = $this->sectionRepository->getRootSectionsWithLocale();
 
         return $this->render('partial/layout/_header-nav.html.twig', [
             'sections' => $sections

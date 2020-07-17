@@ -21,6 +21,7 @@ class RegistrationFormType extends AbstractType
         $builder
             ->add('username', TextType::class, [
                 'label' => 'form.username',
+                'validation_groups' => 'register',
                 'constraints' => [
                     new NotBlank([
                         'message' => 'form.constraint.username-not-blank'

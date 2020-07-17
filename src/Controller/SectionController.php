@@ -30,14 +30,14 @@ class SectionController extends AbstractController
      */
     public function section($slug)
     {
-        $section = $this->sectionRepository->findPublic($slug);
+        $section = $this->sectionRepository->findWithLocaleBySlug($slug);
         if (!$section) {
             throw new NotFoundHttpException();
         }
 
-        $sectionChildren = $this->sectionRepository->findChildrenPublic($section->getId());
+        $sectionChildren = $this->sectionRepository->findChildrenWithLocale($section->getId());
 
-        $articles = $this->articleRepository->findAllPublishedBySection($section->getId());
+        $articles = $this->articleRepository->findAllWithLocaleBySection($section->getId());
 
         $breadcrumbs = $this->breadcrumbs->getBreadcrumbsForSection($section);
 

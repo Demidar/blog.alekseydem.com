@@ -1,3 +1,13 @@
+place:
+  draft: Draft
+  inReview: In review
+  rejected: Rejected
+  published: Published
+  hidden: Hidden
+  active: Active
+  blocked: Blocked
+  visible: Visible
+  invisible: Invisible
 edit: Edit
 show_published: Show
 hide_published: Hide

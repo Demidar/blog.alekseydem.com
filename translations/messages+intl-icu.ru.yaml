@@ -1,10 +1,15 @@
 dems.blog: Блог Dem
+homepage: Главная
+author: Автор
+register: Регистрация
+login: Вход
+if-has-account-login: Уже есть аккаунт? <a href={loginUrl}>Войди здесь</a>!
+
 workflow:
   entity-is-not-whitelisted: Эта сущность отсутствует в белом списке
   entity-not-found: Сущность не найдена
   transiton-not-allowed: Невозможно совершить переход на целевое состояние
   transition-success: Переход выполнен успешно
-homepage: Главная
 comments:
   title: Комментарии
   missing: Комментариев еще нет... будь первым!
@@ -14,3 +19,9 @@ form:
   password: Пароль
   a-comment: Комментарий
   send: Отправить
+article:
+  created-at: Написан
+  updated-at: Обновлен
+comment:
+  created-at: Написан
+  updated-at: Обновлен

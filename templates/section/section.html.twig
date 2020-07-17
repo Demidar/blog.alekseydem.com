@@ -10,7 +10,13 @@
 {% block side %}
     <ul class="list list_no-dot">
         {% for childSection in sectionChildren %}
-            <li class="list__item"><a class="list__item-link" href="{{ path('section', {slug: childSection.slug}) }}"><span class="list__item-title">{{ childSection.title }}</span></a></li>
+            <li class="list__item">
+                <a class="list__item-link" href="{{ path('section', {slug: childSection.slug}) }}">
+                    <span class="list__item-title">{{ childSection.title }}</span>
+                    {% if childSection.status == 'invisible' %}
+                        <span class="list__item-is-hidden-title">({{ ('place.' ~ childSection.status)|trans({}, 'workflow') }})</span>
+                    {% endif %}
+                </a></li>
         {% endfor %}
     </ul>
 {% endblock %}
@@ -21,14 +27,24 @@
 
 {% block body %}
     <div class="section">
-        <h2 class="section__title">{{ section.title }}</h2>
+        <h2 class="section__title">
+            {{ section.title }}
+            {% if section.status == 'invisible' %}
+                <span class="section__is-hidden-title">({{ ('place.' ~ section.status)|trans({}, 'workflow') }})</span>
+            {% endif %}
+        </h2>
         <div class="section__text">{{ section.text|raw }}</div>
     </div>
     <div class="entity-list">
         {% for article in articles %}
             <div class="entity-list__item">
                 <h4 class="entity-list__item-title">
-                    <a class="entity-list__item-link" href="{{ path('article', {slug: article.slug}) }}">{{ article.title }}</a>
+                    <a class="entity-list__item-link" href="{{ path('article', {slug: article.slug}) }}">
+                        {{ article.title }}
+                    </a>
+                    {% if article.status != 'published' %}
+                        <span class="entity-list__item-is-not-visible-title">({{ ('place.' ~ article.status)|trans({}, 'workflow') }})</span>
+                    {% endif %}
                 </h4>
             </div>
         {% endfor %}

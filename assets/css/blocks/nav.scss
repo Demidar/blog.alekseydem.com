@@ -31,41 +31,18 @@
     color: $theme;
     font-size: 35px;
   }
-  &__item {
-    height: 50px;
-    padding: 15px;
-    font-family: $font-family-text;
-    font-weight: 700;
-    color: $theme-link;
-    text-decoration: none;
-    &:visited {
-      color: $theme-link;
-    }
-    &:hover {
-      background-color: $theme-light-darker;
-    }
-  }
-  &__item-title {
-  }
 }
 
 @media screen {
   @media (max-width: $breakpoint-md) {
     .nav {
       width: 100%;
-      &__item {
-        padding-left: 0;
-        padding-right: 30px;
-      }
     }
   }
   @media (max-width: $breakpoint-sm) {
     .nav {
       &__panel {
         flex-direction: column;
-      }
-      &__item {
-        padding-right: 0;
       }
     }
   }

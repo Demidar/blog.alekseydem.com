@@ -27,4 +27,9 @@
     font-weight: 700;
     color: $theme-link;
   }
+
+  &__item-is-hidden-title {
+    font-style: italic;
+    opacity: 0.8;
+  }
 }

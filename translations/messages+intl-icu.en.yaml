@@ -1,10 +1,15 @@
 dems.blog: Dem's blog
+homepage: Homepage
+author: Author
+register: Register
+login: Login
+if-has-account-login: Already have an account? <a href={loginUrl}>Sign in here</a>!
+
 workflow:
   entity-is-not-whitelisted: This entity is not whitelisted
   entity-not-found: Entity did not found
   transiton-not-allowed: Transition does not allowed
   transition-success: Transition completed succesfully
-homepage: Homepage
 comments:
   title: Comments
   missing: There are no comments... be first!
@@ -14,3 +19,9 @@ form:
   password: Password
   a-comment: Comment
   send: Send
+article:
+  created-at: Written
+  updated-at: Updated
+comment:
+  created-at: Written
+  updated-at: Updated
