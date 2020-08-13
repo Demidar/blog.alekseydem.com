@@ -95,7 +95,7 @@ class RequestSubscriber implements EventSubscriberInterface
         return [
             KernelEvents::REQUEST => [
                 // must be registered before (i.e. with a higher priority than) the default Locale listener
-                ['determineLocale', 50],
+                ['determineLocale', 40],
                 ['settingDoctrineFilters']
             ]
         ];
