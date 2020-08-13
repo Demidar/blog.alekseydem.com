@@ -1,0 +1,17 @@
+@import './../variables/variables';
+
+.table {
+  border-collapse: collapse;
+  &__row {
+    &_thread {
+
+    }
+  }
+  &__col {
+    border: 1px solid $theme;
+    padding: 5px;
+    &_thread {
+      background-color: rgba($theme, 0.2);
+    }
+  }
+}

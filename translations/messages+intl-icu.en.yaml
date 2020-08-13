@@ -2,6 +2,10 @@ dems.blog: Dem's blog
 main-title: Aleksey Dem's Blog
 homepage: Homepage
 author: Author
+sort-by: Sort by
+total-items: Total items
+no-articles: There are no articles
+no-sections: There are no sections
 
 auth:
   register: Register
@@ -9,6 +13,7 @@ auth:
   already-signed-in: You are logged in as {username}. <a href={logoutUrl}>Logout here</a>.
   signing-in: Signing in
   join: Join
+  logout: Logout
 workflow:
   entity-is-not-whitelisted: This entity is not whitelisted
   entity-not-found: Entity did not found
@@ -23,8 +28,23 @@ form:
   password: Password
   a-comment: Comment
   send: Send
+  submit: Submit
   login: Sign In
   register: Register
+  status: "Status (Current: {current})"
+  status-plain: Status
+  attached-section: Attached section
+  title:
+    article: Title
+    section: Title
+  position: Position
+  slug: Alias
+  text:
+    section: Description
+  parent:
+    section: Parent section
+  owner:
+    article: Writer
 article:
   created-at: Written
   updated-at: Updated

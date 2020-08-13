@@ -3,6 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\Section;
+use App\Repository\Filter\SectionFilter;
+use App\Repository\Modifier\SectionQueryModifier;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
@@ -27,62 +29,94 @@ class SectionRepository extends ClosureTreeRepository
     /**
      * parent::getPath() with applying translation hints
      *
-     * @param Section $section
      * @return Section[]
      */
-    public function getSectionPathWithLocale(Section $section): array
+    public function getSectionPath(Section $section, SectionFilter $filter = null): array
     {
         return array_map(static function (AbstractClosure $closure) {
             return $closure->getAncestor();
-        }, $this->applyHints($this->getPathQuery($section))->getResult());
+        }, $this->applyHints($this->getPathQuery($section), $filter)->getResult());
     }
 
-    public function findWithLocaleById(int $id, ?string $locale = null, bool $fallback = true): ?Section
+    public function findSectionById(int $id, SectionFilter $filter = null): ?Section
     {
+
         $qb = $this->createQueryBuilder('s')
             ->andWhere('s.id = :id')
             ->setParameter('id', $id);
 
-        return $this->applyHints($qb->getQuery(), $fallback, $locale)->getOneOrNullResult();
+        return $this->applyHints($qb->getQuery(), $filter)->getOneOrNullResult();
     }
 
-    public function findWithLocaleBySlug(string $slug, ?string $locale = null, bool $fallback = true): ?Section
+    public function findSectionBySlug(string $slug, SectionFilter $filter = null): ?Section
     {
         $qb = $this->createQueryBuilder('s')
             ->andWhere('s.slug = :slug')
             ->setParameter('slug', $slug)
         ;
 
-        return $this->applyHints($qb->getQuery(), $fallback, $locale)->getOneOrNullResult();
+        return $this->applyHints($qb->getQuery(), $filter)->getOneOrNullResult();
     }
 
     /**
      * @return Section[]
      */
-    public function findChildrenWithLocale(int $id): array
+    public function findSections(SectionFilter $filter = null): array
+    {
+        return $this->findSectionsQuery($filter)->getResult();
+    }
+
+    public function findSectionsQuery(?SectionFilter $filter = null, ?SectionQueryModifier $modifier = null): Query
+    {
+        $qb = $this->createQueryBuilder('s');
+
+        $this->applyModifier($qb, $modifier);
+
+        return $this->applyHints($qb->getQuery(), $filter);
+    }
+
+    /**
+     * @return Section[]
+     */
+    public function findChildren(int $id, SectionFilter $filter = null): array
     {
         $qb = $this->createQueryBuilder('s')
             ->andWhere('s.parent = :id')
             ->setParameter('id', $id)
         ;
 
-        return $this->applyHints($qb->getQuery())->getResult();
+        return $this->applyHints($qb->getQuery(), $filter)->getResult();
     }
 
     /**
      * @return Section[]
      */
-    public function getRootSectionsWithLocale(): array
+    public function getRootSections(SectionFilter $filter = null): array
     {
         $qb = $this->getRootNodesQueryBuilder('position', 'asc');
 
-        return $this->applyHints($qb->getQuery())->getResult();
+        return $this->applyHints($qb->getQuery(), $filter)->getResult();
     }
 
-    private function applyHints(Query $query, bool $withFallback = true, ?string $locale = null): Query
+    private function applyModifier(QueryBuilder $qb, ?SectionQueryModifier $modifier): void
     {
+        if (!$modifier) {
+            return;
+        }
+        if ($modifier->withParent) {
+            $qb->addSelect('p')
+                ->leftJoin('s.parent', 'p');
+        }
+    }
+
+    private function applyHints(Query $query, ?SectionFilter $filter = null): Query
+    {
+        $locale = $filter->locale ?? null;
+        $fallback = $filter->fallback ?? true;
+
         $query->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, TranslationWalker::class);
-        if ($withFallback) {
+
+        if ($fallback) {
             $query->setHint(TranslatableListener::HINT_FALLBACK, 1);
         }
         if ($locale) {

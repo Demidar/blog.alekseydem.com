@@ -1,0 +1,14 @@
+{% extends '@admin/base.html.twig' %}
+
+{% block title %}Edit Section{% endblock %}
+
+{% block body %}
+    <a class="button button_link" href="{{ path('admin_section_index') }}">Back to list</a>
+
+    {{ include('@admin/crud/section/_delete_form.html.twig') }}
+
+    <h1>Edit Section</h1>
+
+    {{ form(form) }}
+
+{% endblock %}

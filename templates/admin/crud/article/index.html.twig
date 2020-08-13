@@ -1,0 +1,66 @@
+{# @var paginatedArticles \Knp\Component\Pager\Pagination\PaginationInterface|\App\Entity\Article[] #}
+{# @var viewFields array #}
+{# @var viewFieldsOptions array #}
+{# @var sortFields array #}
+
+{% extends "@admin/base.html.twig" %}
+
+{% block title %} Articles - {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="spacer spacer_bottom">
+        <a href="{{ path('admin_article_new') }}" class="button button_link">{{ "article.create"|trans({}, 'admin') }}</a>
+    </div>
+    {% if paginatedArticles.totalItemCount == 0 %}
+        <p>{{ "no-articles"|trans }}</p>
+    {% else %}
+        <div>{{ "total-items"|trans }}: {{ paginatedArticles.totalItemCount }}</div>
+
+        {{ knp_pagination_render(paginatedArticles) }}
+
+        {% include '@admin/partial/sort-list.html.twig' with {
+            fields: ['id', 'title', 'status', 'section', 'owner'],
+            alias: 'a',
+            options: {
+                'owner': {
+                    'nested': true,
+                    'nestedAliasedField': 'o.username'
+                },
+                'section': {
+                    'nested': true,
+                    'nestedAliasedField': 's.title'
+                }
+            },
+            pagination: paginatedArticles,
+        } only %}
+
+        {{ knp_pagination_filter(paginatedArticles, {
+            'a.title': 'Title',
+            'a.text': 'Text',
+            'a.status': 'Status',
+            's.title': 'Section',
+            'o.username': 'Owner'
+        }) }}
+
+        {% include '@admin/partial/table.html.twig' with {
+            fields: ['id', 'title', 'text', 'status', 'section', 'owner'],
+            options: {
+                'text': {
+                    'max': 150
+                },
+                'owner': {
+                    'nested': true,
+                    'nestedField': 'username'
+                },
+                'section': {
+                    'nested': true,
+                    'nestedField': 'title'
+                }
+            },
+            entities: paginatedArticles,
+            editRouteName: 'admin_article_edit',
+        } only %}
+
+        {{ knp_pagination_render(paginatedArticles) }}
+    {% endif %}
+{% endblock %}

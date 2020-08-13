@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Comment;
 use App\Form\CreateCommentFormType;
 use App\Repository\ArticleRepository;
+use App\Repository\Modifier\ArticleQueryModifier;
 use App\Service\Breadcrumbs;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -28,7 +29,10 @@ class ArticleController extends AbstractController
      */
     public function article($slug)
     {
-        $article = $this->articleRepository->findWithLocaleWithComments($slug);
+        $article = $this->articleRepository->findArticleBySlug($slug, null, new ArticleQueryModifier([
+            'withComments' => true,
+            'withOwner' => true
+        ]));
         if (!$article) {
             throw new NotFoundHttpException();
         }

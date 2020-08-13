@@ -9,7 +9,8 @@
 
     <h1>{{"auth.register"|trans}}</h1>
 
+    <p>{{ "auth.if-has-account-login"|trans({loginUrl: path('app_login')})|raw }}</p>
+
     {{ form(registrationForm) }}
 
-    <p>{{ "auth.if-has-account-login"|trans({loginUrl: path('app_login')})|raw }}</p>
 {% endblock %}

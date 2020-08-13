@@ -38,6 +38,7 @@ class Comment
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="comments")
+     * @ORM\JoinColumn(name="owner_id", referencedColumnName="id")
      */
     private $owner;
 

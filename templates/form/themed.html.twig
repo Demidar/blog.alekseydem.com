@@ -8,83 +8,33 @@ Mainly 'class' attributes were added.
 {# FORM #}
 
 {%- block form_start -%}
-    {%- do form.setMethodRendered() -%}
-    {% set method = method|upper %}
-    {%- if method in ["GET", "POST"] -%}
-        {% set form_method = method %}
-    {%- else -%}
-        {% set form_method = "POST" %}
-    {%- endif -%}
-    <form
-        class="form"
-        {% if name != '' %} name="{{ name }}"{% endif %}
-        method="{{ form_method|lower }}"
-        {% if action != '' %} action="{{ action }}"{% endif %}
-        {{ block('attributes') }}
-        {% if multipart %} enctype="multipart/form-data"{% endif %}
-    >
-    {%- if form_method != method -%}
-        <input type="hidden" name="_method" value="{{ method }}" />
-    {%- endif -%}
+    {% set attr = attr|merge({"class": (attr.class|default('') ~ ' form')|trim}) %}
+    {{ parent() }}
 {%- endblock form_start -%}
 
 {%- block form_widget_simple -%}
     {%- set type = type|default('text') -%}
-    {%- if type == 'range' or type == 'color' -%}
-        {# Attribute "required" is not supported #}
-        {%- set required = false -%}
-    {%- endif -%}
     {% set attr = attr|merge({"class": (attr.class|default('') ~ ' form__' ~ type ~ '-widget')|trim}) %}
-    <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+    {{ parent() }}
 {%- endblock form_widget_simple -%}
-
-{%- block form_widget_compound -%}
-    <div {{ block('widget_container_attributes') }}>
-        {%- if form is rootform -%}
-            {{ form_errors(form) }}
-        {%- endif -%}
-        {{- block('form_rows') -}}
-        {{- form_rest(form) -}}
-    </div>
-{%- endblock form_widget_compound -%}
 
 {# END FORM #}
 
 {# ROWS #}
 
 {%- block form_row -%}
-    {%- set widget_attr = {} -%}
-    {%- if help is not empty -%}
-        {%- set widget_attr = {attr: {'aria-describedby': id ~"_help"}} -%}
-    {%- endif -%}
     {% set row_attr = row_attr|merge({"class": (row_attr.class|default('') ~ ' form__row')|trim}) %}
-    <div{% with {attr: row_attr} %}{{ block('attributes') }}{% endwith %}>
-        {{- form_label(form) -}}
-        {{- form_errors(form) -}}
-        {{- form_widget(form, widget_attr) -}}
-        {{- form_help(form) -}}
-    </div>
+    {{ parent() }}
 {%- endblock form_row -%}
 
 {%- block checkbox_row -%}
-    {%- set widget_attr = {} -%}
-    {%- if help is not empty -%}
-        {%- set widget_attr = {attr: {'aria-describedby': id ~"_help"}} -%}
-    {%- endif -%}
     {% set row_attr = row_attr|merge({"class": (row_attr.class|default('') ~ ' form__checkbox-row')|trim}) %}
-    <div{% with {attr: row_attr} %}{{ block('attributes') }}{% endwith %}>
-        {{- form_label(form) -}}
-        {{- form_errors(form) -}}
-        {{- form_widget(form, widget_attr) -}}
-        {{- form_help(form) -}}
-    </div>
+    {{ block(form_row) }}
 {%- endblock checkbox_row -%}
 
 {%- block button_row -%}
     {% set row_attr = row_attr|merge({"class": (row_attr.class|default('') ~ ' form__row')|trim}) %}
-    <div{% with {attr: row_attr} %}{{ block('attributes') }}{% endwith %}>
-        {{- form_widget(form) -}}
-    </div>
+    {{ parent() }}
 {%- endblock button_row -%}
 
 {# END ROWS #}
@@ -92,8 +42,8 @@ Mainly 'class' attributes were added.
 {# LABELS #}
 
 {%- block form_label -%}
+    {% set label_attr = label_attr|merge({"class": (label_attr.class|default('') ~ ' form__label')|trim}) %}
     {% if label is not same as(false) -%}
-        {% set label_attr = label_attr|merge({"class": (label_attr.class|default('') ~ ' form__label')|trim}) %}
         {% if not compound -%}
             {% set label_attr = label_attr|merge({'for': id}) %}
         {%- endif -%}
@@ -125,11 +75,16 @@ Mainly 'class' attributes were added.
             {%- endif -%}
         {%- endif -%}
         {% if required -%}
-            <span class="form__label-required"> *</span>
+            <span class="form__required-mark"> *</span>
         {%- endif -%}
         </{{ element|default('label') }}>
     {%- endif -%}
 {%- endblock form_label -%}
+
+{%- block radio_label -%}
+    {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' form__label_inline')|trim}) %}
+    {{ block('form_label') }}
+{%- endblock radio_label -%}
 
 {# END LABELS #}
 
@@ -150,27 +105,14 @@ Mainly 'class' attributes were added.
     <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
 {%- endblock checkbox_widget -%}
 
+{%- block radio_widget -%}
+    {% set attr = attr|merge({"class": (attr.class|default('') ~ ' form__radio-widget')|trim}) %}
+    <input type="radio" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+{%- endblock radio_widget -%}
+
 {%- block choice_widget_collapsed -%}
-    {%- if required and placeholder is none and not placeholder_in_choices and not multiple and (attr.size is not defined or attr.size <= 1) -%}
-        {% set required = false %}
-    {%- endif -%}
     {% set attr = attr|merge({"class": (attr.class|default('') ~ ' form__select-widget')|trim}) %}
-    <select {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %}>
-        {%- if placeholder is not none -%}
-            <option value=""{% if required and value is empty %} selected="selected"{% endif %}>{{ placeholder != '' ? (translation_domain is same as(false) ? placeholder : placeholder|trans({}, translation_domain)) }}</option>
-        {%- endif -%}
-        {%- if preferred_choices|length > 0 -%}
-            {% set options = preferred_choices %}
-            {% set render_preferred_choices = true %}
-            {{- block('choice_widget_options') -}}
-            {%- if choices|length > 0 and separator is not none -%}
-                <option disabled="disabled">{{ separator }}</option>
-            {%- endif -%}
-        {%- endif -%}
-        {%- set options = choices -%}
-        {%- set render_preferred_choices = false -%}
-        {{- block('choice_widget_options') -}}
-    </select>
+    {{ parent() }}
 {%- endblock choice_widget_collapsed -%}
 
 {%- block choice_widget_options -%}
@@ -190,11 +132,9 @@ Mainly 'class' attributes were added.
 {# END WIDGETS #}
 
 {# ATTRIBUTES #}
-
 {%- block button_attributes -%}
     {% set attr = attr|merge({"class": (attr.class|default('') ~ ' form__'~type~'-widget')|trim}) %}
-    id="{{ id }}" name="{{ full_name }}"{% if disabled %} disabled="disabled"{% endif -%}
-    {{ block('attributes') }}
+    {{ parent() }}
 {%- endblock button_attributes -%}
 
 {# END ATTRIBUTES #}

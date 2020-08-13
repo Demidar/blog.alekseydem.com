@@ -2,6 +2,10 @@ dems.blog: Блог Dem
 main-title: Блог Алексея Dem
 homepage: Главная
 author: Автор
+sort-by: Сортировка
+total-items: Всего
+no-articles: Статьи отсутствуют
+no-sections: Секции отсутствуют
 
 auth:
   register: Регистрация
@@ -9,6 +13,7 @@ auth:
   already-signed-in: Вы уже вошли как {username}. <a href={logoutUrl}>Нажмите здесь, чтобы выйти</a>.
   signing-in: Вход
   join: Войти
+  logout: Выйти
 workflow:
   entity-is-not-whitelisted: Эта сущность отсутствует в белом списке
   entity-not-found: Сущность не найдена
@@ -23,8 +28,24 @@ form:
   password: Пароль
   a-comment: Комментарий
   send: Отправить
+  submit: Отправить
   login: Войти
   register: Зарегистрироваться
+  status: "Статус (Текущий: {current})"
+  status-plain: Статус
+  attached-section: Закрепленная секция
+  title:
+    article: Оглавление
+    section: Название
+  position: Позиция
+  slug: Ссылка
+  text:
+    article: Статья
+    section: Описание
+  parent:
+    section: Родительская секция
+  owner:
+    article: Составитель
 article:
   created-at: Написан
   updated-at: Обновлен

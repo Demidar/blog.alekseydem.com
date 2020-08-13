@@ -6,7 +6,7 @@ use App\Entity\Section;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Query\Filter\SQLFilter;
 
-class SectionFilter extends SQLFilter
+class SectionSqlFilter extends SQLFilter
 {
     public function addFilterConstraint(ClassMetadata $targetEntity, $targetTableAlias)
     {

@@ -1,0 +1,12 @@
+<span class="link link_sorter {% if sorted %}link_selected{% endif %}">
+    <a{% for attr, value in options %} {{ attr }}="{{ value }}"{% endfor %}>
+        {{ title }}
+        {% if sorted %}
+            {% if direction == 'asc' %}
+                <i class="fas fa-sort-amount-up-alt"></i>
+            {% else %}
+                <i class="fas fa-sort-amount-down-alt"></i>
+            {% endif %}
+        {% endif %}
+    </a>
+</span>

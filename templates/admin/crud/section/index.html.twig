@@ -1,0 +1,70 @@
+{# @var paginatedSections \Knp\Component\Pager\Pagination\PaginationInterface|\App\Entity\Section[] #}
+{# @var viewFields array #}
+{# @var viewFieldsOptions array #}
+{# @var sortFields array #}
+
+{% extends "@admin/base.html.twig" %}
+
+{% block title %} Sections - {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="spacer spacer_bottom">
+        <a href="{{ path('admin_section_new') }}" class="button button_link">{{ "section.create"|trans({}, 'admin') }}</a>
+    </div>
+    {% if paginatedSections.totalItemCount == 0 %}
+        <p>There is no sectionss</p>
+    {% else %}
+        <div>{{ "total-items"|trans }}: {{ paginatedSections.totalItemCount }}</div>
+
+        {{ knp_pagination_render(paginatedSections) }}
+
+        {% include '@admin/partial/sort-list.html.twig' with {
+            fields: [
+                'id',
+                'title',
+                'status',
+                'parent',
+            ],
+            alias: 's',
+            options: {
+                'parent': {
+                    'nested': true,
+                    'nestedAliasedField': 'p.title'
+                }
+            },
+            pagination: paginatedSections
+        } only %}
+
+        {{ knp_pagination_filter(paginatedSections, {
+            's.title': 'Title',
+            's.text': 'Text',
+            's.status': 'Status',
+            'p.title': 'Parent'
+        }) }}
+
+        {% include '@admin/partial/table.html.twig' with {
+            fields: [
+                'id',
+                'title',
+                'text',
+                'position',
+                'status',
+                'articlesCount',
+                'parent',
+            ],
+            options: {
+                'text': {
+                    'max': 150
+                },
+                'parent': {
+                    'nested': true,
+                    'nestedField': 'title'
+                }
+            },
+            entities: paginatedSections,
+            editRouteName: 'admin_section_edit',
+        } only %}
+
+        {{ knp_pagination_render(paginatedSections) }}
+    {% endif %}
+{% endblock %}

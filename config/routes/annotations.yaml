@@ -5,7 +5,7 @@ controllers:
 controllers_admin:
     resource: ../../src/Admin/Controller/
     type: annotation
-    prefix: /admin
+    prefix: /{_locale<%app.supported_locales%>}/admin
 
 kernel:
     resource: ../../src/Kernel.php

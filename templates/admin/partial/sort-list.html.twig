@@ -1,0 +1,19 @@
+{# @var fields string[] #}
+{# @var pagination \Knp\Component\Pager\Pagination\PaginationInterface #}
+{# @var alias string #}
+
+<div>
+    <span>{{ "sort-by"|trans }}:</span>
+    {% for field in fields %}
+        {% set fieldCaption = field|humanize %}
+        {% set key = alias ~ '.' ~ field %}
+
+        {% if option[field] is defined %}
+            {% if option[field]['nested'] is defined and option[field]['nested'] == true %}
+                {% set key = option[field]['nestedAliasedField'] %}
+            {% endif %}
+        {% endif %}
+
+        {{ knp_pagination_sortable(pagination, fieldCaption, key) }}
+    {% endfor %}
+</div>

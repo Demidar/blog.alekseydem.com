@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Security;
@@ -39,6 +40,9 @@ class RequestSubscriber implements EventSubscriberInterface
 
     public function determineLocale(RequestEvent $event): void
     {
+        if (!$event->isMasterRequest()) {
+            return;
+        }
         $request = $event->getRequest();
 
 //        if (!$request->hasPreviousSession()) {
@@ -55,8 +59,9 @@ class RequestSubscriber implements EventSubscriberInterface
                     $request->getPreferredLanguage($this->supportedLocales) ?: $request->getDefaultLocale()
                 )
             );
-
-            $this->redirectIfLocaleInPathIsNotSpecified($request, $event);
+            //if (in_array($request->getMethod(), [Request::METHOD_GET, Request::METHOD_HEAD], true)) {
+                $this->redirectIfLocaleInPathIsNotSpecified($request, $event);
+            //}
         }
     }
 
@@ -77,24 +82,26 @@ class RequestSubscriber implements EventSubscriberInterface
         if (!$user || !$this->authorizationChecker->isGranted('ROLE_ADMIN')) {
             $filters->enable('section')->setParameter('status', 'visible');
             $filters->enable('article')->setParameter('status', 'published');
+            $filters->enable('comment')->setParameter('status', 'visible');
             if ($userId) {
                 $filters->getFilter('article')->setParameter('ownerId', $userId);
+                $filters->getFilter('comment')->setParameter('ownerId', $userId);
             }
         }
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             KernelEvents::REQUEST => [
                 // must be registered before (i.e. with a higher priority than) the default Locale listener
-                ['determineLocale', 20],
+                ['determineLocale', 50],
                 ['settingDoctrineFilters']
             ]
         ];
     }
 
-    private function redirectIfLocaleInPathIsNotSpecified(Request $request, RequestEvent $event)
+    private function redirectIfLocaleInPathIsNotSpecified(Request $request, RequestEvent $event): void
     {
         $path = $request->getPathInfo();
 

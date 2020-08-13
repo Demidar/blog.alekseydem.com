@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\SectionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use App\Entity\Closure\SectionClosure;
@@ -28,6 +29,7 @@ class Section
      * @Gedmo\TreeParent()
      * @Gedmo\SortableGroup()
      * @ORM\ManyToOne(targetEntity=Section::class, inversedBy="children")
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     private $parent;
 
@@ -48,7 +50,7 @@ class Section
     private $status = 'visible';
 
     /**
-     * @ORM\OneToMany(targetEntity=Article::class, mappedBy="section")
+     * @ORM\OneToMany(targetEntity=Article::class, mappedBy="section", fetch="EXTRA_LAZY")
      */
     private $articles;
 
@@ -176,6 +178,11 @@ class Section
     public function getArticles(): Collection
     {
         return $this->articles;
+    }
+
+    public function getArticlesCount(): int
+    {
+        return $this->getArticles()->count();
     }
 
     public function addArticle(Article $article): self

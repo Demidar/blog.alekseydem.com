@@ -1,1 +1,5 @@
 logo: Admin Panel
+section:
+  create: Create a section
+article:
+  create: Create an article

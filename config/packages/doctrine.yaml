@@ -10,8 +10,9 @@ doctrine:
         naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
         auto_mapping: true
         filters:
-            section: App\Doctrine\SectionFilter
-            article: App\Doctrine\ArticleFilter
+            section: App\Doctrine\SectionSqlFilter
+            article: App\Doctrine\ArticleSqlFilter
+            comment: App\Doctrine\CommentSqlFilter
         mappings:
             gedmo_translatable:
                 type: annotation

@@ -7,9 +7,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\Router;
 use Symfony\Component\Routing\RouterInterface;
 
 class IndexController extends AbstractController
@@ -35,7 +40,7 @@ class IndexController extends AbstractController
     /**
      * @Route("/switch-language", name="language-switcher")
      */
-    public function switchLanguage(Request $request, string $bound_supportedLocales, RouterInterface $router)
+    public function switchLanguage(Request $request, RouterInterface $router, RequestStack $requestStack)
     {
         $form = $this->createForm(LanguageSwitcherFormType::class);
         $form->handleRequest($request);
@@ -55,18 +60,19 @@ class IndexController extends AbstractController
             return new RedirectResponse($this->generateUrl('homepage', ['_locale' => $desiredLang]));
         }
 
-        $refererPath = preg_replace('/(https?:\/\/.*?)(\/.*)/', '$2', $referer);
-        $refererPathWithoutBase = str_replace($request->getBasePath(), '', $refererPath);
-
+        $refRequest = Request::create($referer);
         try {
-            $routeParameters = $router->match($refererPathWithoutBase);
-        } catch (ResourceNotFoundException $exception) {
+            $router->getContext()->setMethod('GET');
+            $routeParameters = $router->match($refRequest->getPathInfo());
+        } catch (ResourceNotFoundException | MethodNotAllowedException $exception) {
             return new RedirectResponse($this->generateUrl('homepage', ['_locale' => $desiredLang]));
         }
 
         $routeParameters['_locale'] = $desiredLang;
         $route = $routeParameters['_route'];
         unset($routeParameters['_route']);
+
+        $routeParameters = array_merge($routeParameters, $refRequest->query->all());
 
         return new RedirectResponse($this->generateUrl($route, $routeParameters));
     }

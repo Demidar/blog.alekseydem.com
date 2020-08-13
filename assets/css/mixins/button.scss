@@ -1,0 +1,15 @@
+@import './../variables/variables';
+
+@mixin button {
+  padding: 10px;
+  background-color: $theme-light;
+  border: 1px solid $theme;
+  border-radius: 4px;
+  font-family: $font-family-text;
+  font-size: 1.2em;
+  color: $theme-color;
+  cursor: pointer;
+  &:hover {
+    background-color: darken($theme-light, 10%);
+  }
+}

@@ -76,6 +76,7 @@ class Article
 
     /**
      * @ORM\ManyToOne(targetEntity=Section::class, inversedBy="articles")
+     * @ORM\JoinColumn(onDelete="SET NULL")
      */
     private $section;
 
