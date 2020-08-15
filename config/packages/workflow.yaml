@@ -64,6 +64,34 @@ framework:
                 activate:
                     from: blocked
                     to: active
+
+        comment_statuses:
+            type: state_machine
+            audit_trail: '%kernel.debug%'
+            marking_store:
+                type: method
+                property: status
+            supports:
+                - App\Entity\Comment
+            initial_marking: inReview
+            places:
+                - inReview
+                - visible
+                - invisible
+            transitions:
+                publish:
+                    from: inReview
+                    to: visible
+                deny:
+                    from: inReview
+                    to: invisible
+                hide:
+                    from: visible
+                    to: invisible
+                show:
+                    from: invisible
+                    to: visible
+
         showhide_status:
             type: state_machine
             audit_trail: '%kernel.debug%'
@@ -72,7 +100,6 @@ framework:
                 property: status
             supports:
                 - App\Entity\Section
-                - App\Entity\Comment
             initial_marking: visible
             places:
                 - visible

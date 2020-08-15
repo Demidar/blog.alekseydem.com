@@ -1,7 +1,4 @@
 {# @var paginatedSections \Knp\Component\Pager\Pagination\PaginationInterface|\App\Entity\Section[] #}
-{# @var viewFields array #}
-{# @var viewFieldsOptions array #}
-{# @var sortFields array #}
 
 {% extends "@admin/base.html.twig" %}
 
@@ -12,7 +9,7 @@
         <a href="{{ path('admin_section_new') }}" class="button button_link">{{ "section.create"|trans({}, 'admin') }}</a>
     </div>
     {% if paginatedSections.totalItemCount == 0 %}
-        <p>There is no sectionss</p>
+        <p>There is no sections</p>
     {% else %}
         <div>{{ "total-items"|trans }}: {{ paginatedSections.totalItemCount }}</div>
 

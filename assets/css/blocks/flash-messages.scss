@@ -1,5 +1,16 @@
-.flash-messages {
-  &__item {
+@import './../mixins/mixins';
 
+.flash-messages {
+  &__container {
+    @include container;
+  }
+  &__item {
+    padding: 20px 0;
+    &_message {
+      background-color: lightgreen;
+    }
+    &_error {
+      background-color: lightcoral;
+    }
   }
 }

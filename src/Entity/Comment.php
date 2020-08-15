@@ -49,18 +49,20 @@ class Comment
 
     /**
      * @ORM\Column(type="datetime")
+     * @Gedmo\Timestampable(on="create")
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     * @Gedmo\Timestampable(on="update")
      */
     private $updatedAt;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $status;
+    private $status = 'inReview';
 
     /**
      * @ORM\ManyToOne(targetEntity=Article::class, inversedBy="comments")

@@ -1,5 +1,6 @@
 {# @var \App\Entity\Article article #}
 {# @var \App\Model\Link[] breadcrumbs #}
+{# @var \App\Model\CommentsHierarchy[] comments #}
 {# @var \Symfony\Component\Form\FormView createCommentForm #}
 
 {% extends "base.html.twig" %}
@@ -28,28 +29,9 @@
         </div>
     </div>
     <div class="delimiter"></div>
-    <div class="comments">
-        {% if article.comments is not empty %}
-            <h3 class="comments__title">{{ "comments.title"|trans }}:</h3>
-            <div class="comments__list">
-                {% for comment in article.comments %}
-                    <div class="comment comments__item-container">
-                        <div class="comment__author-photo">{# TODO #}</div>
-                        <div class="comment__author"><span class="comment__bold">{{ comment.owner.username }}</span></div>
-                        <div class="comment__text">{{ comment.text }}</div>
-                        <div class="comment__date">{{ comment.createdAt|format_datetime() }}</div>
-                    </div>
-                {% endfor %}
-            </div>
-        {% else %}
-            <div class="comments__no-comments">{{ "comments.missing"|trans }}</div>
-        {% endif %}
-        <div class="delimiter"></div>
-        <div class="comments__form-container">
-            <div class="form-container">
-                <div class="form-container__title">{{ "comments.leave-one"|trans }}:</div>
-                {{ form(createCommentForm) }}
-            </div>
-        </div>
-    </div>
+    {% include 'partial/comment/_list-hierarchy.html.twig' with {
+        'comments': comments, 'canComment': createCommentForm ? true : false
+    } only %}
+    <div class="delimiter"></div>
+    {% include 'partial/form/create-comment.html.twig' with {'form': createCommentForm} only %}
 {% endblock %}

@@ -7,6 +7,11 @@ total-items: Total items
 no-articles: There are no articles
 no-sections: There are no sections
 
+flash:
+  comment-submitted-successfully: Your comment accepted! It'll be reviewed and published shortly
+  comment-does-not-submitted: Something goes wrong. Can you check the comment form for errors?
+  comment-updated-successfully: Your comment updated!
+  comment-does-not-updated: Can't update comment.
 auth:
   register: Register
   if-has-account-login: Already have an account? <a href={loginUrl}>Sign in here</a>!
@@ -23,9 +28,11 @@ comments:
   title: Comments
   missing: There are no comments... be first!
   leave-one: Leave a comment
+  join-to-comment: "Want to leave a comment? <a href=\"{join}\">Join here!</a>"
 form:
   username: Username
   password: Password
+  repeat-password: Repeat password
   a-comment: Comment
   send: Send
   submit: Submit
@@ -40,14 +47,21 @@ form:
   position: Position
   slug: Alias
   text:
+    article: Article
     section: Description
+    comment: Commentary
   parent:
     section: Parent section
+    comment: Parent commentary
   owner:
     article: Writer
+    comment: Commentator
+  relation:
+    article: Related Article
 article:
   created-at: Written
   updated-at: Updated
 comment:
   created-at: Written
   updated-at: Updated
+  in-reply-to: In reply to

@@ -6,6 +6,7 @@ use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -21,7 +22,6 @@ class RegistrationFormType extends AbstractType
         $builder
             ->add('username', TextType::class, [
                 'label' => 'form.username',
-                'validation_groups' => 'register',
                 'constraints' => [
                     new Length([
                         'min' => 3,
@@ -32,11 +32,12 @@ class RegistrationFormType extends AbstractType
                     ])
                 ]
             ])
-            ->add('plainPassword', PasswordType::class, [
+            ->add('plainPassword', RepeatedType::class, [
+                'type' => PasswordType::class,
                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller
-                'label' => 'form.password',
                 'mapped' => false,
+                'invalid_message' => 'form.constraint.password.is-not-equal',
                 'constraints' => [
                     new NotBlank([
                         'message' => 'form.constraint.common.is-blank',
@@ -48,6 +49,8 @@ class RegistrationFormType extends AbstractType
                         'maxMessage' => 'form.constraint.common.too-big',
                     ]),
                 ],
+                'first_options' => ['label' => 'form.password', ],
+                'second_options' => ['label' => 'form.repeat-password']
             ])
 //            ->add('agreeTerms', CheckboxType::class, [
 //                'mapped' => false,
@@ -66,6 +69,7 @@ class RegistrationFormType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
+            'validation_groups' => 'registration',
             'data_class' => User::class,
         ]);
     }

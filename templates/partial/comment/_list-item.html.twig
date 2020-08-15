@@ -1,0 +1,39 @@
+{# @var \App\Entity\Comment comment #}
+{# @var int level #}
+{# @var bool canComment #}
+<div class="comment comments__item-container">
+    <div class="comment__container">
+        {% if level %}
+            {% for i in range(1, level) %}
+                {% if loop.last %}
+                    <div class="comment__margin comment__margin_arrow">
+                        <i class="fas fa-angle-right"></i>
+                    </div>
+                {% else %}
+                    <div class="comment__margin"></div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+        <div class="comment__content">
+            <div class="comment__block">
+                <span class="comment__author">{{ comment.owner.username }}</span>
+                <span class="comment__date">{{ comment.createdAt|format_datetime() }}</span>
+                {% if canComment %}
+                    <a
+                            class="comment__respond-link js_comment-reply-link"
+                            href="#comment_form"
+                            data-comment="{{ comment.id }}"
+                            data-author="{{ comment.owner.username }}"
+                    >(reply)</a>
+                {% endif %}
+            </div>
+            {% if comment.status != 'visible' %}
+                <div class="comment__status">({{ ('place.' ~ comment.status)|trans({}, 'workflow') }})</div>
+            {% endif %}
+            {% if comment.parent %}
+                <span class="comment__in-reply-to">{{"comment.in-reply-to"|trans}}: {{ comment.parent.owner.username }}</span>
+            {% endif %}
+            <div class="comment__text">{{ comment.text }}</div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,15 @@
+{# @var \App\Model\CommentsHierarchy[] comments #}
+{# @var bool canComment #}
+
+<div class="comments">
+    {% if comments is not empty %}
+        <h3 class="comments__title">{{ "comments.title"|trans }}:</h3>
+        <div class="comments__list">
+            {% for comment in comments %}
+                {% include '/partial/comment/_list-hierarchy-resolver.html.twig' with {'comment': comment, 'canComment': canComment} only %}
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="comments__secondary-text">{{ "comments.missing"|trans }}</div>
+    {% endif %}
+</div>

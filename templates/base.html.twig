@@ -15,15 +15,20 @@
                 {{ include('layout/header.html.twig') }}
             </div>
             <div class="layout__body">
-                <div class="flash-messages">
-                    {% for label, message in app.flashes %}
-                        {% for message in messages %}
-                            <div class="flash-messages__item flash-messages__item_{{ label }}">
-                                {{ message }}
-                            </div>
-                        {% endfor %}
-                    {% endfor %}
-                </div>
+                {% set flashes = app.flashes %}
+                {% if flashes %}
+                    <div class="flash-messages">
+                            {% for label, messages in flashes %}
+                                {% for message in messages %}
+                                    <div class="flash-messages__item flash-messages__item_{{ label }}">
+                                        <div class="flash-messages__container">
+                                            {{ message }}
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            {% endfor %}
+                    </div>
+                {% endif %}
                 <div class="body">
                     <div class="body__container">
                         <div class="body__breadcrumbs">

@@ -1,0 +1,85 @@
+{# @var paginatedComments \Knp\Component\Pager\Pagination\PaginationInterface|\App\Entity\Comment[] #}
+
+{% extends "@admin/base.html.twig" %}
+
+{% block title %} Comments - {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="spacer spacer_bottom">
+        <a href="{{ path('admin_comment_new') }}" class="button button_link">{{ "comment.create"|trans({}, 'admin') }}</a>
+    </div>
+    {% if paginatedComments.totalItemCount == 0 %}
+        <p>There is no comments</p>
+    {% else %}
+        <div>{{ "total-items"|trans }}: {{ paginatedComments.totalItemCount }}</div>
+
+        {{ knp_pagination_render(paginatedComments) }}
+
+        {% include '@admin/partial/sort-list.html.twig' with {
+            fields: [
+                'id',
+                'article',
+                'parent',
+                'owner',
+                'status',
+            ],
+            alias: 'c',
+            options: {
+                'parent': {
+                    'nested': true,
+                    'nestedAliasedField': 'p.text'
+                },
+                'owner': {
+                    'nested': true,
+                    'nestedAliasedField': 'o.username'
+                },
+                'article': {
+                    'nested': true,
+                    'nestedAliasedField': 'a.title'
+                }
+            },
+            pagination: paginatedComments
+        } only %}
+
+        {{ knp_pagination_filter(paginatedComments, {
+            'a.title': 'Article',
+            'c.text': 'Text',
+            'c.status': 'Status',
+            'o.title': 'Owner',
+            'p.text': 'Parent comment\'s text',
+            'p.owner': 'Parent comment\'s owner'
+        }) }}
+
+        {% include '@admin/partial/table.html.twig' with {
+            fields: [
+                'id',
+                'text',
+                'article',
+                'status',
+                'owner',
+                'parent',
+            ],
+            options: {
+                'text': {
+                    'max': 100
+                },
+                'parent': {
+                    'nested': true,
+                    'nestedField': 'text'
+                },
+                'owner': {
+                    'nested': true,
+                    'nestedField': 'username'
+                },
+                'article': {
+                    'nested': true,
+                    'nestedField': 'title'
+                }
+            },
+            entities: paginatedComments,
+            editRouteName: 'admin_comment_edit',
+        } only %}
+
+        {{ knp_pagination_render(paginatedComments) }}
+    {% endif %}
+{% endblock %}

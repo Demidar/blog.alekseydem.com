@@ -2,9 +2,12 @@
 
 namespace App\Repository;
 
-use App\Entity\Article;
 use App\Entity\Comment;
+use App\Repository\Filter\CommentFilter;
+use App\Repository\Modifier\CommentQueryModifier;
+use App\Repository\RepoTrait\TranslatableTrait;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Gedmo\Tree\Entity\Repository\ClosureTreeRepository;
 
@@ -16,32 +19,90 @@ use Gedmo\Tree\Entity\Repository\ClosureTreeRepository;
  */
 class CommentRepository extends ClosureTreeRepository
 {
+    use TranslatableTrait;
+
     public function __construct(EntityManagerInterface $em)
     {
         parent::__construct($em, $em->getClassMetadata(Comment::class));
     }
 
+    public function findCommentById(int $id, ?CommentFilter $filter = null, ?CommentQueryModifier $modifier = null): ?Comment
+    {
+        $qb = $this->createQueryBuilder('c')
+            ->andWhere('c.id = :id')
+            ->setParameter('id', $id)
+        ;
+
+        $this->applyModifier($qb, $modifier);
+
+        return $this->applyHints($qb->getQuery(), $filter)->getOneOrNullResult();
+    }
+
     /**
      * @return Comment[]
      */
-    public function findAllVisibleCommentsOfArticle(Article $article)
+    public function findCommentsByArticle(int $id, ?CommentFilter $filter = null, ?CommentQueryModifier $modifier = null): array
     {
         $qb = $this->createQueryBuilder('c')
             ->andWhere('c.article = :article')
-            ->join('c.owner', 'o')
-            ->setParameter('article', $article->getId())
+            ->setParameter('article', $id)
         ;
 
-        $this->applyFilter($qb, 'c');
+        $this->applyModifier($qb, $modifier);
 
-        return $qb->getQuery()->getResult();
+        return $this->applyHints($qb->getQuery(), $filter)->getResult();
     }
 
-    private function applyFilter(QueryBuilder $qb, $commentAlias = 'c'): void
+    /**
+     * @return Comment[]
+     */
+    public function findComments(?CommentFilter $filter = null, ?CommentQueryModifier $modifier = null): array
     {
-        $qb
-            ->andWhere(sprintf('%s.status = :status', $commentAlias))
-            ->setParameter('status', 'visible')
-        ;
+        return $this->findCommentsQuery($filter, $modifier)->getResult();
+    }
+
+    public function countComments(): int
+    {
+        return $this->count([]);
+    }
+
+    public function findCommentsQuery(?CommentFilter $filter = null, ?CommentQueryModifier $modifier = null): Query
+    {
+        $qb = $this->createQueryBuilder('c');
+
+        $this->applyModifier($qb, $modifier);
+
+        return $this->applyHints($qb->getQuery(), $filter);
+    }
+
+    private function applyModifier(QueryBuilder $qb, ?CommentQueryModifier $modifier): void
+    {
+        if (!$modifier) {
+            return;
+        }
+        if ($modifier->withOwner) {
+            $qb->addSelect('o')
+                ->leftJoin('c.owner', 'o');
+        }
+        if ($modifier->withParent) {
+            $qb->addSelect('p')
+                ->leftJoin('c.parent', 'p');
+        }
+        if ($modifier->withArticle) {
+            $qb->addSelect('a')
+                ->leftJoin('c.article', 'a');
+        }
+    }
+
+    private function applyHints(Query $query, ?CommentFilter $filter = null): Query
+    {
+        /**
+         * Althoug comments has no translations, these rules will be applied to such relations as Article.
+         */
+        $query = $this->applyTranslatables($query, $filter);
+
+        $query->setHint('knp_paginator.count', $this->countComments());
+
+        return $query;
     }
 }

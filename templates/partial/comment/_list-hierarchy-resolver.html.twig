@@ -1,0 +1,17 @@
+{# @var \App\Model\CommentsHierarchy comment #}
+{# @var int level #}
+{# @var bool canComment #}
+
+{% set level = level|default(0) %}
+
+{% include 'partial/comment/_list-item.html.twig' with {
+    'comment': comment.item, 'canComment': canComment, 'level': level
+} only %}
+
+{% if comment.children %}
+    {% for childComment in comment.children %}
+        {% include 'partial/comment/_list-hierarchy-resolver.html.twig' with {
+            'comment': childComment, 'canComment': canComment, 'level': level+1
+        } only %}
+    {% endfor %}
+{% endif %}

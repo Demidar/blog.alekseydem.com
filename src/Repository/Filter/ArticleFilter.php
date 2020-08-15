@@ -2,21 +2,53 @@
 
 namespace App\Repository\Filter;
 
-class ArticleFilter
+class ArticleFilter implements TranslatableFilter
 {
     /**
-     * @var bool
+     * @var bool|null
      */
-    public $fallback;
+    private $fallback;
 
     /**
-     * @var string
+     * @var string|null
      */
-    public $locale;
+    private $locale;
 
     public function __construct(array $filterArray = null)
     {
-        $this->fallback = $filterArray['fallback'] ?? null;
-        $this->locale = $filterArray['locale'] ?? null;
+        $this->setFallback($filterArray['fallback'] ?? null);
+        $this->setLocale($filterArray['locale'] ?? null);
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getLocale(): ?string
+    {
+        return $this->locale;
+    }
+
+    /**
+     * @param string|null $locale
+     */
+    public function setLocale(?string $locale): void
+    {
+        $this->locale = $locale;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function getFallback(): ?bool
+    {
+        return $this->fallback;
+    }
+
+    /**
+     * @param bool|null $fallback
+     */
+    public function setFallback(?bool $fallback): void
+    {
+        $this->fallback = $fallback;
     }
 }

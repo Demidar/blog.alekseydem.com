@@ -32,7 +32,7 @@ class ArticleCrudController extends AbstractCrudController
     /**
      * @Route("/index", name="admin_article_index")
      */
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
         $lang = $request->query->get('lang', $request->getLocale());
         $page = $request->query->getInt('page', 1);
@@ -64,6 +64,7 @@ class ArticleCrudController extends AbstractCrudController
         $lang = $request->query->get('lang', $request->getLocale());
 
         $article = new Article();
+        $article->setOwner($this->getUser());
         $article->setTranslatableLocale($lang);
 
         $form = $this->createForm(ArticleType::class, $article);
@@ -74,7 +75,7 @@ class ArticleCrudController extends AbstractCrudController
             $entityManager->persist($article);
             $entityManager->flush();
 
-            return $this->redirectToRoute('admin_section_index');
+            return $this->redirectToRoute('admin_article_index');
         }
 
         return $this->render('admin/crud/article/new.html.twig', [

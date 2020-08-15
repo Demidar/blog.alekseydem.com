@@ -3,3 +3,5 @@ section:
   create: Создать секцию
 article:
   create: Создать статью
+comment:
+  create: Создать комментарий

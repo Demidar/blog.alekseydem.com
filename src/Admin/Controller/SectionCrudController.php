@@ -37,7 +37,7 @@ class SectionCrudController extends AbstractCrudController
     /**
      * @Route("/index", name="admin_section_index")
      */
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
         $lang = $request->query->get('lang', $request->getLocale());
         $page = $request->query->getInt('page', 1);

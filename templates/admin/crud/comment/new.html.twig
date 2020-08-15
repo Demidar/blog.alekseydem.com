@@ -1,0 +1,12 @@
+{% extends "@admin/base.html.twig" %}
+
+{% block title %}New Comment - {{ parent() }}{% endblock %}
+
+{% block body %}
+    <h1>Create new Comment</h1>
+
+    <a class="button button_link" href="{{ path('admin_comment_index') }}">Back to list</a>
+
+    {{ form(form) }}
+
+{% endblock %}

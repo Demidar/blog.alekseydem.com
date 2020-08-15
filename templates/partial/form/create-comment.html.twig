@@ -1,5 +1,18 @@
-{# @var \Symfony\Component\Form\FormView createCommentForm #}
+{# @var \Symfony\Component\Form\FormView|null form #}
 
-<div class="form">
-    <div class="form__title">Create Comment</div>
-</div>
+{% if form %}
+    <div class="comments__form-container">
+        <div class="form-container">
+            <div class="form-container__title" id="comment_form">{{ "comments.leave-one"|trans }}:</div>
+            <div class="form-container__note form-container__note_hidden">
+                <span class="js_comment-form_reply-to"></span>
+                <a href="#" class="js-comment-reply_remove">(Remove)</a>
+            </div>
+            {{ form(form) }}
+        </div>
+    </div>
+{% else %}
+    <div class="comments__secondary-text">
+        {{ "comments.join-to-comment"|trans({"join": path("app_register")})|raw }}
+    </div>
+{% endif %}

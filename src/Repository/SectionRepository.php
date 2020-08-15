@@ -5,11 +5,10 @@ namespace App\Repository;
 use App\Entity\Section;
 use App\Repository\Filter\SectionFilter;
 use App\Repository\Modifier\SectionQueryModifier;
+use App\Repository\RepoTrait\TranslatableTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
-use Gedmo\Translatable\Query\TreeWalker\TranslationWalker;
-use Gedmo\Translatable\TranslatableListener;
 use Gedmo\Tree\Entity\MappedSuperclass\AbstractClosure;
 use Gedmo\Tree\Entity\Repository\ClosureTreeRepository;
 
@@ -21,6 +20,8 @@ use Gedmo\Tree\Entity\Repository\ClosureTreeRepository;
  */
 class SectionRepository extends ClosureTreeRepository
 {
+    use TranslatableTrait;
+
     public function __construct(EntityManagerInterface $em)
     {
         parent::__construct($em, $em->getClassMetadata(Section::class));
@@ -111,17 +112,7 @@ class SectionRepository extends ClosureTreeRepository
 
     private function applyHints(Query $query, ?SectionFilter $filter = null): Query
     {
-        $locale = $filter->locale ?? null;
-        $fallback = $filter->fallback ?? true;
-
-        $query->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, TranslationWalker::class);
-
-        if ($fallback) {
-            $query->setHint(TranslatableListener::HINT_FALLBACK, 1);
-        }
-        if ($locale) {
-            $query->setHint(TranslatableListener::HINT_TRANSLATABLE_LOCALE, $locale);
-        }
+        $query = $this->applyTranslatables($query, $filter);
 
         return $query;
     }

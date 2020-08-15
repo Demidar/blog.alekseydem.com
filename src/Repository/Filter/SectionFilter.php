@@ -2,21 +2,41 @@
 
 namespace App\Repository\Filter;
 
-class SectionFilter
+class SectionFilter implements TranslatableFilter
 {
     /**
      * @var bool|null
      */
-    public $fallback;
+    private $fallback;
 
     /**
      * @var string|null
      */
-    public $locale;
+    private $locale;
 
     public function __construct(array $filterArray = null)
     {
-        $this->fallback = $filterArray['fallback'] ?? null;
-        $this->locale = $filterArray['locale'] ?? null;
+        $this->setFallback($filterArray['fallback'] ?? null);
+        $this->setLocale($filterArray['locale'] ?? null);
+    }
+
+    public function getLocale(): ?string
+    {
+        return $this->locale;
+    }
+
+    public function setLocale(?string $locale): void
+    {
+        $this->locale = $locale;
+    }
+
+    public function getFallback(): ?bool
+    {
+        return $this->fallback;
+    }
+
+    public function setFallback(?bool $fallback): void
+    {
+        $this->fallback = $fallback;
     }
 }

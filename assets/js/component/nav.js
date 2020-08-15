@@ -1,6 +1,6 @@
 export function navButton() {
     navButtonFn();
-    window.addEventListener('resize', navButtonFn);
+    document.addEventListener('resize', navButtonFn);
 
     function navButtonFn() {
         let navButton = document.querySelector('.nav__button');

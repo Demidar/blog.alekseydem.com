@@ -5,13 +5,11 @@ namespace App\Repository;
 use App\Entity\Article;
 use App\Repository\Filter\ArticleFilter;
 use App\Repository\Modifier\ArticleQueryModifier;
+use App\Repository\RepoTrait\TranslatableTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
-use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
-use Gedmo\Translatable\Query\TreeWalker\TranslationWalker;
-use Gedmo\Translatable\TranslatableListener;
 
 /**
  * @method Article|null find($id, $lockMode = null, $lockVersion = null)
@@ -21,6 +19,8 @@ use Gedmo\Translatable\TranslatableListener;
  */
 class ArticleRepository extends ServiceEntityRepository
 {
+    use TranslatableTrait;
+
     public function __construct(
         ManagerRegistry $registry
     ) {
@@ -91,6 +91,16 @@ class ArticleRepository extends ServiceEntityRepository
         if (!$modifier) {
             return;
         }
+        if ($modifier->select) {
+            $qb->select(
+                array_map(static function ($field) {
+                        return 'a.'.$field;
+                    }, $modifier->select)
+            );
+        }
+        if ($modifier->orderByField) {
+            $qb->addOrderBy('a.'.$modifier->orderByField, $modifier->orderDirection ?: 'ASC');
+        }
         if ($modifier->withSection) {
             $qb->addSelect('s')
                 ->leftJoin('a.section', 's');
@@ -103,21 +113,17 @@ class ArticleRepository extends ServiceEntityRepository
             $qb->addSelect('c')
                 ->leftJoin('a.comments', 'c');
         }
+
+        if ($modifier->comments) {
+            if ($modifier->comments->orderByField) {
+                $qb->addOrderBy('c.'.$modifier->comments->orderByField, $modifier->comments->orderDirection ?: 'ASC');
+            }
+        }
     }
 
     private function applyHints(Query $query, ?ArticleFilter $filter = null): Query
     {
-        $locale = $filter->locale ?? null;
-        $fallback = $filter->fallback ?? true;
-
-        $query->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, TranslationWalker::class);
-
-        if ($fallback) {
-            $query->setHint(TranslatableListener::HINT_FALLBACK, 1);
-        }
-        if ($locale) {
-            $query->setHint(TranslatableListener::HINT_TRANSLATABLE_LOCALE, $locale);
-        }
+        $query = $this->applyTranslatables($query, $filter);
 
         return $query;
     }

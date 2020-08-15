@@ -15,11 +15,13 @@
             {% for field in fields %}
                 {% set value = attribute(entity, field) %}
                 {% if value is not empty and options[field] is defined %}
+                    {% set currentField = field %}
                     {% if options[field]['nested'] is defined and options[field]['nested'] == true %}
                         {% set value = attribute(value, options[field]['nestedField']) %}
+                        {% set currentField = options[field]['nestedField'] %}
                     {% endif %}
-                    {% if options[field]['max'] is defined and value|length > options[field]['max'] %}
-                        {% set value = value|slice(0, options[field]['max']+3) ~ '...' %}
+                    {% if options[currentField]['max'] is defined and value|length > options[currentField]['max'] %}
+                        {% set value = value|slice(0, options[currentField]['max']+3) ~ '...' %}
                     {% endif %}
                 {% endif %}
                 <td class="table__col">{{ value }}</td>

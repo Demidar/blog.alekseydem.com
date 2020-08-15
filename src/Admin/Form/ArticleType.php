@@ -4,7 +4,9 @@ namespace App\Admin\Form;
 
 use App\Entity\Article;
 use App\Entity\Section;
+use App\Entity\User;
 use App\Repository\SectionRepository;
+use App\Repository\UserRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -17,10 +19,14 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class ArticleType extends AbstractType
 {
     private $sectionRepository;
+    private $userRepository;
 
-    public function __construct(SectionRepository $sectionRepository)
-    {
+    public function __construct(
+        SectionRepository $sectionRepository,
+        UserRepository $userRepository
+    ) {
         $this->sectionRepository = $sectionRepository;
+        $this->userRepository = $userRepository;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -54,6 +60,18 @@ class ArticleType extends AbstractType
                 },
                 'choice_name' => static function (?Section $entity) {
                     return $entity ? $entity->getTitle() : '';
+                }
+            ])
+            ->add('owner', EntityType::class, [
+                'required' => false,
+                'label' => 'form.owner.article',
+                'class' => User::class,
+                'choices' => $this->userRepository->findAll(),
+                'choice_value' => static function (?User $entity) {
+                    return $entity ? $entity->getId() : '';
+                },
+                'choice_name' => static function (?User $entity) {
+                    return $entity ? $entity->getUsername() : '';
                 }
             ])
             ->add('submit', SubmitType::class, [

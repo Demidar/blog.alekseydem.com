@@ -106,6 +106,8 @@ class RequestSubscriber implements EventSubscriberInterface
         $path = $request->getPathInfo();
 
         try {
+            $context = (new RequestContext())->fromRequest($request);
+            $this->router->setContext($context);
             $this->router->match($path);
         } catch (ResourceNotFoundException $prevException) {
             try {

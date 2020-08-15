@@ -3,3 +3,5 @@ section:
   create: Create a section
 article:
   create: Create an article
+comment:
+  create: Create a comment

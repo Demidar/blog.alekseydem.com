@@ -12,3 +12,7 @@ form:
           one     {This field can have only one character.}
           other   {This field is too small. It should have at least {limit} characters.}
         }
+    password:
+      is-not-equal: Password is not matched
+username:
+  in-use: There is already an account with this username

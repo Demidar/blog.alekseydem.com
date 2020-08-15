@@ -8,9 +8,9 @@
         {% set fieldCaption = field|humanize %}
         {% set key = alias ~ '.' ~ field %}
 
-        {% if option[field] is defined %}
-            {% if option[field]['nested'] is defined and option[field]['nested'] == true %}
-                {% set key = option[field]['nestedAliasedField'] %}
+        {% if options[field] is defined %}
+            {% if options[field]['nested'] is defined and options[field]['nested'] == true %}
+                {% set key = options[field]['nestedAliasedField'] %}
             {% endif %}
         {% endif %}
 

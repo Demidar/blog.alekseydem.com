@@ -7,6 +7,11 @@ total-items: Всего
 no-articles: Статьи отсутствуют
 no-sections: Секции отсутствуют
 
+flash:
+  comment-submitted-successfully: Ваш комментарий принят! Он будет в скором времени проверен и опубликован.
+  comment-does-not-submitted: Что-то идет не так. Можете проверить форму комментария на ошибки?
+  comment-updated-successfully: Ваш комментарий обновлен!
+  comment-does-not-updated: Ошибка обновления комментария.
 auth:
   register: Регистрация
   if-has-account-login: Уже есть аккаунт? <a href={loginUrl}>Войди здесь</a>!
@@ -23,9 +28,11 @@ comments:
   title: Комментарии
   missing: Комментариев еще нет... будь первым!
   leave-one: Оставить комментарий
+  join-to-comment: "Хотите оставить комментарий? <a href=\"{join}\">Присоединяйся здесь!</a>"
 form:
   username: Имя пользователя
   password: Пароль
+  repeat-password: Повторите пароль
   a-comment: Комментарий
   send: Отправить
   submit: Отправить
@@ -42,13 +49,19 @@ form:
   text:
     article: Статья
     section: Описание
+    comment: Комментарий
   parent:
     section: Родительская секция
+    comment: Родительский комментарий
   owner:
     article: Составитель
+    comment: Комментатор
+  relation:
+    article: Связанная статья
 article:
   created-at: Написан
   updated-at: Обновлен
 comment:
   created-at: Написан
   updated-at: Обновлен
+  in-reply-to: Ответ к

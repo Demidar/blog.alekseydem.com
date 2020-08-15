@@ -1,4 +1,15 @@
+@import './../variables/variables';
+
 .comment {
+  &__container {
+    display: flex;
+  }
+  &__content {
+    flex-grow: 1;
+  }
+  &__in-reply-to {
+    font-style: italic;
+  }
   &__author {
     font-weight: bold;
   }
@@ -6,6 +17,15 @@
     margin: 10px 0;
   }
   &__date {
-    text-align: right;
+    font-style: italic;
+    color: rgba($theme-color, 0.5);
+  }
+  &__status {
+    margin: 10px 0;
+    font-weight: bold;
+    font-style: italic;
+  }
+  &__margin {
+    width: 30px;
   }
 }
