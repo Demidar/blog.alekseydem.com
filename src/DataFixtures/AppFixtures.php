@@ -48,7 +48,7 @@ class AppFixtures extends CustomFixture
         $users = $this->getReferencesByPrefix(User::class);
         $articles = $this->getReferencesByPrefix(Article::class);
 
-        for ($i = 0; $i < 300; $i++) {
+        for ($i = 0; $i < 600; $i++) {
             $comments = $this->getReferencesByPrefix(Comment::class);
             /** @var Article $article */
             $article = $this->faker->randomElement($articles);

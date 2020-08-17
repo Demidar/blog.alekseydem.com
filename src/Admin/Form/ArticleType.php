@@ -7,6 +7,7 @@ use App\Entity\Section;
 use App\Entity\User;
 use App\Repository\SectionRepository;
 use App\Repository\UserRepository;
+use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -46,9 +47,13 @@ class ArticleType extends AbstractType
                 'required' => false,
                 'label' => 'form.slug'
             ])
-            ->add('text', TextareaType::class, [
-                'required' => false,
-                'label' => 'form.text.article'
+            ->add('text', CKEditorType::class, [
+                'required' => true,
+                'label' => 'form.text.article',
+                'config' => [
+                    'filebrowserImageUploadRoute' => 'upload-article-images',
+                    'filebrowserImageUploadRouteParameters' => ['id' => $article->getId()],
+                ]
             ])
             ->add('section', EntityType::class, [
                 'required' => false,

@@ -9,10 +9,13 @@ export function respondToComment() {
             formNote.classList.remove('form-container__note_hidden');
         });
     });
-    document.querySelector('.js-comment-reply_remove').addEventListener('click', event => {
-        event.preventDefault();
-        document.querySelector('.js_comment-reply_form-parent').value = '';
-        document.querySelector('.js_comment-form_reply-to').innerHTML = '';
-        formNote.classList.add('form-container__note_hidden');
-    });
+    let removeButton = document.querySelector('.js-comment-reply_remove');
+    if (removeButton) {
+        removeButton.addEventListener('click', event => {
+            event.preventDefault();
+            document.querySelector('.js_comment-reply_form-parent').value = '';
+            document.querySelector('.js_comment-form_reply-to').innerHTML = '';
+            formNote.classList.add('form-container__note_hidden');
+        });
+    }
 }
