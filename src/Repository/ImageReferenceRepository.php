@@ -3,7 +3,11 @@
 namespace App\Repository;
 
 use App\Entity\ImageReference;
+use App\Repository\Filter\ImageReferenceFilter;
+use App\Repository\Modifier\ImageReferenceQueryModifier;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -14,37 +18,56 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ImageReferenceRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, $entityClass = null)
     {
-        parent::__construct($registry, ImageReference::class);
+        parent::__construct($registry, $entityClass ?? ImageReference::class);
     }
 
-    // /**
-    //  * @return ImageReference[] Returns an array of ImageReference objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function findImageReferenceById(int $id, ?ImageReferenceFilter $filter = null, ?ImageReferenceQueryModifier $modifier = null): ?ImageReference
     {
-        return $this->createQueryBuilder('i')
-            ->andWhere('i.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('i.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
+        $qb = $this->createQueryBuilder('fr')
+            ->andWhere('fr.id = :id')
+            ->setParameter('id', $id)
         ;
-    }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?ImageReference
-    {
-        return $this->createQueryBuilder('i')
-            ->andWhere('i.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        $this->applyModifier($qb, $modifier);
+
+        return $this->applyHints($qb->getQuery(), $filter)->getOneOrNullResult();
     }
-    */
+
+    /**
+     * @return ImageReference[]
+     */
+    public function findImageReferences(?ImageReferenceFilter $filter = null, ?ImageReferenceQueryModifier $modifier = null): array
+    {
+        return $this->findImageReferencesQuery($filter, $modifier)->getResult();
+    }
+
+    public function countImageReferences(): int
+    {
+        return $this->count([]);
+    }
+
+    public function findImageReferencesQuery(?ImageReferenceFilter $filter = null, ?ImageReferenceQueryModifier $modifier = null): Query
+    {
+        $qb = $this->createQueryBuilder('fr');
+
+        $this->applyModifier($qb, $modifier);
+
+        return $this->applyHints($qb->getQuery(), $filter);
+    }
+
+    private function applyModifier(QueryBuilder $qb, ?ImageReferenceQueryModifier $modifier): void
+    {
+        if (!$modifier) {
+            return;
+        }
+    }
+
+    private function applyHints(Query $query, ?ImageReferenceFilter $filter = null): Query
+    {
+        $query->setHint('knp_paginator.count', $this->countImageReferences());
+
+        return $query;
+    }
 }

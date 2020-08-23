@@ -1,0 +1,12 @@
+{% extends "@admin/base.html.twig" %}
+
+{% block title %}New File - {{ parent() }}{% endblock %}
+
+{% block body %}
+    <h1>Create new File</h1>
+
+    <a class="button button_link" href="{{ path('admin_file_index') }}">Back to list</a>
+
+    {{ form(form) }}
+
+{% endblock %}

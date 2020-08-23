@@ -3,7 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\FileReferenceArticle;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Repository\Filter\FileReferenceFilter;
+use App\Repository\Modifier\FileReferenceQueryModifier;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -11,40 +12,13 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method FileReferenceArticle|null findOneBy(array $criteria, array $orderBy = null)
  * @method FileReferenceArticle[]    findAll()
  * @method FileReferenceArticle[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method FileReferenceArticle|null findFileReferenceById(int $id, ?FileReferenceFilter $filter = null, ?FileReferenceQueryModifier $modifier = null)
+ * @method FileReferenceArticle[]    findFileReferences(?FileReferenceFilter $filter = null, ?FileReferenceQueryModifier $modifier = null)
  */
-class FileReferenceArticleRepository extends ServiceEntityRepository
+class FileReferenceArticleRepository extends FileReferenceRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, FileReferenceArticle::class);
     }
-
-    // /**
-    //  * @return FileReferenceArticle[] Returns an array of FileReferenceArticle objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('f')
-            ->andWhere('f.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('f.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?FileReferenceArticle
-    {
-        return $this->createQueryBuilder('f')
-            ->andWhere('f.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

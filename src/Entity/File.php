@@ -13,13 +13,6 @@ use Doctrine\ORM\Mapping as ORM;
 class File extends AbstractFile
 {
     /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
-    private $id;
-
-    /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="files")
      */
     private $owner;
@@ -32,11 +25,6 @@ class File extends AbstractFile
     public function __construct()
     {
         $this->fileReferences = new ArrayCollection();
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
     }
 
     public function getOwner(): ?User

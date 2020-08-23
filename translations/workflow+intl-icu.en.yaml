@@ -11,8 +11,11 @@ place:
 edit: Edit
 show_published: Show
 hide_published: Hide
-written: Send to rewiew
+send_to_review: Send to rewiew
 show: Show
 hide: Hide
 None: Don't change
 publish: Publish
+reject: Reject
+edit_rejected: Return to draft
+publish_rejected: Publish a rejected article

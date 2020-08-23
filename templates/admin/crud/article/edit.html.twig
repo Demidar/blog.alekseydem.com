@@ -9,6 +9,8 @@
 
     <h1>Edit Article</h1>
 
+    <a href="{{ path('admin_image_reference_article_new', {'article_id': article.id}) }}" class="button button_link">{{ "image.link-to-article"|trans({}, 'admin') }}</a>
+
     {{ form(form) }}
 
 {% endblock %}

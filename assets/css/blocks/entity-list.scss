@@ -5,10 +5,13 @@
   &__item {
     border-top: 2px solid $theme-light;
     border-radius: 2px;
+    display: flex;
   }
   &__item-title {
     font-family: $font-family-text;
     font-weight: 400;
+    display: flex;
+    align-items: center;
   }
   &__item-link {
 

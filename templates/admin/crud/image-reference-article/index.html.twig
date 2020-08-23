@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ImageReferenceArticle index{% endblock %}
+
+{% block body %}
+    <h1>ImageReferenceArticle index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Position</th>
+                <th>Status</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for image_reference_article in image_reference_articles %}
+            <tr>
+                <td>{{ image_reference_article.id }}</td>
+                <td>{{ image_reference_article.position }}</td>
+                <td>{{ image_reference_article.status }}</td>
+                <td>
+                    <a href="{{ path('admin-image-reference-article-show', {'id': image_reference_article.id}) }}">show</a>
+                    <a href="{{ path('admin-image-reference-article-edit', {'id': image_reference_article.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('admin-image-reference-article-new') }}">Create new</a>
+{% endblock %}

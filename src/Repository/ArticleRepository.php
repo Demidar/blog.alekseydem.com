@@ -67,6 +67,11 @@ class ArticleRepository extends ServiceEntityRepository
         return $this->findArticlesQuery($filter, $modifier)->getResult();
     }
 
+    public function countArticles(): int
+    {
+        return $this->count([]);
+    }
+
     public function findArticlesQuery(?ArticleFilter $filter = null, ?ArticleQueryModifier $modifier = null): Query
     {
         $qb = $this->createQueryBuilder('a');
@@ -124,6 +129,8 @@ class ArticleRepository extends ServiceEntityRepository
     private function applyHints(Query $query, ?ArticleFilter $filter = null): Query
     {
         $query = $this->applyTranslatables($query, $filter);
+
+        $query->setHint('knp_paginator.count', $this->countArticles());
 
         return $query;
     }

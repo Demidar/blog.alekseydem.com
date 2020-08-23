@@ -3,7 +3,11 @@
 namespace App\Repository;
 
 use App\Entity\File;
+use App\Repository\Filter\FileFilter;
+use App\Repository\Modifier\FileQueryModifier;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -19,32 +23,51 @@ class FileRepository extends ServiceEntityRepository
         parent::__construct($registry, File::class);
     }
 
-    // /**
-    //  * @return File[] Returns an array of File objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function findFileById(int $id, ?FileFilter $filter = null, ?FileQueryModifier $modifier = null): ?File
     {
-        return $this->createQueryBuilder('f')
-            ->andWhere('f.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('f.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
+        $qb = $this->createQueryBuilder('f')
+            ->andWhere('f.id = :id')
+            ->setParameter('id', $id)
         ;
-    }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?File
-    {
-        return $this->createQueryBuilder('f')
-            ->andWhere('f.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        $this->applyModifier($qb, $modifier);
+
+        return $this->applyHints($qb->getQuery(), $filter)->getOneOrNullResult();
     }
-    */
+
+    /**
+     * @return File[]
+     */
+    public function findFiles(?FileFilter $filter = null, ?FileQueryModifier $modifier = null): array
+    {
+        return $this->findFilesQuery($filter, $modifier)->getResult();
+    }
+
+    public function countFiles(): int
+    {
+        return $this->count([]);
+    }
+
+    public function findFilesQuery(?FileFilter $filter = null, ?FileQueryModifier $modifier = null): Query
+    {
+        $qb = $this->createQueryBuilder('f');
+
+        $this->applyModifier($qb, $modifier);
+
+        return $this->applyHints($qb->getQuery(), $filter);
+    }
+
+    private function applyModifier(QueryBuilder $qb, ?FileQueryModifier $modifier): void
+    {
+        if (!$modifier) {
+            return;
+        }
+    }
+
+    private function applyHints(Query $query, ?FileFilter $filter = null): Query
+    {
+        $query->setHint('knp_paginator.count', $this->countFiles());
+
+        return $query;
+    }
 }

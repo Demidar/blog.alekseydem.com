@@ -1,0 +1,16 @@
+{% extends '@admin/base.html.twig' %}
+
+{% block title %}Edit Image{% endblock %}
+
+{% block body %}
+    <a class="button button_link" href="{{ path('admin_image_index') }}">Back to list</a>
+
+    {{ include('@admin/crud/image/_delete_form.html.twig') }}
+
+    <h1>Edit Image</h1>
+
+    <a href="{{ path('admin_image-reference_new', {'entity': 'article', 'image_id': image.id}) }}" class="button button_link">{{ "image.link-to-article"|trans({}, 'admin') }}</a>
+
+    {{ form(form) }}
+
+{% endblock %}

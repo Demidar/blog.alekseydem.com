@@ -21,7 +21,7 @@ framework:
                 - published
                 - hidden
             transitions:
-                written:
+                send_to_review:
                     from: draft
                     to: inReview
                 publish:
@@ -100,6 +100,10 @@ framework:
                 property: status
             supports:
                 - App\Entity\Section
+                - App\Entity\File
+                - App\Entity\Image
+                - App\Entity\FileReference
+                - App\Entity\ImageReference
             initial_marking: visible
             places:
                 - visible

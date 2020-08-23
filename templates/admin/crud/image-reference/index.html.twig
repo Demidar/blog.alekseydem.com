@@ -1,0 +1,60 @@
+{# @var paginatedImageReferences \Knp\Component\Pager\Pagination\PaginationInterface|\App\Entity\ImageReference[] #}
+
+{% extends "@admin/base.html.twig" %}
+
+{% block title %} Image references - {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="spacer spacer_bottom">
+        <a href="{{ path('admin_image-reference_new', {'entity': 'article'}) }}" class="button button_link">{{ "image.link-to-article"|trans({}, 'admin') }}</a>
+    </div>
+    {% if paginatedImages.totalItemCount == 0 %}
+        <p>There are no images.</p>
+    {% else %}
+        <div>{{ "total-items"|trans }}: {{ paginatedImages.totalItemCount }}</div>
+
+        {{ knp_pagination_render(paginatedImages) }}
+
+        {% include '@admin/partial/sort-list.html.twig' with {
+            fields: [
+                'id',
+                'originalName',
+                'mimeType',
+                'name',
+                'size',
+                'status'
+            ],
+            alias: 'f',
+            pagination: paginatedImages
+        } only %}
+
+        {{ knp_pagination_filter(paginatedImages, {
+            'f.originalName': 'Original name',
+            'f.mimeType': 'Mime Type',
+            'f.name': 'Name',
+            'f.status': 'Status'
+        }) }}
+
+        {% include '@admin/partial/table.html.twig' with {
+            fields: [
+                'id',
+                'preview',
+                'originalName',
+                'mimeType',
+                'name',
+                'size',
+                'status'
+            ],
+            entities: paginatedImages,
+            editRouteName: 'admin_image_edit',
+            options: {
+                'preview': {
+                    'mapped': false,
+                    'preview_image_field': 'name'
+                }
+            }
+        } only %}
+
+        {{ knp_pagination_render(paginatedImages) }}
+    {% endif %}
+{% endblock %}

@@ -13,6 +13,10 @@ doctrine:
             section: App\Doctrine\SectionSqlFilter
             article: App\Doctrine\ArticleSqlFilter
             comment: App\Doctrine\CommentSqlFilter
+            file: App\Doctrine\FileSqlFilter
+            image: App\Doctrine\ImageSqlFilter
+            fileReference: App\Doctrine\FileReferenceSqlFilter
+            imageReference: App\Doctrine\ImageReferenceSqlFilter
         mappings:
             gedmo_translatable:
                 type: annotation

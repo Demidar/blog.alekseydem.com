@@ -29,7 +29,7 @@ Mainly 'class' attributes were added.
 
 {%- block checkbox_row -%}
     {% set row_attr = row_attr|merge({"class": (row_attr.class|default('') ~ ' form__checkbox-row')|trim}) %}
-    {{ block(form_row) }}
+    {{ block('form_row') }}
 {%- endblock checkbox_row -%}
 
 {%- block button_row -%}
@@ -129,9 +129,13 @@ Mainly 'class' attributes were added.
     {% endfor %}
 {%- endblock choice_widget_options -%}
 
+{%- block imageSelector_radio_widget -%}
+{%- endblock imageSelector_radio_widget -%}
+
 {# END WIDGETS #}
 
 {# ATTRIBUTES #}
+
 {%- block button_attributes -%}
     {% set attr = attr|merge({"class": (attr.class|default('') ~ ' form__'~type~'-widget')|trim}) %}
     {{ parent() }}
@@ -165,4 +169,20 @@ Mainly 'class' attributes were added.
 
 {# END SPECIFIC FIELD: LANGUAGE SWITCHER #}
 
+{# SPECIFIC FIELD: IMAGE_REFERENCE #}
+
+{#{% block _image_reference_article_image_entry_widget %}#}
+{#    {{ block('image_reference_entry_widget') }}#}
+{#{% endblock _image_reference_article_image_entry_widget %}#}
+
 {# END SPECIFIC FIELDS #}
+
+{# CUSTOM BLOCKS #}
+
+{% block image_reference_entry_widget %}
+    {% set attr = attr|merge({"class": (attr.class|default('') ~ ' form__image-selector-widget')|trim}) %}
+    <img src="" alt="">
+    <input type="radio" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+{% endblock image_reference_entry_widget %}
+
+{# END CUSTOM BLOCKS #}

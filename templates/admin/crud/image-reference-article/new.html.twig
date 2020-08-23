@@ -1,0 +1,16 @@
+{# @var image_reference_article \App\Entity\ImageReferenceArticle #}
+{% extends 'base.html.twig' %}
+
+{% block title %}New ImageReferenceArticle{% endblock %}
+
+{% block body %}
+    <h1>Create new ImageReferenceArticle</h1>
+
+    {% if image_reference_article.article %}
+        <a class="button button_link" href="{{ path('admin_article_edit', {'id': image_reference_article.article.id}) }}">back to article</a>
+    {% endif %}
+    <a class="button button_link" href="{{ path('admin-image-reference-article-index') }}">back to list</a>
+
+    {{ form(form) }}
+
+{% endblock %}

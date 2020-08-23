@@ -83,6 +83,10 @@ class RequestSubscriber implements EventSubscriberInterface
             $filters->enable('section')->setParameter('status', 'visible');
             $filters->enable('article')->setParameter('status', 'published');
             $filters->enable('comment')->setParameter('status', 'visible');
+            $filters->enable('file')->setParameter('status', 'visible');
+            $filters->enable('image')->setParameter('status', 'visible');
+            $filters->enable('fileReference')->setParameter('status', 'visible');
+            $filters->enable('imageReference')->setParameter('status', 'visible');
             if ($userId) {
                 $filters->getFilter('article')->setParameter('ownerId', $userId);
                 $filters->getFilter('comment')->setParameter('ownerId', $userId);

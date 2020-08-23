@@ -20,32 +20,32 @@ abstract class AbstractFile
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    protected $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $originalName;
+    protected $originalName;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $extension;
+    protected $mimeType;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $name;
+    protected $name;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $status;
+    protected $status = 'visible';
 
     /**
      * @ORM\Column(type="integer")
      */
-    private $size;
+    protected $size;
 
     public function getId(): ?int
     {
@@ -64,14 +64,14 @@ abstract class AbstractFile
         return $this;
     }
 
-    public function getExtension(): ?string
+    public function getMimeType(): ?string
     {
-        return $this->extension;
+        return $this->mimeType;
     }
 
-    public function setExtension(string $extension): self
+    public function setMimeType(string $mimeType): self
     {
-        $this->extension = $extension;
+        $this->mimeType = $mimeType;
 
         return $this;
     }

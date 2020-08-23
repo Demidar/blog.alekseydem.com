@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit ImageReferenceArticle{% endblock %}
+
+{% block body %}
+    <h1>Edit ImageReferenceArticle</h1>
+
+    {{ form(form) }}
+
+    <a class="button" href="{{ path('admin_article_edit', {'id': image_reference_article.article.id}) }}">back to article</a>
+
+    {{ include('admin/crud/image-reference-article/_delete_form.html.twig') }}
+{% endblock %}

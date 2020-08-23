@@ -41,29 +41,8 @@ class CommentType extends AbstractType
         $article = $comment->getArticle();
 
         $builder
-            // TODO: this looks overwhelmed, find a way to do this better
             ->add('article', HeavyArticleSelectorType::class, [
-                'label' => 'form.relation.article',
-                // 'class' => Article::class,
-                /* TODO: this may be heavy when there are more than 1000 articles.
-                 *  Try implement loading through AJAX while filling a field.
-                 */
-                // convert array of arrays to array of object to avoid "choices grouping"
-                'choices' => array_map(
-                    static function ($entry) {return (object) $entry;},
-                    $this->articleRepository->findArticles(null, new ArticleQueryModifier([
-                        'select' => ['id', 'title', 'status'],
-                        'orderByField' => 'title',
-                    ]))
-                ),
-                'data' => (object) ['id' => $article->getId()],
-                'choice_value' => static function (?object $entity) {
-                    return $entity->id ?? null;
-                },
-                'choice_translation_domain' => false,
-                'choice_label' => static function (?object $entity) {
-                    return $entity ? $entity->title . ' (' . $entity->status . ')' : '';
-                }
+                'data' => $article
             ])
             ->add('transition', WorkflowType::class, [
                 'subject' => $comment,

@@ -11,8 +11,11 @@ place:
 edit: Редактировать
 show_published: Опубликовать
 hide_published: Скрыть
-written: Отправить на ревью
+send_to_review: Отправить на ревью
 show: Отобразить
 hide: Скрыть
 None: Не изменять
 publish: Опубликовать
+reject: Отклонить
+edit_rejected: Вернуть в черновики
+publish_rejected: Опубликовать отклоненную статью

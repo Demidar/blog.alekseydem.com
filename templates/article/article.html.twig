@@ -17,6 +17,12 @@
                 <span class="article__title-not-published">({{ ('place.' ~ article.status)|trans({}, 'workflow') }})</span>
             {% endif %}
         </h2>
+        {% if article.images is not empty %}
+            {% set image = article.images[0].image %}
+            <div class="article__image">
+                <img src="{{ image.name|imagine_filter_imagename('article_main_image') }}" alt="">
+            </div>
+        {% endif %}
         <div class="article__spacer">
             <div class="article__author"><span class="article__bold">{{ "author"|trans() }}:</span> {{ article.owner.username }}</div>
         </div>

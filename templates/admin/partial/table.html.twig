@@ -13,18 +13,36 @@
     {% for entity in entities %}
         <tr class="table__row">
             {% for field in fields %}
-                {% set value = attribute(entity, field) %}
-                {% if value is not empty and options[field] is defined %}
-                    {% set currentField = field %}
-                    {% if options[field]['nested'] is defined and options[field]['nested'] == true %}
-                        {% set value = attribute(value, options[field]['nestedField']) %}
-                        {% set currentField = options[field]['nestedField'] %}
+                {% set currentField = field %}
+                {% set is_raw = false %}
+                {% if options[field]['mapped'] is not defined or options[field]['mapped'] == true %}
+                    {# field is mapped #}
+                    {% set value = attribute(entity, field) %}
+                    {% if value is not empty and options[field] is defined %}
+                        {% if options[field]['nested'] is defined and options[field]['nested'] == true %}
+                            {% set value = attribute(value, options[field]['nestedField']) %}
+                            {% set currentField = options[field]['nestedField'] %}
+                        {% endif %}
+                        {% if options[currentField]['max'] is defined and value|length > options[currentField]['max'] %}
+                            {% set value = value|slice(0, options[currentField]['max']+3) ~ '...' %}
+                        {% endif %}
                     {% endif %}
-                    {% if options[currentField]['max'] is defined and value|length > options[currentField]['max'] %}
-                        {% set value = value|slice(0, options[currentField]['max']+3) ~ '...' %}
+                {% else %}
+                    {# field is not mapped #}
+                    {% if options[field]['preview_image_field'] is defined %}
+                        {% set value =
+                            '<img src="'
+                            ~attribute(entity, options[field]['preview_image_field'])|imagine_filter_imagename('thumb')
+                            ~'">'
+                        %}
+                        {% set is_raw = true %}
                     {% endif %}
                 {% endif %}
-                <td class="table__col">{{ value }}</td>
+                {% if is_raw %}
+                    <td class="table__col">{{ value|raw }}</td>
+                {% else %}
+                    <td class="table__col">{{ value }}</td>
+                {% endif %}
             {% endfor %}
             <td class="table__col">
                 <a href="{{ path(editRouteName, {id: entity.id}) }}">Edit</a>
