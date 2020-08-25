@@ -112,6 +112,9 @@ class SectionCrudController extends AbstractCrudController
         $lang = $request->query->get('lang', $request->getLocale());
 
         $section = $this->sectionRepository->findSectionById($id, new SectionFilter(['locale' => $lang, 'fallback' => false]));
+        // detach this section
+        $this->sectionRepository->clear();
+
         if (!$section) {
             throw new NotFoundHttpException('section not found');
         }

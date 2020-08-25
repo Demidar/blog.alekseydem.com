@@ -4,7 +4,6 @@ doctrine:
         metadata_cache_driver:
             type: pool
             pool: doctrine.system_cache_pool
-# doesn't work properly with Translatebles from Doctrine Extensions
 #        query_cache_driver:
 #            type: pool
 #            pool: doctrine.system_cache_pool
