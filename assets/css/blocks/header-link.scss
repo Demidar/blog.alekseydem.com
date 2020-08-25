@@ -36,13 +36,8 @@
 @media screen {
   @media (max-width: $breakpoint-md) {
     .header-link {
-      padding-left: 0;
-      padding-right: 30px;
-    }
-  }
-  @media (max-width: $breakpoint-sm) {
-    .header-link {
-      padding-right: 0;
+      padding-left: 10px;
+      padding-right: 10px;
     }
   }
 }

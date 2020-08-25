@@ -39,7 +39,7 @@
       width: 100%;
     }
   }
-  @media (max-width: $breakpoint-sm) {
+  @media (max-width: $breakpoint-xsm) {
     .nav {
       &__panel {
         flex-direction: column;
