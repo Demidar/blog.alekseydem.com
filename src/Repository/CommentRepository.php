@@ -3,7 +3,6 @@
 namespace App\Repository;
 
 use App\Entity\Comment;
-use App\Repository\Filter\CommentFilter;
 use App\Repository\Modifier\CommentQueryModifier;
 use App\Repository\RepoTrait\TranslatableTrait;
 use Doctrine\ORM\EntityManagerInterface;
@@ -26,7 +25,7 @@ class CommentRepository extends ClosureTreeRepository
         parent::__construct($em, $em->getClassMetadata(Comment::class));
     }
 
-    public function findCommentById(int $id, ?CommentFilter $filter = null, ?CommentQueryModifier $modifier = null): ?Comment
+    public function findCommentById(int $id, ?CommentQueryModifier $modifier = null): ?Comment
     {
         $qb = $this->createQueryBuilder('c')
             ->andWhere('c.id = :id')
@@ -35,13 +34,13 @@ class CommentRepository extends ClosureTreeRepository
 
         $this->applyModifier($qb, $modifier);
 
-        return $this->applyHints($qb->getQuery(), $filter)->getOneOrNullResult();
+        return $this->applyHints($qb->getQuery(), $modifier)->getOneOrNullResult();
     }
 
     /**
      * @return Comment[]
      */
-    public function findCommentsByArticle(int $id, ?CommentFilter $filter = null, ?CommentQueryModifier $modifier = null): array
+    public function findCommentsByArticle(int $id, ?CommentQueryModifier $modifier = null): array
     {
         $qb = $this->createQueryBuilder('c')
             ->andWhere('c.article = :article')
@@ -50,15 +49,15 @@ class CommentRepository extends ClosureTreeRepository
 
         $this->applyModifier($qb, $modifier);
 
-        return $this->applyHints($qb->getQuery(), $filter)->getResult();
+        return $this->applyHints($qb->getQuery(), $modifier)->getResult();
     }
 
     /**
      * @return Comment[]
      */
-    public function findComments(?CommentFilter $filter = null, ?CommentQueryModifier $modifier = null): array
+    public function findComments(?CommentQueryModifier $modifier = null): array
     {
-        return $this->findCommentsQuery($filter, $modifier)->getResult();
+        return $this->findCommentsQuery($modifier)->getResult();
     }
 
     public function countComments(): int
@@ -66,40 +65,43 @@ class CommentRepository extends ClosureTreeRepository
         return $this->count([]);
     }
 
-    public function findCommentsQuery(?CommentFilter $filter = null, ?CommentQueryModifier $modifier = null): Query
+    public function findCommentsQuery(?CommentQueryModifier $modifier = null): Query
     {
         $qb = $this->createQueryBuilder('c');
 
         $this->applyModifier($qb, $modifier);
 
-        return $this->applyHints($qb->getQuery(), $filter);
+        return $this->applyHints($qb->getQuery(), $modifier);
     }
 
-    private function applyModifier(QueryBuilder $qb, ?CommentQueryModifier $modifier): void
+    public function applyModifier(QueryBuilder $qb, ?CommentQueryModifier $modifier, string $alias = 'c'): void
     {
         if (!$modifier) {
             return;
         }
         if ($modifier->withOwner) {
-            $qb->addSelect('o')
-                ->leftJoin('c.owner', 'o');
+            $qb->addSelect('comment_o')
+                ->leftJoin("$alias.owner", 'comment_o');
         }
         if ($modifier->withParent) {
-            $qb->addSelect('p')
-                ->leftJoin('c.parent', 'p');
+            $qb->addSelect('comment_p')
+                ->leftJoin("$alias.parent", 'comment_p');
         }
         if ($modifier->withArticle) {
-            $qb->addSelect('a')
-                ->leftJoin('c.article', 'a');
+            $qb->addSelect('comment_a')
+                ->leftJoin("$alias.article", 'comment_a');
+        }
+        if ($modifier->orderByField) {
+            $qb->addOrderBy("$alias.{$modifier->orderByField}", $modifier->orderDirection ?: 'ASC');
         }
     }
 
-    private function applyHints(Query $query, ?CommentFilter $filter = null): Query
+    private function applyHints(Query $query, ?CommentQueryModifier $modifier = null): Query
     {
         /**
          * Althoug comments has no translations, these rules will be applied to such relations as Article.
          */
-        $query = $this->applyTranslatables($query, $filter);
+        $query = $this->applyTranslatables($query, $modifier);
 
         $query->setHint('knp_paginator.count', $this->countComments());
 

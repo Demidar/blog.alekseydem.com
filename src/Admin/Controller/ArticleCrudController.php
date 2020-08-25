@@ -5,7 +5,6 @@ namespace App\Admin\Controller;
 use App\Admin\Form\ArticleType;
 use App\Entity\Article;
 use App\Repository\ArticleRepository;
-use App\Repository\Filter\ArticleFilter;
 use App\Repository\Modifier\ArticleQueryModifier;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,10 +36,9 @@ class ArticleCrudController extends AbstractCrudController
         $lang = $request->query->get('lang', $request->getLocale());
         $page = $request->query->getInt('page', 1);
 
-        $articlesQuery = $this->articleRepository->findArticlesQuery(new ArticleFilter([
+        $articlesQuery = $this->articleRepository->findArticlesQuery(new ArticleQueryModifier([
             'locale' => $lang,
-            'fallback' => true
-        ]), new ArticleQueryModifier([
+            'fallback' => true,
             'withSection' => true,
             'withOwner' => true
         ]));

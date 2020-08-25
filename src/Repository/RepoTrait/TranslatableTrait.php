@@ -2,17 +2,17 @@
 
 namespace App\Repository\RepoTrait;
 
-use App\Repository\Filter\TranslatableFilter;
+use App\Repository\Modifier\TranslatableQueryModifier;
 use Doctrine\ORM\Query;
 use Gedmo\Translatable\Query\TreeWalker\TranslationWalker;
 use Gedmo\Translatable\TranslatableListener;
 
 trait TranslatableTrait
 {
-    protected function applyTranslatables(Query $query, TranslatableFilter $filter = null): Query
+    protected function applyTranslatables(Query $query, TranslatableQueryModifier $modifier = null): Query
     {
-        $locale = $filter ? $filter->getLocale() : null;
-        $fallback = $filter ? $filter->getFallback() : true;
+        $locale = $modifier ? $modifier->getLocale() : null;
+        $fallback = $modifier ? $modifier->getFallback() : true;
 
         $query->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, TranslationWalker::class);
 

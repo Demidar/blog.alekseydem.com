@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\Comment;
 use App\Form\CommentFormType;
 use App\Repository\ArticleRepository;
-use App\Repository\CommentRepository;
 use App\Repository\Modifier\ArticleQueryModifier;
 use App\Repository\Modifier\CommentQueryModifier;
 use App\Service\Breadcrumbs;
@@ -36,7 +35,7 @@ class ArticleController extends AbstractController
      */
     public function article($slug)
     {
-        $article = $this->articleRepository->findArticleBySlug($slug, null, new ArticleQueryModifier([
+        $article = $this->articleRepository->findArticleBySlug($slug, new ArticleQueryModifier([
             'withComments' => true,
             'comments' => new CommentQueryModifier([
                 'orderByField'=> 'createdAt',

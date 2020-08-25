@@ -2,39 +2,41 @@
 
 namespace App\Repository\Modifier;
 
-class CommentQueryModifier
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
+class CommentQueryModifier implements TranslatableQueryModifier
 {
-    /**
-     * @var bool|null
-     */
-    public $withOwner;
-
-    /**
-     * @var bool|null
-     */
-    public $withParent;
-
-    /**
-     * @var bool|null
-     */
-    public $withArticle;
-
-    /**
-     * @var string|null
-     */
-    public $orderByField;
-
-    /**
-     * @var string|null
-     */
-    public $orderDirection;
+    public ?bool $withOwner;
+    public ?bool $withParent;
+    public ?bool $withArticle;
+    public ?string $orderByField;
+    public ?string $orderDirection;
+    public ?bool $fallback;
+    public ?string $locale;
 
     public function __construct(array $modifiersArray = null)
     {
-        $this->withOwner = $modifiersArray['withOwner'] ?? null;
-        $this->withParent = $modifiersArray['withParent'] ?? null;
-        $this->withArticle = $modifiersArray['withArticle'] ?? null;
-        $this->orderByField = $modifiersArray['orderByField'] ?? null;
-        $this->orderDirection = $modifiersArray['orderDirection'] ?? null;
+        $options = (new OptionsResolver())->setDefaults([
+            'withOwner' => null,
+            'withParent' => null,
+            'withArticle' => null,
+            'orderByField' => null,
+            'orderDirection' => null,
+            'fallback' => null,
+            'locale' => null,
+        ])->resolve($modifiersArray);
+        foreach ($options as $key => $value) {
+            $this->$key = $value;
+        }
+    }
+
+    public function getLocale(): ?string
+    {
+        return $this->locale;
+    }
+
+    public function getFallback(): ?bool
+    {
+        return $this->fallback;
     }
 }

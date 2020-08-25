@@ -35,7 +35,6 @@ class HeavyArticleSelectorType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        // TODO: this looks overwhelmed, find a way to do this better
         $resolver->setDefaults([
             'label' => 'form.relation.article',
             'invalid_message' => 'The selected article does not exist',
@@ -45,7 +44,7 @@ class HeavyArticleSelectorType extends AbstractType
             // convert array of arrays to array of object to avoid "choices grouping"
             'choices' => array_map(
                 static function ($entry) {return (object) $entry;},
-                $this->articleRepository->findArticles(null, new ArticleQueryModifier([
+                $this->articleRepository->findArticles(new ArticleQueryModifier([
                     'select' => ['id', 'title', 'status'],
                     'orderByField' => 'title',
                 ]))

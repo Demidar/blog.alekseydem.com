@@ -2,51 +2,52 @@
 
 namespace App\Repository\Modifier;
 
-class ArticleQueryModifier
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
+class ArticleQueryModifier implements TranslatableQueryModifier
 {
-    /**
-     * @var bool|null
-     */
-    public $withOwner;
-
-    /**
-     * @var bool|null
-     */
-    public $withSection;
-
-    /**
-     * @var bool|null
-     */
-    public $withComments;
-
-    /**
-     * @var string|null
-     */
-    public $orderByField;
-
-    /**
-     * @var string|null
-     */
-    public $orderDirection;
-
-    /**
-     * @var string[]|null
-     */
-    public $select;
-
-    /**
-     * @var CommentQueryModifier|null
-     */
-    public $comments;
+    public ?bool $withOwner;
+    public ?bool $withSection;
+    public ?bool $withComments;
+    public ?bool $withImages;
+    public ?string $orderByField;
+    public ?string $orderDirection;
+    /** @var string[]|null */
+    public ?array $select;
+    public ?CommentQueryModifier $comments;
+    public ?bool $fallback;
+    public ?string $locale;
+    public ?int $limit;
+    public ?int $offset;
 
     public function __construct(array $modifiersArray = null)
     {
-        $this->withOwner = $modifiersArray['withOwner'] ?? null;
-        $this->withSection = $modifiersArray['withSection'] ?? null;
-        $this->withComments = $modifiersArray['withComments'] ?? null;
-        $this->orderByField = $modifiersArray['orderByField'] ?? null;
-        $this->orderDirection = $modifiersArray['orderDirection'] ?? null;
-        $this->select = $modifiersArray['select'] ?? null;
-        $this->comments = $modifiersArray['comments'] ?? null;
+        $options = (new OptionsResolver())->setDefaults([
+            'withOwner' => null,
+            'withSection' => null,
+            'withComments' => null,
+            'withImages' => null,
+            'comments' => null,
+            'orderByField' => null,
+            'orderDirection' => null,
+            'select' => null,
+            'fallback' => null,
+            'locale' => null,
+            'limit' => null,
+            'offset' => null
+        ])->resolve($modifiersArray);
+        foreach ($options as $key => $value) {
+            $this->$key = $value;
+        }
+    }
+
+    public function getLocale(): ?string
+    {
+        return $this->locale;
+    }
+
+    public function getFallback(): ?bool
+    {
+        return $this->fallback;
     }
 }

@@ -21,16 +21,13 @@ class CommentType extends AbstractType
 {
     private $commentRepository;
     private $userRepository;
-    private $articleRepository;
 
     public function __construct(
         CommentRepository $commentRepository,
-        UserRepository $userRepository,
-        ArticleRepository $articleRepository
+        UserRepository $userRepository
     ) {
         $this->commentRepository = $commentRepository;
         $this->userRepository = $userRepository;
-        $this->articleRepository = $articleRepository;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void

@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Repository\ArticleRepository;
+use App\Repository\Modifier\ArticleQueryModifier;
+use App\Repository\Modifier\SectionQueryModifier;
 use App\Repository\SectionRepository;
 use App\Service\Breadcrumbs;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -30,21 +32,23 @@ class SectionController extends AbstractController
      */
     public function section($slug)
     {
-        $section = $this->sectionRepository->findSectionBySlug($slug);
+        $section = $this->sectionRepository->findSectionBySlug($slug, new SectionQueryModifier([
+            'withArticles' => true,
+            'articles' => new ArticleQueryModifier([
+                'withImages' => true
+            ])
+        ]));
         if (!$section) {
             throw new NotFoundHttpException();
         }
 
         $sectionChildren = $this->sectionRepository->findChildren($section->getId());
 
-        $articles = $this->articleRepository->findArticlesBySection($section->getId());
-
         $breadcrumbs = $this->breadcrumbs->getBreadcrumbsForSection($section);
 
         return $this->render('section/section.html.twig', [
             'section' => $section,
             'sectionChildren' => $sectionChildren,
-            'articles' => $articles,
             'breadcrumbs' => $breadcrumbs
         ]);
     }

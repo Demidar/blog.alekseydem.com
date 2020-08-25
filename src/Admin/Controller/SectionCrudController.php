@@ -4,10 +4,8 @@ namespace App\Admin\Controller;
 
 use App\Entity\Section;
 use App\Admin\Form\SectionType;
-use App\Repository\Filter\SectionFilter;
 use App\Repository\Modifier\SectionQueryModifier;
 use App\Repository\SectionRepository;
-use App\Service\Paginator;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -42,10 +40,9 @@ class SectionCrudController extends AbstractCrudController
         $lang = $request->query->get('lang', $request->getLocale());
         $page = $request->query->getInt('page', 1);
 
-        $sectionsQuery = $this->sectionRepository->findSectionsQuery(new SectionFilter([
+        $sectionsQuery = $this->sectionRepository->findSectionsQuery(new SectionQueryModifier([
             'locale' => $lang,
-            'fallback' => true
-        ]), new SectionQueryModifier([
+            'fallback' => true,
             'withParent' => true
         ]));
 
@@ -74,9 +71,8 @@ class SectionCrudController extends AbstractCrudController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($section);
-            $entityManager->flush();
+            $this->entityManager->persist($section);
+            $this->entityManager->flush();
 
             return $this->redirectToRoute('admin_section_index');
         }
@@ -111,7 +107,7 @@ class SectionCrudController extends AbstractCrudController
     {
         $lang = $request->query->get('lang', $request->getLocale());
 
-        $section = $this->sectionRepository->findSectionById($id, new SectionFilter(['locale' => $lang, 'fallback' => false]));
+        $section = $this->sectionRepository->findSectionById($id, new SectionQueryModifier(['locale' => $lang, 'fallback' => false]));
         // detach this section
         $this->sectionRepository->clear();
 

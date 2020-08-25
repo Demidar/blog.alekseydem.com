@@ -3,7 +3,6 @@
 namespace App\Repository;
 
 use App\Entity\Section;
-use App\Repository\Filter\SectionFilter;
 use App\Repository\Modifier\SectionQueryModifier;
 use App\Repository\RepoTrait\TranslatableTrait;
 use Doctrine\ORM\EntityManagerInterface;
@@ -22,9 +21,14 @@ class SectionRepository extends ClosureTreeRepository
 {
     use TranslatableTrait;
 
-    public function __construct(EntityManagerInterface $em)
-    {
+    private $articleRepository;
+
+    public function __construct(
+        EntityManagerInterface $em,
+        ArticleRepository $articleRepository
+    ) {
         parent::__construct($em, $em->getClassMetadata(Section::class));
+        $this->articleRepository = $articleRepository;
     }
 
     /**
@@ -32,87 +36,101 @@ class SectionRepository extends ClosureTreeRepository
      *
      * @return Section[]
      */
-    public function getSectionPath(Section $section, SectionFilter $filter = null): array
+    public function getSectionPath(Section $section, ?SectionQueryModifier $modifier = null): array
     {
         return array_map(static function (AbstractClosure $closure) {
             return $closure->getAncestor();
-        }, $this->applyHints($this->getPathQuery($section), $filter)->getResult());
+        }, $this->applyHints($this->getPathQuery($section), $modifier)->getResult());
     }
 
-    public function findSectionById(int $id, SectionFilter $filter = null): ?Section
+    public function findSectionById(int $id, ?SectionQueryModifier $modifier = null): ?Section
     {
-
         $qb = $this->createQueryBuilder('s')
             ->andWhere('s.id = :id')
             ->setParameter('id', $id);
 
-        return $this->applyHints($qb->getQuery(), $filter)->getOneOrNullResult();
+        $this->applyModifier($qb, $modifier);
+
+        return $this->applyHints($qb->getQuery(), $modifier)->getOneOrNullResult();
     }
 
-    public function findSectionBySlug(string $slug, SectionFilter $filter = null): ?Section
+    public function findSectionBySlug(string $slug, ?SectionQueryModifier $modifier = null): ?Section
     {
         $qb = $this->createQueryBuilder('s')
             ->andWhere('s.slug = :slug')
             ->setParameter('slug', $slug)
         ;
 
-        return $this->applyHints($qb->getQuery(), $filter)->getOneOrNullResult();
+        $this->applyModifier($qb, $modifier);
+
+        return $this->applyHints($qb->getQuery(), $modifier)->getOneOrNullResult();
     }
 
     /**
      * @return Section[]
      */
-    public function findSections(SectionFilter $filter = null): array
+    public function findSections(?SectionQueryModifier $modifier = null): array
     {
-        return $this->findSectionsQuery($filter)->getResult();
+        return $this->findSectionsQuery($modifier)->getResult();
     }
 
-    public function findSectionsQuery(?SectionFilter $filter = null, ?SectionQueryModifier $modifier = null): Query
+    public function findSectionsQuery(?SectionQueryModifier $modifier = null): Query
     {
         $qb = $this->createQueryBuilder('s');
 
         $this->applyModifier($qb, $modifier);
 
-        return $this->applyHints($qb->getQuery(), $filter);
+        return $this->applyHints($qb->getQuery(), $modifier);
     }
 
     /**
      * @return Section[]
      */
-    public function findChildren(int $id, SectionFilter $filter = null): array
+    public function findChildren(int $id, ?SectionQueryModifier $modifier = null): array
     {
         $qb = $this->createQueryBuilder('s')
             ->andWhere('s.parent = :id')
             ->setParameter('id', $id)
         ;
 
-        return $this->applyHints($qb->getQuery(), $filter)->getResult();
+        $this->applyModifier($qb, $modifier);
+
+        return $this->applyHints($qb->getQuery(), $modifier)->getResult();
     }
 
     /**
      * @return Section[]
      */
-    public function getRootSections(SectionFilter $filter = null): array
+    public function getRootSections(?SectionQueryModifier $modifier = null): array
     {
         $qb = $this->getRootNodesQueryBuilder('position', 'asc');
 
-        return $this->applyHints($qb->getQuery(), $filter)->getResult();
+        $this->applyModifier($qb, $modifier, 'node');
+
+        return $this->applyHints($qb->getQuery(), $modifier)->getResult();
     }
 
-    private function applyModifier(QueryBuilder $qb, ?SectionQueryModifier $modifier): void
+    private function applyModifier(QueryBuilder $qb, ?SectionQueryModifier $modifier, string $alias = 's'): void
     {
         if (!$modifier) {
             return;
         }
         if ($modifier->withParent) {
-            $qb->addSelect('p')
-                ->leftJoin('s.parent', 'p');
+            $qb->addSelect('section_parent')
+                ->leftJoin("$alias.parent", 'section_parent');
+        }
+        if ($modifier->withArticles) {
+            $qb->addSelect('section_articles')
+                ->leftJoin("$alias.articles", 'section_articles');
+            if ($modifier->articles) {
+                $this->articleRepository->applyModifier($qb, $modifier->articles, 'section_articles');
+            }
         }
     }
 
-    private function applyHints(Query $query, ?SectionFilter $filter = null): Query
+    private function applyHints(Query $query, ?SectionQueryModifier $modifier = null): Query
     {
-        $query = $this->applyTranslatables($query, $filter);
+        $query = $this->applyTranslatables($query, $modifier);
 
         return $query;
     }

@@ -3,7 +3,6 @@
 namespace App\Repository;
 
 use App\Entity\File;
-use App\Repository\Filter\FileFilter;
 use App\Repository\Modifier\FileQueryModifier;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
@@ -23,7 +22,7 @@ class FileRepository extends ServiceEntityRepository
         parent::__construct($registry, File::class);
     }
 
-    public function findFileById(int $id, ?FileFilter $filter = null, ?FileQueryModifier $modifier = null): ?File
+    public function findFileById(int $id, ?FileQueryModifier $modifier = null): ?File
     {
         $qb = $this->createQueryBuilder('f')
             ->andWhere('f.id = :id')
@@ -32,15 +31,15 @@ class FileRepository extends ServiceEntityRepository
 
         $this->applyModifier($qb, $modifier);
 
-        return $this->applyHints($qb->getQuery(), $filter)->getOneOrNullResult();
+        return $this->applyHints($qb->getQuery(), $modifier)->getOneOrNullResult();
     }
 
     /**
      * @return File[]
      */
-    public function findFiles(?FileFilter $filter = null, ?FileQueryModifier $modifier = null): array
+    public function findFiles(?FileQueryModifier $modifier = null): array
     {
-        return $this->findFilesQuery($filter, $modifier)->getResult();
+        return $this->findFilesQuery($modifier)->getResult();
     }
 
     public function countFiles(): int
@@ -48,13 +47,13 @@ class FileRepository extends ServiceEntityRepository
         return $this->count([]);
     }
 
-    public function findFilesQuery(?FileFilter $filter = null, ?FileQueryModifier $modifier = null): Query
+    public function findFilesQuery(?FileQueryModifier $modifier = null): Query
     {
         $qb = $this->createQueryBuilder('f');
 
         $this->applyModifier($qb, $modifier);
 
-        return $this->applyHints($qb->getQuery(), $filter);
+        return $this->applyHints($qb->getQuery(), $modifier);
     }
 
     private function applyModifier(QueryBuilder $qb, ?FileQueryModifier $modifier): void
@@ -64,7 +63,7 @@ class FileRepository extends ServiceEntityRepository
         }
     }
 
-    private function applyHints(Query $query, ?FileFilter $filter = null): Query
+    private function applyHints(Query $query, ?FileQueryModifier $modifier = null): Query
     {
         $query->setHint('knp_paginator.count', $this->countFiles());
 
