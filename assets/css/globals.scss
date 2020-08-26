@@ -4,10 +4,18 @@
   box-sizing: border-box;
 }
 
+html {
+  height: 100%;
+}
+
 body {
   margin: 0;
-  background-color: $theme-background-color;
+  height: 100%;
   font-family: $font-family-text;
+  background-image: linear-gradient(lighten($theme-light, 3%), $theme-background-color);
+  background-color: $theme-background-color;
+  background-size: 100% 100vh;
+  background-repeat: no-repeat;
 }
 
 a {

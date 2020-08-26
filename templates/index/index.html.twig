@@ -1,5 +1,7 @@
+{# @var articles \App\Entity\Article[] #}
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    content
+    <h2 class="title">{{ "latest-articles"|trans() }}</h2>
+    {% include "partial/_article-detailed-list.html.twig" with {articles: articles} only %}
 {% endblock %}

@@ -34,24 +34,5 @@
         </h2>
         <div class="section__text">{{ section.text|raw }}</div>
     </div>
-    <div class="entity-list">
-        {% for article in section.articles %}
-            <div class="entity-list__item">
-                {% if article.images is not empty %}
-                    {% set image = article.images[0].image %}
-                    <div class="entity-list__item-image">
-                        <img src="{{ image.name|imagine_filter_imagename('thumb') }}" alt="">
-                    </div>
-                {% endif %}
-                <h4 class="entity-list__item-title">
-                    <a class="entity-list__item-link" href="{{ path('article', {slug: article.slug}) }}">
-                        {{ article.title }}
-                    </a>
-                    {% if article.status != 'published' %}
-                        <span class="entity-list__item-is-not-visible-title">({{ ('place.' ~ article.status)|trans({}, 'workflow') }})</span>
-                    {% endif %}
-                </h4>
-            </div>
-        {% endfor %}
-    </div>
+    {% include "partial/_article-list.html.twig" with {articles: section.articles} only %}
 {% endblock %}

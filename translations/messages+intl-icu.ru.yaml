@@ -6,6 +6,7 @@ sort-by: Сортировка
 total-items: Всего
 no-articles: Статьи отсутствуют
 no-sections: Секции отсутствуют
+latest-articles: Последние статьи
 
 flash:
   comment-submitted-successfully: Ваш комментарий принят! Он будет в скором времени проверен и опубликован.
@@ -61,6 +62,7 @@ form:
 article:
   created-at: Написан
   updated-at: Обновлен
+  section: Раздел
 comment:
   created-at: Написан
   updated-at: Обновлен

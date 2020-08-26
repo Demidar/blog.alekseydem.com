@@ -11,16 +11,21 @@ trait TranslatableTrait
 {
     protected function applyTranslatables(Query $query, TranslatableQueryModifier $modifier = null): Query
     {
-        $locale = $modifier ? $modifier->getLocale() : null;
-        $fallback = $modifier ? $modifier->getFallback() : true;
+        if ($modifier) {
+            $locale = $modifier->getLocale();
+            if ($modifier->getFallback() !== null) {
+                $fallback = $modifier->getFallback();
+            } else {
+                $fallback = true;
+            }
+        } else {
+            $locale = null;
+            $fallback = true;
+        }
 
         $query->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, TranslationWalker::class);
 
-        if ($fallback) {
-            $query->setHint(TranslatableListener::HINT_FALLBACK, 1);
-        } else {
-            $query->setHint(TranslatableListener::HINT_FALLBACK, 0);
-        }
+        $query->setHint(TranslatableListener::HINT_FALLBACK, $fallback);
         if ($locale) {
             $query->setHint(TranslatableListener::HINT_TRANSLATABLE_LOCALE, $locale);
         }

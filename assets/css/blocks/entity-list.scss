@@ -5,7 +5,14 @@
   &__item {
     border-top: 2px solid $theme-light;
     border-radius: 2px;
-    display: flex;
+    &_higher {
+      padding: 20px 0;
+    }
+  }
+  &__container {
+    &_horizontal {
+      display: flex;
+    }
   }
   &__item-title {
     font-family: $font-family-text;
@@ -13,11 +20,11 @@
     display: flex;
     align-items: center;
   }
-  &__item-link {
-
-  }
   &__item-is-not-visible-title {
     font-style: italic;
     opacity: 0.8;
+  }
+  &__description {
+    color: $theme-color-faded;
   }
 }

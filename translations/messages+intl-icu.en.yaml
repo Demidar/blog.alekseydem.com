@@ -6,6 +6,7 @@ sort-by: Sort by
 total-items: Total items
 no-articles: There are no articles
 no-sections: There are no sections
+latest-articles: Recent articles
 
 flash:
   comment-submitted-successfully: Your comment accepted! It'll be reviewed and published shortly
@@ -61,6 +62,7 @@ form:
 article:
   created-at: Written
   updated-at: Updated
+  section: Section
 comment:
   created-at: Written
   updated-at: Updated

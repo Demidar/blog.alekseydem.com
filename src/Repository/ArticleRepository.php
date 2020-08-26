@@ -91,6 +91,7 @@ class ArticleRepository extends ServiceEntityRepository
         if (!$modifier) {
             return;
         }
+
         if ($modifier->select) {
             $qb->select(
                 array_map(static function ($field) use ($alias) {
@@ -117,6 +118,9 @@ class ArticleRepository extends ServiceEntityRepository
             $qb->addSelect(['article_images', 'article_image_references'])
                 ->leftJoin("$alias.images", 'article_image_references')
                 ->leftJoin('article_image_references.image', 'article_images');
+        }
+        if ($modifier->limit) {
+            $qb->setMaxResults($modifier->limit);
         }
         if ($modifier->comments) {
             $this->commentRepository->applyModifier($qb, $modifier->comments, 'article_comments');

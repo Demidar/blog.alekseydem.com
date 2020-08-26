@@ -15,4 +15,12 @@
   &_selected {
     background-color: $theme-light;
   }
+  &_text-like {
+    text-decoration: none;
+    font-family: $font-family-text;
+    color: $theme-link;
+  }
+  &_bold {
+    font-weight: 700;
+  }
 }

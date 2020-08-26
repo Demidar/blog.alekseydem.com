@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Form\LanguageSwitcherFormType;
 use App\Repository\ArticleRepository;
+use App\Repository\Modifier\ArticleQueryModifier;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -32,8 +33,16 @@ class IndexController extends AbstractController
      */
     public function index(): Response
     {
-        $articles = $this->articleRepository->findArticles();
-        return $this->render('index/index.html.twig');
+        $articles = $this->articleRepository->findArticles(new ArticleQueryModifier([
+            'withImages' => true,
+            'withSection' => true,
+            'orderDirection' => 'DESC',
+            'fallback' => 1,
+            'limit' => 10
+        ]));
+        return $this->render('index/index.html.twig', [
+            'articles' => $articles
+        ]);
     }
 
     /**

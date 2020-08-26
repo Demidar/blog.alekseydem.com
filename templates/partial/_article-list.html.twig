@@ -1,0 +1,24 @@
+{# @var articles \App\Entity\Article[] #}
+
+<div class="entity-list">
+    {% for article in articles %}
+        <div class="entity-list__item">
+            <div class="entity-list__container entity-list__container_horizontal">
+                {% if article.images is not empty %}
+                    {% set image = article.images[0].image %}
+                    <div class="entity-list__item-image">
+                        <img src="{{ image.name|imagine_filter_imagename('thumb') }}" alt="">
+                    </div>
+                {% endif %}
+                <h4 class="entity-list__item-title">
+                    <a class="entity-list__item-link" href="{{ path('article', {slug: article.slug}) }}">
+                        {{ article.title }}
+                    </a>
+                    {% if article.status != 'published' %}
+                        <span class="entity-list__item-is-not-visible-title">({{ ('place.' ~ article.status)|trans({}, 'workflow') }})</span>
+                    {% endif %}
+                </h4>
+            </div>
+        </div>
+    {% endfor %}
+</div>
