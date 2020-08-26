@@ -37,7 +37,6 @@ class IndexController extends AbstractController
             'withImages' => true,
             'withSection' => true,
             'orderDirection' => 'DESC',
-            'fallback' => 1,
             'limit' => 10
         ]));
         return $this->render('index/index.html.twig', [

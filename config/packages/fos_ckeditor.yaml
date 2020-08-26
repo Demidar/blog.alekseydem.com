@@ -5,9 +5,6 @@ fos_ck_editor:
         default:
             filebrowserImageBrowseRoute: browse-images
             toolbar: standard
-    plugins:
-        code-block:
-            path: ''
 twig:
     form_themes:
         - '@FOSCKEditor/Form/ckeditor_widget.html.twig'
