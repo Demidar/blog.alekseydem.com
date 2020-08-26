@@ -116,14 +116,14 @@ class SectionRepository extends ClosureTreeRepository
             return;
         }
         if ($modifier->withParent) {
-            $qb->addSelect('section_parent')
-                ->leftJoin("$alias.parent", 'section_parent');
+            $qb->addSelect('s_parent')
+                ->leftJoin("$alias.parent", 's_parent');
         }
         if ($modifier->withArticles) {
-            $qb->addSelect('section_articles')
-                ->leftJoin("$alias.articles", 'section_articles');
+            $qb->addSelect('s_articles')
+                ->leftJoin("$alias.articles", 's_articles');
             if ($modifier->articles) {
-                $this->articleRepository->applyModifier($qb, $modifier->articles, 'section_articles');
+                $this->articleRepository->applyModifier($qb, $modifier->articles, 's_articles');
             }
         }
     }

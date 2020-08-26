@@ -8,9 +8,6 @@
     <div class="spacer spacer_bottom">
         <a href="{{ path('admin_comment_new') }}" class="button button_link">{{ "comment.create"|trans({}, 'admin') }}</a>
     </div>
-    {% if paginatedComments.totalItemCount == 0 %}
-        <p>There is no comments</p>
-    {% else %}
         <div>{{ "total-items"|trans }}: {{ paginatedComments.totalItemCount }}</div>
 
         {{ knp_pagination_render(paginatedComments) }}
@@ -27,59 +24,63 @@
             options: {
                 'parent': {
                     'nested': true,
-                    'nestedAliasedField': 'p.text'
+                    'nestedAliasedField': 'c_parent.text'
                 },
                 'owner': {
                     'nested': true,
-                    'nestedAliasedField': 'o.username'
+                    'nestedAliasedField': 'c_owner.username'
                 },
                 'article': {
                     'nested': true,
-                    'nestedAliasedField': 'a.title'
+                    'nestedAliasedField': 'c_article.title'
                 }
             },
             pagination: paginatedComments
         } only %}
 
         {{ knp_pagination_filter(paginatedComments, {
-            'a.title': 'Article',
+            'c_article.title': 'Article',
             'c.text': 'Text',
             'c.status': 'Status',
-            'o.title': 'Owner',
-            'p.text': 'Parent comment\'s text',
-            'p.owner': 'Parent comment\'s owner'
+            'c_owner.title': 'Owner',
+            'c_parent.text': 'Parent comment\'s text',
+            'c_parent.owner': 'Parent comment\'s owner'
         }) }}
 
-        {% include '@admin/partial/table.html.twig' with {
-            fields: [
-                'id',
-                'text',
-                'article',
-                'status',
-                'owner',
-                'parent',
-            ],
-            options: {
-                'text': {
-                    'max': 100
+        {% if paginatedComments|length == 0 %}
+            <p>There is no comments</p>
+        {% else %}
+
+            {% include '@admin/partial/table.html.twig' with {
+                fields: [
+                    'id',
+                    'text',
+                    'article',
+                    'status',
+                    'owner',
+                    'parent',
+                ],
+                options: {
+                    'text': {
+                        'max': 100
+                    },
+                    'parent': {
+                        'nested': true,
+                        'nestedField': 'text'
+                    },
+                    'owner': {
+                        'nested': true,
+                        'nestedField': 'username'
+                    },
+                    'article': {
+                        'nested': true,
+                        'nestedField': 'title'
+                    }
                 },
-                'parent': {
-                    'nested': true,
-                    'nestedField': 'text'
-                },
-                'owner': {
-                    'nested': true,
-                    'nestedField': 'username'
-                },
-                'article': {
-                    'nested': true,
-                    'nestedField': 'title'
-                }
-            },
-            entities: paginatedComments,
-            editRouteName: 'admin_comment_edit',
-        } only %}
+                entities: paginatedComments,
+                editRouteName: 'admin_comment_edit',
+            } only %}
+        {% endif %}
 
         {{ knp_pagination_render(paginatedComments) }}
-    {% endif %}
 {% endblock %}

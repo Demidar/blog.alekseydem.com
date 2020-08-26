@@ -8,37 +8,37 @@
     <div class="spacer spacer_bottom">
         <a href="{{ path('admin_section_new') }}" class="button button_link">{{ "section.create"|trans({}, 'admin') }}</a>
     </div>
-    {% if paginatedSections.totalItemCount == 0 %}
+    <div>{{ "total-items"|trans }}: {{ paginatedSections.totalItemCount }}</div>
+
+    {{ knp_pagination_render(paginatedSections) }}
+
+    {% include '@admin/partial/sort-list.html.twig' with {
+        fields: [
+            'id',
+            'title',
+            'status',
+            'parent',
+        ],
+        alias: 's',
+        options: {
+            'parent': {
+                'nested': true,
+                'nestedAliasedField': 's_parent.title'
+            }
+        },
+        pagination: paginatedSections
+    } only %}
+
+    {{ knp_pagination_filter(paginatedSections, {
+        's.title': 'Title',
+        's.text': 'Text',
+        's.status': 'Status',
+        's_parent.title': 'Parent'
+    }) }}
+
+    {% if paginatedSections|length == 0 %}
         <p>There is no sections</p>
     {% else %}
-        <div>{{ "total-items"|trans }}: {{ paginatedSections.totalItemCount }}</div>
-
-        {{ knp_pagination_render(paginatedSections) }}
-
-        {% include '@admin/partial/sort-list.html.twig' with {
-            fields: [
-                'id',
-                'title',
-                'status',
-                'parent',
-            ],
-            alias: 's',
-            options: {
-                'parent': {
-                    'nested': true,
-                    'nestedAliasedField': 'p.title'
-                }
-            },
-            pagination: paginatedSections
-        } only %}
-
-        {{ knp_pagination_filter(paginatedSections, {
-            's.title': 'Title',
-            's.text': 'Text',
-            's.status': 'Status',
-            'p.title': 'Parent'
-        }) }}
-
         {% include '@admin/partial/table.html.twig' with {
             fields: [
                 'id',
@@ -61,7 +61,7 @@
             entities: paginatedSections,
             editRouteName: 'admin_section_edit',
         } only %}
-
-        {{ knp_pagination_render(paginatedSections) }}
     {% endif %}
+
+    {{ knp_pagination_render(paginatedSections) }}
 {% endblock %}

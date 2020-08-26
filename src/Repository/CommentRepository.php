@@ -80,16 +80,16 @@ class CommentRepository extends ClosureTreeRepository
             return;
         }
         if ($modifier->withOwner) {
-            $qb->addSelect('comment_o')
-                ->leftJoin("$alias.owner", 'comment_o');
+            $qb->addSelect('c_owner')
+                ->leftJoin("$alias.owner", 'c_owner');
         }
         if ($modifier->withParent) {
-            $qb->addSelect('comment_p')
-                ->leftJoin("$alias.parent", 'comment_p');
+            $qb->addSelect('c_parent')
+                ->leftJoin("$alias.parent", 'c_parent');
         }
         if ($modifier->withArticle) {
-            $qb->addSelect('comment_a')
-                ->leftJoin("$alias.article", 'comment_a');
+            $qb->addSelect('c_article')
+                ->leftJoin("$alias.article", 'c_article');
         }
         if ($modifier->orderByField) {
             $qb->addOrderBy("$alias.{$modifier->orderByField}", $modifier->orderDirection ?: 'ASC');

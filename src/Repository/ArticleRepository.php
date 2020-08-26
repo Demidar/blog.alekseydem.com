@@ -103,27 +103,27 @@ class ArticleRepository extends ServiceEntityRepository
             $qb->addOrderBy("$alias.{$modifier->orderByField}", $modifier->orderDirection ?: 'ASC');
         }
         if ($modifier->withSection) {
-            $qb->addSelect('article_section')
-                ->leftJoin("$alias.section", 'article_section');
+            $qb->addSelect('a_section')
+                ->leftJoin("$alias.section", 'a_section');
         }
         if ($modifier->withOwner) {
-            $qb->addSelect('article_owner')
-                ->leftJoin("$alias.owner", 'article_owner');
+            $qb->addSelect('a_owner')
+                ->leftJoin("$alias.owner", 'a_owner');
         }
         if ($modifier->withComments) {
-            $qb->addSelect('article_comments')
-                ->leftJoin("$alias.comments", 'article_comments');
+            $qb->addSelect('a_comments')
+                ->leftJoin("$alias.comments", 'a_comments');
         }
         if ($modifier->withImages) {
-            $qb->addSelect(['article_images', 'article_image_references'])
-                ->leftJoin("$alias.images", 'article_image_references')
-                ->leftJoin('article_image_references.image', 'article_images');
+            $qb->addSelect(['a_images', 'a_image_references'])
+                ->leftJoin("$alias.images", 'a_image_references')
+                ->leftJoin('a_image_references.image', 'a_images');
         }
         if ($modifier->limit) {
             $qb->setMaxResults($modifier->limit);
         }
         if ($modifier->comments) {
-            $this->commentRepository->applyModifier($qb, $modifier->comments, 'article_comments');
+            $this->commentRepository->applyModifier($qb, $modifier->comments, 'a_comments');
         }
     }
 
