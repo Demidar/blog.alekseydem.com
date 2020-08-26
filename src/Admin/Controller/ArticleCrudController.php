@@ -89,7 +89,7 @@ class ArticleCrudController extends AbstractCrudController
     {
         $lang = $request->query->get('lang', $request->getLocale());
 
-        $article = $this->articleRepository->findArticleById($id, new ArticleFilter(['locale' => $lang, 'fallback' => false]));
+        $article = $this->articleRepository->findArticleById($id, new ArticleQueryModifier(['locale' => $lang, 'fallback' => false]));
         if (!$article) {
             throw new NotFoundHttpException('Article not found');
         }
