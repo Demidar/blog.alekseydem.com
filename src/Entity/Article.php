@@ -28,6 +28,7 @@ class Article
     private $owner;
 
     /**
+     * @Gedmo\Translatable()
      * @ORM\Column(type="string", length=255)
      */
     private $title;
