@@ -10,6 +10,9 @@
     &_horizontal-till-md {
       flex-direction: row;
     }
+    &_horizontal-till-lg {
+      flex-direction: row;
+    }
   }
   &__breadcrumbs {
 
@@ -28,6 +31,15 @@
     .body {
       &__container {
         &_horizontal-till-md {
+          flex-direction: column;
+        }
+      }
+    }
+  }
+  @media (max-width: $breakpoint-lg) {
+    .body {
+      &__container {
+        &_horizontal-till-lg {
           flex-direction: column;
         }
       }
