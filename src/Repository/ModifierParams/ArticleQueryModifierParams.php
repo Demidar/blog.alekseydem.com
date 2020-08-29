@@ -2,11 +2,13 @@
 
 namespace App\Repository\ModifierParams;
 
+use App\Repository\Modifier\UserQueryModifier;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ArticleQueryModifierParams implements TranslatableQueryModifierParams
 {
     public ?bool $withOwner;
+    public ?UserQueryModifier $owner;
     public ?bool $withSection;
     public ?bool $withComments;
     public ?bool $withImages;
@@ -24,6 +26,7 @@ class ArticleQueryModifierParams implements TranslatableQueryModifierParams
     {
         $options = (new OptionsResolver())->setDefaults([
             'withOwner' => null,
+            'owner' => null,
             'withSection' => null,
             'withComments' => null,
             'withImages' => null,

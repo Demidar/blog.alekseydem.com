@@ -14,7 +14,7 @@ class SectionQueryModifier
         $this->articleQueryModifier = $articleQueryModifier;
     }
 
-    public function applyModifier(QueryBuilder $qb, ?SectionQueryModifierParams $modifier, string $alias = 's'): void
+    public function applyModifier(QueryBuilder $qb, ?SectionQueryModifierParams $modifier, string $alias): void
     {
         if (!$modifier) {
             return;
@@ -29,6 +29,9 @@ class SectionQueryModifier
             if ($modifier->articles) {
                 $this->articleQueryModifier->applyModifier($qb, $modifier->articles, 's_articles');
             }
+        }
+        if ($modifier->findExceptIds) {
+            $qb->andWhere($qb->expr()->notIn("$alias.id", $modifier->findExceptIds));
         }
     }
 }

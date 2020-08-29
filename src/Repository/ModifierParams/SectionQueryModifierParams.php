@@ -11,6 +11,8 @@ class SectionQueryModifierParams implements TranslatableQueryModifierParams
     public ?ArticleQueryModifierParams $articles;
     public ?bool $fallback;
     public ?string $locale;
+    /** @var integer[]|null  */
+    public ?array $findExceptIds;
 
     public function __construct(array $modifiersArray = null)
     {
@@ -20,6 +22,7 @@ class SectionQueryModifierParams implements TranslatableQueryModifierParams
             'articles' => null,
             'fallback' => null,
             'locale' => null,
+            'findExceptIds' => null
         ])->resolve($modifiersArray);
         foreach ($options as $key => $value) {
             $this->$key = $value;

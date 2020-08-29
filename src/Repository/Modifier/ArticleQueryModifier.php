@@ -8,10 +8,14 @@ use Doctrine\ORM\QueryBuilder;
 class ArticleQueryModifier
 {
     private $commentQueryModifier;
+    private $userQueryModifier;
 
-    public function __construct(CommentQueryModifier $commentQueryModifier)
-    {
+    public function __construct(
+        CommentQueryModifier $commentQueryModifier,
+        UserQueryModifier $userQueryModifier
+    ) {
         $this->commentQueryModifier = $commentQueryModifier;
+        $this->userQueryModifier = $userQueryModifier;
     }
 
     public function applyModifier(QueryBuilder $qb, ?ArticleQueryModifierParams $modifier, string $alias): void
@@ -52,6 +56,9 @@ class ArticleQueryModifier
         }
         if ($modifier->comments) {
             $this->commentQueryModifier->applyModifier($qb, $modifier->comments, 'a_comments');
+        }
+        if ($modifier->owner) {
+            $this->userQueryModifier->applyModifier($qb, $modifier->owner, 'a_owner');
         }
     }
 }

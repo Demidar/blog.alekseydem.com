@@ -3,6 +3,7 @@
 namespace App\Admin\Form;
 
 use App\Entity\Section;
+use App\Repository\ModifierParams\SectionQueryModifierParams;
 use App\Repository\SectionRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -52,7 +53,9 @@ class SectionType extends AbstractType
                 'required' => false,
                 'label' => 'form.parent.section',
                 'class' => Section::class,
-                'choices' => $this->sectionRepository->findSections(),
+                'choices' => $this->sectionRepository->findSections(new SectionQueryModifierParams([
+                    'findExceptIds' => [$section->getId()]
+                ])),
                 'choice_value' => static function (?Section $entity) {
                     return $entity ? $entity->getId() : '';
                 },
