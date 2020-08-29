@@ -3,6 +3,8 @@ fos_ck_editor:
     default_config: default
     configs:
         default:
+            allowedContent: true
+            extraAllowedContent: 'span;ul;li;table;td;style;*[id];*(*);*{*}'
             filebrowserImageBrowseRoute: browse-images
             toolbar: standard
 twig:
