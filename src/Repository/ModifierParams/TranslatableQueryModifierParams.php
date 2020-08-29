@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Repository\Modifier;
+namespace App\Repository\ModifierParams;
 
-interface TranslatableQueryModifier
+interface TranslatableQueryModifierParams
 {
     public function getLocale(): ?string;
     public function getFallback(): ?bool;

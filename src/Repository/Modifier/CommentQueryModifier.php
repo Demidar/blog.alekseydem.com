@@ -2,41 +2,30 @@
 
 namespace App\Repository\Modifier;
 
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use App\Repository\ModifierParams\CommentQueryModifierParams;
+use Doctrine\ORM\QueryBuilder;
 
-class CommentQueryModifier implements TranslatableQueryModifier
+class CommentQueryModifier
 {
-    public ?bool $withOwner;
-    public ?bool $withParent;
-    public ?bool $withArticle;
-    public ?string $orderByField;
-    public ?string $orderDirection;
-    public ?bool $fallback;
-    public ?string $locale;
-
-    public function __construct(array $modifiersArray = null)
+    public function applyModifier(QueryBuilder $qb, ?CommentQueryModifierParams $modifier, string $alias): void
     {
-        $options = (new OptionsResolver())->setDefaults([
-            'withOwner' => null,
-            'withParent' => null,
-            'withArticle' => null,
-            'orderByField' => null,
-            'orderDirection' => null,
-            'fallback' => null,
-            'locale' => null,
-        ])->resolve($modifiersArray);
-        foreach ($options as $key => $value) {
-            $this->$key = $value;
+        if (!$modifier) {
+            return;
         }
-    }
-
-    public function getLocale(): ?string
-    {
-        return $this->locale;
-    }
-
-    public function getFallback(): ?bool
-    {
-        return $this->fallback;
+        if ($modifier->withOwner) {
+            $qb->addSelect('c_owner')
+                ->leftJoin("$alias.owner", 'c_owner');
+        }
+        if ($modifier->withParent) {
+            $qb->addSelect('c_parent')
+                ->leftJoin("$alias.parent", 'c_parent');
+        }
+        if ($modifier->withArticle) {
+            $qb->addSelect('c_article')
+                ->leftJoin("$alias.article", 'c_article');
+        }
+        if ($modifier->orderByField) {
+            $qb->addOrderBy("$alias.{$modifier->orderByField}", $modifier->orderDirection ?: 'ASC');
+        }
     }
 }

@@ -4,10 +4,10 @@ namespace App\Repository;
 
 use App\Entity\Comment;
 use App\Repository\Modifier\CommentQueryModifier;
+use App\Repository\ModifierParams\CommentQueryModifierParams;
 use App\Repository\RepoTrait\TranslatableTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
-use Doctrine\ORM\QueryBuilder;
 use Gedmo\Tree\Entity\Repository\ClosureTreeRepository;
 
 /**
@@ -20,19 +20,29 @@ class CommentRepository extends ClosureTreeRepository
 {
     use TranslatableTrait;
 
+    private CommentQueryModifier $queryModifier;
+
     public function __construct(EntityManagerInterface $em)
     {
         parent::__construct($em, $em->getClassMetadata(Comment::class));
     }
 
-    public function findCommentById(int $id, ?CommentQueryModifier $modifier = null): ?Comment
+    /**
+     * @required
+     */
+    public function setQueryModifier(CommentQueryModifier $queryModifier)
+    {
+        $this->queryModifier = $queryModifier;
+    }
+
+    public function findCommentById(int $id, ?CommentQueryModifierParams $modifier = null): ?Comment
     {
         $qb = $this->createQueryBuilder('c')
             ->andWhere('c.id = :id')
             ->setParameter('id', $id)
         ;
 
-        $this->applyModifier($qb, $modifier);
+        $this->queryModifier->applyModifier($qb, $modifier, 'c');
 
         return $this->applyHints($qb->getQuery(), $modifier)->getOneOrNullResult();
     }
@@ -40,14 +50,14 @@ class CommentRepository extends ClosureTreeRepository
     /**
      * @return Comment[]
      */
-    public function findCommentsByArticle(int $id, ?CommentQueryModifier $modifier = null): array
+    public function findCommentsByArticle(int $id, ?CommentQueryModifierParams $modifier = null): array
     {
         $qb = $this->createQueryBuilder('c')
             ->andWhere('c.article = :article')
             ->setParameter('article', $id)
         ;
 
-        $this->applyModifier($qb, $modifier);
+        $this->queryModifier->applyModifier($qb, $modifier, 'c');
 
         return $this->applyHints($qb->getQuery(), $modifier)->getResult();
     }
@@ -55,7 +65,7 @@ class CommentRepository extends ClosureTreeRepository
     /**
      * @return Comment[]
      */
-    public function findComments(?CommentQueryModifier $modifier = null): array
+    public function findComments(?CommentQueryModifierParams $modifier = null): array
     {
         return $this->findCommentsQuery($modifier)->getResult();
     }
@@ -65,38 +75,16 @@ class CommentRepository extends ClosureTreeRepository
         return $this->count([]);
     }
 
-    public function findCommentsQuery(?CommentQueryModifier $modifier = null): Query
+    public function findCommentsQuery(?CommentQueryModifierParams $modifier = null): Query
     {
         $qb = $this->createQueryBuilder('c');
 
-        $this->applyModifier($qb, $modifier);
+        $this->queryModifier->applyModifier($qb, $modifier, 'c');
 
         return $this->applyHints($qb->getQuery(), $modifier);
     }
 
-    public function applyModifier(QueryBuilder $qb, ?CommentQueryModifier $modifier, string $alias = 'c'): void
-    {
-        if (!$modifier) {
-            return;
-        }
-        if ($modifier->withOwner) {
-            $qb->addSelect('c_owner')
-                ->leftJoin("$alias.owner", 'c_owner');
-        }
-        if ($modifier->withParent) {
-            $qb->addSelect('c_parent')
-                ->leftJoin("$alias.parent", 'c_parent');
-        }
-        if ($modifier->withArticle) {
-            $qb->addSelect('c_article')
-                ->leftJoin("$alias.article", 'c_article');
-        }
-        if ($modifier->orderByField) {
-            $qb->addOrderBy("$alias.{$modifier->orderByField}", $modifier->orderDirection ?: 'ASC');
-        }
-    }
-
-    private function applyHints(Query $query, ?CommentQueryModifier $modifier = null): Query
+    private function applyHints(Query $query, ?CommentQueryModifierParams $modifier = null): Query
     {
         /**
          * Althoug comments has no translations, these rules will be applied to such relations as Article.

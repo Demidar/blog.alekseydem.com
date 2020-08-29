@@ -2,37 +2,33 @@
 
 namespace App\Repository\Modifier;
 
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use App\Repository\ModifierParams\SectionQueryModifierParams;
+use Doctrine\ORM\QueryBuilder;
 
-class SectionQueryModifier implements TranslatableQueryModifier
+class SectionQueryModifier
 {
-    public ?bool $withParent;
-    public ?bool $withArticles;
-    public ?ArticleQueryModifier $articles;
-    public ?bool $fallback;
-    public ?string $locale;
+    private $articleQueryModifier;
 
-    public function __construct(array $modifiersArray = null)
+    public function __construct(ArticleQueryModifier $articleQueryModifier)
     {
-        $options = (new OptionsResolver())->setDefaults([
-            'withParent' => null,
-            'withArticles' => null,
-            'articles' => null,
-            'fallback' => null,
-            'locale' => null,
-        ])->resolve($modifiersArray);
-        foreach ($options as $key => $value) {
-            $this->$key = $value;
+        $this->articleQueryModifier = $articleQueryModifier;
+    }
+
+    public function applyModifier(QueryBuilder $qb, ?SectionQueryModifierParams $modifier, string $alias = 's'): void
+    {
+        if (!$modifier) {
+            return;
         }
-    }
-
-    public function getLocale(): ?string
-    {
-        return $this->locale;
-    }
-
-    public function getFallback(): ?bool
-    {
-        return $this->fallback;
+        if ($modifier->withParent) {
+            $qb->addSelect('s_parent')
+                ->leftJoin("$alias.parent", 's_parent');
+        }
+        if ($modifier->withArticles) {
+            $qb->addSelect('s_articles')
+                ->leftJoin("$alias.articles", 's_articles');
+            if ($modifier->articles) {
+                $this->articleQueryModifier->applyModifier($qb, $modifier->articles, 's_articles');
+            }
+        }
     }
 }

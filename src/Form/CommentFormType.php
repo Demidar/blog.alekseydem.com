@@ -2,14 +2,10 @@
 
 namespace App\Form;
 
-use App\Entity\Article;
 use App\Entity\Comment;
 use App\Form\Transformer\ArticleToIdTransformer;
 use App\Form\Transformer\CommentToIdTransformer;
-use App\Form\type\EntityHiddenType;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;

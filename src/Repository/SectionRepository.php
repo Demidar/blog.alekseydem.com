@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Section;
 use App\Repository\Modifier\SectionQueryModifier;
+use App\Repository\ModifierParams\SectionQueryModifierParams;
 use App\Repository\RepoTrait\TranslatableTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
@@ -21,14 +22,20 @@ class SectionRepository extends ClosureTreeRepository
 {
     use TranslatableTrait;
 
-    private $articleRepository;
+    private SectionQueryModifier $queryModifier;
 
     public function __construct(
-        EntityManagerInterface $em,
-        ArticleRepository $articleRepository
+        EntityManagerInterface $em
     ) {
         parent::__construct($em, $em->getClassMetadata(Section::class));
-        $this->articleRepository = $articleRepository;
+    }
+
+    /**
+     * @required
+     */
+    public function setQueryModifier(SectionQueryModifier $queryModifier)
+    {
+        $this->queryModifier = $queryModifier;
     }
 
     /**
@@ -36,32 +43,32 @@ class SectionRepository extends ClosureTreeRepository
      *
      * @return Section[]
      */
-    public function getSectionPath(Section $section, ?SectionQueryModifier $modifier = null): array
+    public function getSectionPath(Section $section, ?SectionQueryModifierParams $modifier = null): array
     {
         return array_map(static function (AbstractClosure $closure) {
             return $closure->getAncestor();
         }, $this->applyHints($this->getPathQuery($section), $modifier)->getResult());
     }
 
-    public function findSectionById(int $id, ?SectionQueryModifier $modifier = null): ?Section
+    public function findSectionById(int $id, ?SectionQueryModifierParams $modifier = null): ?Section
     {
         $qb = $this->createQueryBuilder('s')
             ->andWhere('s.id = :id')
             ->setParameter('id', $id);
 
-        $this->applyModifier($qb, $modifier);
+        $this->queryModifier->applyModifier($qb, $modifier, 's');
 
         return $this->applyHints($qb->getQuery(), $modifier)->getOneOrNullResult();
     }
 
-    public function findSectionBySlug(string $slug, ?SectionQueryModifier $modifier = null): ?Section
+    public function findSectionBySlug(string $slug, ?SectionQueryModifierParams $modifier = null): ?Section
     {
         $qb = $this->createQueryBuilder('s')
             ->andWhere('s.slug = :slug')
             ->setParameter('slug', $slug)
         ;
 
-        $this->applyModifier($qb, $modifier);
+        $this->queryModifier->applyModifier($qb, $modifier, 's');
 
         return $this->applyHints($qb->getQuery(), $modifier)->getOneOrNullResult();
     }
@@ -69,16 +76,16 @@ class SectionRepository extends ClosureTreeRepository
     /**
      * @return Section[]
      */
-    public function findSections(?SectionQueryModifier $modifier = null): array
+    public function findSections(?SectionQueryModifierParams $modifier = null): array
     {
         return $this->findSectionsQuery($modifier)->getResult();
     }
 
-    public function findSectionsQuery(?SectionQueryModifier $modifier = null): Query
+    public function findSectionsQuery(?SectionQueryModifierParams $modifier = null): Query
     {
         $qb = $this->createQueryBuilder('s');
 
-        $this->applyModifier($qb, $modifier);
+        $this->queryModifier->applyModifier($qb, $modifier, 's');
 
         return $this->applyHints($qb->getQuery(), $modifier);
     }
@@ -86,14 +93,14 @@ class SectionRepository extends ClosureTreeRepository
     /**
      * @return Section[]
      */
-    public function findChildren(int $id, ?SectionQueryModifier $modifier = null): array
+    public function findChildren(int $id, ?SectionQueryModifierParams $modifier = null): array
     {
         $qb = $this->createQueryBuilder('s')
             ->andWhere('s.parent = :id')
             ->setParameter('id', $id)
         ;
 
-        $this->applyModifier($qb, $modifier);
+        $this->queryModifier->applyModifier($qb, $modifier, 's');
 
         return $this->applyHints($qb->getQuery(), $modifier)->getResult();
     }
@@ -101,34 +108,16 @@ class SectionRepository extends ClosureTreeRepository
     /**
      * @return Section[]
      */
-    public function getRootSections(?SectionQueryModifier $modifier = null): array
+    public function getRootSections(?SectionQueryModifierParams $modifier = null): array
     {
         $qb = $this->getRootNodesQueryBuilder('position', 'asc');
 
-        $this->applyModifier($qb, $modifier, 'node');
+        $this->queryModifier->applyModifier($qb, $modifier, 'node');
 
         return $this->applyHints($qb->getQuery(), $modifier)->getResult();
     }
 
-    private function applyModifier(QueryBuilder $qb, ?SectionQueryModifier $modifier, string $alias = 's'): void
-    {
-        if (!$modifier) {
-            return;
-        }
-        if ($modifier->withParent) {
-            $qb->addSelect('s_parent')
-                ->leftJoin("$alias.parent", 's_parent');
-        }
-        if ($modifier->withArticles) {
-            $qb->addSelect('s_articles')
-                ->leftJoin("$alias.articles", 's_articles');
-            if ($modifier->articles) {
-                $this->articleRepository->applyModifier($qb, $modifier->articles, 's_articles');
-            }
-        }
-    }
-
-    private function applyHints(Query $query, ?SectionQueryModifier $modifier = null): Query
+    private function applyHints(Query $query, ?SectionQueryModifierParams $modifier = null): Query
     {
         $query = $this->applyTranslatables($query, $modifier);
 

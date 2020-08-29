@@ -3,8 +3,8 @@
 namespace App\Controller;
 
 use App\Repository\ArticleRepository;
-use App\Repository\Modifier\ArticleQueryModifier;
-use App\Repository\Modifier\SectionQueryModifier;
+use App\Repository\ModifierParams\ArticleQueryModifierParams;
+use App\Repository\ModifierParams\SectionQueryModifierParams;
 use App\Repository\SectionRepository;
 use App\Service\Breadcrumbs;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,16 +15,13 @@ class SectionController extends AbstractController
 {
     private $sectionRepository;
     private $breadcrumbs;
-    private $articleRepository;
 
     public function __construct(
         SectionRepository $sectionRepository,
-        ArticleRepository $articleRepository,
         Breadcrumbs $breadcrumbs
     ) {
         $this->sectionRepository = $sectionRepository;
         $this->breadcrumbs = $breadcrumbs;
-        $this->articleRepository = $articleRepository;
     }
 
     /**
@@ -32,9 +29,9 @@ class SectionController extends AbstractController
      */
     public function section($slug)
     {
-        $section = $this->sectionRepository->findSectionBySlug($slug, new SectionQueryModifier([
+        $section = $this->sectionRepository->findSectionBySlug($slug, new SectionQueryModifierParams([
             'withArticles' => true,
-            'articles' => new ArticleQueryModifier([
+            'articles' => new ArticleQueryModifierParams([
                 'withImages' => true
             ])
         ]));

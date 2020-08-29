@@ -5,7 +5,7 @@ namespace App\Admin\Form;
 use App\Admin\Form\Transformer\ArticleToObjectTransformer;
 use App\Entity\Article;
 use App\Repository\ArticleRepository;
-use App\Repository\Modifier\ArticleQueryModifier;
+use App\Repository\ModifierParams\ArticleQueryModifierParams;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -44,7 +44,7 @@ class HeavyArticleSelectorType extends AbstractType
             // convert array of arrays to array of object to avoid "choices grouping"
             'choices' => array_map(
                 static function ($entry) {return (object) $entry;},
-                $this->articleRepository->findArticles(new ArticleQueryModifier([
+                $this->articleRepository->findArticles(new ArticleQueryModifierParams([
                     'select' => ['id', 'title', 'status'],
                     'orderByField' => 'title',
                 ]))

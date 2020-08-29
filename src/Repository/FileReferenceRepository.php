@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\FileReference;
 use App\Repository\Modifier\FileReferenceQueryModifier;
+use App\Repository\ModifierParams\FileReferenceQueryModifierParams;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
@@ -17,19 +18,29 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class FileReferenceRepository extends ServiceEntityRepository
 {
+    private FileReferenceQueryModifier $queryModifier;
+
     public function __construct(ManagerRegistry $registry, $entityClass = null)
     {
         parent::__construct($registry, $entityClass ?? FileReference::class);
     }
 
-    public function findFileReferenceById(int $id, ?FileReferenceQueryModifier $modifier = null): ?FileReference
+    /**
+     * @required
+     */
+    public function setQueryModifier(FileReferenceQueryModifier $queryModifier): void
+    {
+        $this->queryModifier = $queryModifier;
+    }
+
+    public function findFileReferenceById(int $id, ?FileReferenceQueryModifierParams $modifier = null): ?FileReference
     {
         $qb = $this->createQueryBuilder('fr')
             ->andWhere('fr.id = :id')
             ->setParameter('id', $id)
         ;
 
-        $this->applyModifier($qb, $modifier);
+        $this->queryModifier->applyModifier($qb, $modifier, 'fr');
 
         return $this->applyHints($qb->getQuery(), $modifier)->getOneOrNullResult();
     }
@@ -37,7 +48,7 @@ class FileReferenceRepository extends ServiceEntityRepository
     /**
      * @return FileReference[]
      */
-    public function findFileReferences(?FileReferenceQueryModifier $modifier = null): array
+    public function findFileReferences(?FileReferenceQueryModifierParams $modifier = null): array
     {
         return $this->findFileReferencesQuery($modifier)->getResult();
     }
@@ -47,23 +58,16 @@ class FileReferenceRepository extends ServiceEntityRepository
         return $this->count([]);
     }
 
-    public function findFileReferencesQuery(?FileReferenceQueryModifier $modifier = null): Query
+    public function findFileReferencesQuery(?FileReferenceQueryModifierParams $modifier = null): Query
     {
         $qb = $this->createQueryBuilder('fr');
 
-        $this->applyModifier($qb, $modifier);
+        $this->queryModifier->applyModifier($qb, $modifier, 'fr');
 
         return $this->applyHints($qb->getQuery(), $modifier);
     }
 
-    private function applyModifier(QueryBuilder $qb, ?FileReferenceQueryModifier $modifier): void
-    {
-        if (!$modifier) {
-            return;
-        }
-    }
-
-    private function applyHints(Query $query, ?FileReferenceQueryModifier $modifier = null): Query
+    private function applyHints(Query $query, ?FileReferenceQueryModifierParams $modifier = null): Query
     {
         $query->setHint('knp_paginator.count', $this->countFileReferences());
 

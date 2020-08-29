@@ -5,7 +5,7 @@ namespace App\Admin\Controller;
 use App\Admin\Form\CommentType;
 use App\Entity\Comment;
 use App\Repository\CommentRepository;
-use App\Repository\Modifier\CommentQueryModifier;
+use App\Repository\ModifierParams\CommentQueryModifierParams;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,7 +36,7 @@ class CommentCrudController extends AbstractCrudController
     {
         $page = $request->query->getInt('page', 1);
 
-        $commentsQuery = $this->commentRepository->findCommentsQuery(new CommentQueryModifier([
+        $commentsQuery = $this->commentRepository->findCommentsQuery(new CommentQueryModifierParams([
             'withOwner' => true,
             'withParent' => true,
             'withArticle' => true
@@ -82,7 +82,7 @@ class CommentCrudController extends AbstractCrudController
      */
     public function edit(int $id, Request $request): Response
     {
-        $comment = $this->commentRepository->findCommentById($id, new CommentQueryModifier(['withOwner' => true]));
+        $comment = $this->commentRepository->findCommentById($id, new CommentQueryModifierParams(['withOwner' => true]));
         if (!$comment) {
             throw new NotFoundHttpException('Comment not found');
         }

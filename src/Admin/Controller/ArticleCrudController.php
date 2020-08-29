@@ -5,7 +5,7 @@ namespace App\Admin\Controller;
 use App\Admin\Form\ArticleType;
 use App\Entity\Article;
 use App\Repository\ArticleRepository;
-use App\Repository\Modifier\ArticleQueryModifier;
+use App\Repository\ModifierParams\ArticleQueryModifierParams;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -36,7 +36,7 @@ class ArticleCrudController extends AbstractCrudController
         $lang = $request->query->get('lang', $request->getLocale());
         $page = $request->query->getInt('page', 1);
 
-        $articlesQuery = $this->articleRepository->findArticlesQuery(new ArticleQueryModifier([
+        $articlesQuery = $this->articleRepository->getArticlesQuery(new ArticleQueryModifierParams([
             'locale' => $lang,
             'fallback' => true,
             'withSection' => true,
@@ -89,7 +89,7 @@ class ArticleCrudController extends AbstractCrudController
     {
         $lang = $request->query->get('lang', $request->getLocale());
 
-        $article = $this->articleRepository->findArticleById($id, new ArticleQueryModifier(['locale' => $lang, 'fallback' => false]));
+        $article = $this->articleRepository->findArticleById($id, new ArticleQueryModifierParams(['locale' => $lang, 'fallback' => false]));
         if (!$article) {
             throw new NotFoundHttpException('Article not found');
         }

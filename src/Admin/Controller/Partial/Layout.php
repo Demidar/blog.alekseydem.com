@@ -2,12 +2,8 @@
 
 namespace App\Admin\Controller\Partial;
 
-use App\Admin\Service\Menu\MenuBuilder;
-use App\Entity\Article;
-use App\Entity\Section;
 use App\Model\Link;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
 
 class Layout extends AbstractController
 {

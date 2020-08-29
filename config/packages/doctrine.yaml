@@ -18,12 +18,10 @@ doctrine:
             fileReference: App\Doctrine\FileReferenceSqlFilter
             imageReference: App\Doctrine\ImageReferenceSqlFilter
         mappings:
-            gedmo_translatable:
+            translatable:
                 type: annotation
                 prefix: Gedmo\Translatable\Entity
                 dir: "%kernel.project_dir%/vendor/gedmo/doctrine-extensions/lib/Gedmo/Translatable/Entity"
-                alias: GedmoTranslatable # (optional) it will default to the name set for the mapping
-                is_bundle: false
             App:
                 is_bundle: false
                 type: annotation

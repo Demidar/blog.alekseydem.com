@@ -11,7 +11,7 @@ class DashboardController extends AbstractController
     /**
      * @Route("/", name="admin_dashboard")
      */
-    public function dashboard()
+    public function dashboard(): Response
     {
         return $this->render('admin/dashboard/dashboard.html.twig');
     }

@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\FileReferenceArticle;
-use App\Repository\Modifier\FileReferenceQueryModifier;
+use App\Repository\ModifierParams\FileReferenceQueryModifierParams;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -11,8 +11,8 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method FileReferenceArticle|null findOneBy(array $criteria, array $orderBy = null)
  * @method FileReferenceArticle[]    findAll()
  * @method FileReferenceArticle[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
- * @method FileReferenceArticle|null findFileReferenceById(int $id, ?FileReferenceQueryModifier $modifier = null)
- * @method FileReferenceArticle[]    findFileReferences(?FileReferenceQueryModifier $modifier = null)
+ * @method FileReferenceArticle|null findFileReferenceById(int $id, ?FileReferenceQueryModifierParams $modifier = null)
+ * @method FileReferenceArticle[]    findFileReferences(?FileReferenceQueryModifierParams $modifier = null)
  */
 class FileReferenceArticleRepository extends FileReferenceRepository
 {

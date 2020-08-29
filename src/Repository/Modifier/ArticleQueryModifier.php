@@ -2,52 +2,56 @@
 
 namespace App\Repository\Modifier;
 
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use App\Repository\ModifierParams\ArticleQueryModifierParams;
+use Doctrine\ORM\QueryBuilder;
 
-class ArticleQueryModifier implements TranslatableQueryModifier
+class ArticleQueryModifier
 {
-    public ?bool $withOwner;
-    public ?bool $withSection;
-    public ?bool $withComments;
-    public ?bool $withImages;
-    public ?string $orderByField;
-    public ?string $orderDirection;
-    /** @var string[]|null */
-    public ?array $select;
-    public ?CommentQueryModifier $comments;
-    public ?bool $fallback;
-    public ?string $locale;
-    public ?int $limit;
-    public ?int $offset;
+    private $commentQueryModifier;
 
-    public function __construct(array $modifiersArray = null)
+    public function __construct(CommentQueryModifier $commentQueryModifier)
     {
-        $options = (new OptionsResolver())->setDefaults([
-            'withOwner' => null,
-            'withSection' => null,
-            'withComments' => null,
-            'withImages' => null,
-            'comments' => null,
-            'orderByField' => null,
-            'orderDirection' => null,
-            'select' => null,
-            'fallback' => null,
-            'locale' => null,
-            'limit' => null,
-            'offset' => null
-        ])->resolve($modifiersArray);
-        foreach ($options as $key => $value) {
-            $this->$key = $value;
+        $this->commentQueryModifier = $commentQueryModifier;
+    }
+
+    public function applyModifier(QueryBuilder $qb, ?ArticleQueryModifierParams $modifier, string $alias): void
+    {
+        if (!$modifier) {
+            return;
         }
-    }
 
-    public function getLocale(): ?string
-    {
-        return $this->locale;
-    }
-
-    public function getFallback(): ?bool
-    {
-        return $this->fallback;
+        if ($modifier->select) {
+            $qb->select(
+                array_map(static function ($field) use ($alias) {
+                    return "$alias.$field";
+                }, $modifier->select)
+            );
+        }
+        if ($modifier->orderByField) {
+            $qb->addOrderBy("$alias.{$modifier->orderByField}", $modifier->orderDirection ?: 'ASC');
+        }
+        if ($modifier->withSection) {
+            $qb->addSelect('a_section')
+                ->leftJoin("$alias.section", 'a_section');
+        }
+        if ($modifier->withOwner) {
+            $qb->addSelect('a_owner')
+                ->leftJoin("$alias.owner", 'a_owner');
+        }
+        if ($modifier->withComments) {
+            $qb->addSelect('a_comments')
+                ->leftJoin("$alias.comments", 'a_comments');
+        }
+        if ($modifier->withImages) {
+            $qb->addSelect(['a_images', 'a_image_references'])
+                ->leftJoin("$alias.images", 'a_image_references')
+                ->leftJoin('a_image_references.image', 'a_images');
+        }
+        if ($modifier->limit) {
+            $qb->setMaxResults($modifier->limit);
+        }
+        if ($modifier->comments) {
+            $this->commentQueryModifier->applyModifier($qb, $modifier->comments, 'a_comments');
+        }
     }
 }

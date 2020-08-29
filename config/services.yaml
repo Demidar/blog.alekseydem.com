@@ -39,3 +39,7 @@ services:
     App\Twig\AppExtension:
         arguments:
             $uploadPath: '%app.upload_path%'
+    App\Repository\SectionRepository:
+        arguments:
+            - '@Doctrine\ORM\EntityManagerInterface'
+            - '@App\Repository\ArticleRepository'

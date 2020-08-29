@@ -4,10 +4,10 @@ namespace App\Repository;
 
 use App\Entity\Article;
 use App\Repository\Modifier\ArticleQueryModifier;
+use App\Repository\ModifierParams\ArticleQueryModifierParams;
 use App\Repository\RepoTrait\TranslatableTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
-use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -20,46 +20,46 @@ class ArticleRepository extends ServiceEntityRepository
 {
     use TranslatableTrait;
 
-    private $commentRepository;
+    private $queryModifier;
 
     public function __construct(
         ManagerRegistry $registry,
-        CommentRepository $commentRepository
+        ArticleQueryModifier $queryModifier
     ) {
         parent::__construct($registry, Article::class);
-        $this->commentRepository = $commentRepository;
+        $this->queryModifier = $queryModifier;
     }
 
-    public function findArticleBySlug(string $slug, ?ArticleQueryModifier $modifier = null): ?Article
+    public function findArticleBySlug(string $slug, ?ArticleQueryModifierParams $modifierParams = null): ?Article
     {
         $qb = $this->createQueryBuilder('a')
             ->andWhere('a.slug = :slug')
             ->setParameter('slug', $slug)
         ;
 
-        $this->applyModifier($qb, $modifier);
+        $this->queryModifier->applyModifier($qb, $modifierParams, 'a');
 
-        return $this->applyHints($qb->getQuery(), $modifier)->getOneOrNullResult();
+        return $this->applyHints($qb->getQuery(), $modifierParams)->getOneOrNullResult();
     }
 
-    public function findArticleById(string $id, ?ArticleQueryModifier $modifier = null): ?Article
+    public function findArticleById(string $id, ?ArticleQueryModifierParams $modifierParams = null): ?Article
     {
         $qb = $this->createQueryBuilder('a')
             ->andWhere('a.id = :id')
             ->setParameter('id', $id)
         ;
 
-        $this->applyModifier($qb, $modifier);
+        $this->queryModifier->applyModifier($qb, $modifierParams, 'a');
 
-        return $this->applyHints($qb->getQuery(), $modifier)->getOneOrNullResult();
+        return $this->applyHints($qb->getQuery(), $modifierParams)->getOneOrNullResult();
     }
 
     /**
      * @return Article[]
      */
-    public function findArticles(?ArticleQueryModifier $modifier = null): array
+    public function findArticles(?ArticleQueryModifierParams $modifierParams = null): array
     {
-        return $this->findArticlesQuery($modifier)->getResult();
+        return $this->getArticlesQuery($modifierParams)->getResult();
     }
 
     public function countArticles(): int
@@ -67,67 +67,31 @@ class ArticleRepository extends ServiceEntityRepository
         return $this->count([]);
     }
 
-    public function findArticlesQuery(?ArticleQueryModifier $modifier = null): Query
+    public function getArticlesQuery(?ArticleQueryModifierParams $modifierParams = null): Query
     {
         $qb = $this->createQueryBuilder('a');
 
-        $this->applyModifier($qb, $modifier);
+        $this->queryModifier->applyModifier($qb, $modifierParams, 'a');
 
-        return $this->applyHints($qb->getQuery(), $modifier);
+        return $this->applyHints($qb->getQuery(), $modifierParams);
     }
 
-    public function findArticlesBySection(int $sectionId)
+    /**
+     * @return Article[]
+     */
+    public function findArticlesBySection(int $sectionId, ?ArticleQueryModifierParams $modifierParams = null): array
     {
         $qb = $this->createQueryBuilder('a')
             ->andWhere('a.section = :section')
             ->setParameter('section', $sectionId)
         ;
 
+        $this->queryModifier->applyModifier($qb, $modifierParams, 'a');
+
         return $this->applyHints($qb->getQuery())->getResult();
     }
 
-    public function applyModifier(QueryBuilder $qb, ?ArticleQueryModifier $modifier, string $alias = 'a'): void
-    {
-        if (!$modifier) {
-            return;
-        }
-
-        if ($modifier->select) {
-            $qb->select(
-                array_map(static function ($field) use ($alias) {
-                        return "$alias.$field";
-                    }, $modifier->select)
-            );
-        }
-        if ($modifier->orderByField) {
-            $qb->addOrderBy("$alias.{$modifier->orderByField}", $modifier->orderDirection ?: 'ASC');
-        }
-        if ($modifier->withSection) {
-            $qb->addSelect('a_section')
-                ->leftJoin("$alias.section", 'a_section');
-        }
-        if ($modifier->withOwner) {
-            $qb->addSelect('a_owner')
-                ->leftJoin("$alias.owner", 'a_owner');
-        }
-        if ($modifier->withComments) {
-            $qb->addSelect('a_comments')
-                ->leftJoin("$alias.comments", 'a_comments');
-        }
-        if ($modifier->withImages) {
-            $qb->addSelect(['a_images', 'a_image_references'])
-                ->leftJoin("$alias.images", 'a_image_references')
-                ->leftJoin('a_image_references.image', 'a_images');
-        }
-        if ($modifier->limit) {
-            $qb->setMaxResults($modifier->limit);
-        }
-        if ($modifier->comments) {
-            $this->commentRepository->applyModifier($qb, $modifier->comments, 'a_comments');
-        }
-    }
-
-    private function applyHints(Query $query, ?ArticleQueryModifier $modifier = null): Query
+    private function applyHints(Query $query, ?ArticleQueryModifierParams $modifier = null): Query
     {
         $query = $this->applyTranslatables($query, $modifier);
 

@@ -5,8 +5,8 @@ namespace App\Controller;
 use App\Entity\Comment;
 use App\Form\CommentFormType;
 use App\Repository\ArticleRepository;
-use App\Repository\Modifier\ArticleQueryModifier;
-use App\Repository\Modifier\CommentQueryModifier;
+use App\Repository\ModifierParams\ArticleQueryModifierParams;
+use App\Repository\ModifierParams\CommentQueryModifierParams;
 use App\Service\Breadcrumbs;
 use App\Service\HierarchyBuilder;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -35,9 +35,9 @@ class ArticleController extends AbstractController
      */
     public function article($slug)
     {
-        $article = $this->articleRepository->findArticleBySlug($slug, new ArticleQueryModifier([
+        $article = $this->articleRepository->findArticleBySlug($slug, new ArticleQueryModifierParams([
             'withComments' => true,
-            'comments' => new CommentQueryModifier([
+            'comments' => new CommentQueryModifierParams([
                 'orderByField'=> 'createdAt',
                 'orderDirection' => 'DESC'
             ]),

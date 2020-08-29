@@ -2,14 +2,14 @@
 
 namespace App\Repository\RepoTrait;
 
-use App\Repository\Modifier\TranslatableQueryModifier;
+use App\Repository\ModifierParams\TranslatableQueryModifierParams;
 use Doctrine\ORM\Query;
 use Gedmo\Translatable\Query\TreeWalker\TranslationWalker;
 use Gedmo\Translatable\TranslatableListener;
 
 trait TranslatableTrait
 {
-    protected function applyTranslatables(Query $query, TranslatableQueryModifier $modifier = null): Query
+    protected function applyTranslatables(Query $query, TranslatableQueryModifierParams $modifier = null): Query
     {
         if ($modifier) {
             $locale = $modifier->getLocale();

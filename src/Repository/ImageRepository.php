@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Image;
 use App\Repository\Modifier\ImageQueryModifier;
+use App\Repository\ModifierParams\ImageQueryModifierParams;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
@@ -17,19 +18,22 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ImageRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private $queryModifier;
+
+    public function __construct(ManagerRegistry $registry, ImageQueryModifier $queryModifier)
     {
         parent::__construct($registry, Image::class);
+        $this->queryModifier = $queryModifier;
     }
 
-    public function findImageById(int $id, ?ImageQueryModifier $modifier = null): ?Image
+    public function findImageById(int $id, ?ImageQueryModifierParams $modifier = null): ?Image
     {
         $qb = $this->createQueryBuilder('i')
             ->andWhere('i.id = :id')
             ->setParameter('id', $id)
         ;
 
-        $this->applyModifier($qb, $modifier);
+        $this->queryModifier->applyModifier($qb, $modifier, 'i');
 
         return $this->applyHints($qb->getQuery(), $modifier)->getOneOrNullResult();
     }
@@ -37,7 +41,7 @@ class ImageRepository extends ServiceEntityRepository
     /**
      * @return Image[]
      */
-    public function findImages(?ImageQueryModifier $modifier = null): array
+    public function findImages(?ImageQueryModifierParams $modifier = null): array
     {
         return $this->findImagesQuery($modifier)->getResult();
     }
@@ -47,23 +51,16 @@ class ImageRepository extends ServiceEntityRepository
         return $this->count([]);
     }
 
-    public function findImagesQuery(?ImageQueryModifier $modifier = null): Query
+    public function findImagesQuery(?ImageQueryModifierParams $modifier = null): Query
     {
         $qb = $this->createQueryBuilder('i');
 
-        $this->applyModifier($qb, $modifier);
+        $this->queryModifier->applyModifier($qb, $modifier, 'i');
 
         return $this->applyHints($qb->getQuery(), $modifier);
     }
 
-    private function applyModifier(QueryBuilder $qb, ?ImageQueryModifier $modifier, string $alias = 'i'): void
-    {
-        if (!$modifier) {
-            return;
-        }
-    }
-
-    private function applyHints(Query $query, ?ImageQueryModifier $modifier = null): Query
+    private function applyHints(Query $query, ?ImageQueryModifierParams $modifier = null): Query
     {
         $query->setHint('knp_paginator.count', $this->countImages());
 
