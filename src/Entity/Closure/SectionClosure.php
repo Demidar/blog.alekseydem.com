@@ -2,6 +2,7 @@
 
 namespace App\Entity\Closure;
 
+use App\Entity\CloneableEntityTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Tree\Entity\MappedSuperclass\AbstractClosure;
 
@@ -10,5 +11,5 @@ use Gedmo\Tree\Entity\MappedSuperclass\AbstractClosure;
  */
 class SectionClosure extends AbstractClosure
 {
-
+    use CloneableEntityTrait;
 }

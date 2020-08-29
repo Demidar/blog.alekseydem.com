@@ -13,6 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class FileReference
 {
+    use CloneableEntityTrait;
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

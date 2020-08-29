@@ -12,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Tag
 {
+    use CloneableEntityTrait;
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

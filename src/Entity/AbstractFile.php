@@ -15,37 +15,38 @@ use Doctrine\ORM\Mapping as ORM;
  */
 abstract class AbstractFile
 {
+    use CloneableEntityTrait;
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    protected $id;
+    private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    protected $originalName;
+    private $originalName;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    protected $mimeType;
+    private $mimeType;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    protected $name;
+    private $name;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    protected $status = 'visible';
+    private $status = 'visible';
 
     /**
      * @ORM\Column(type="integer")
      */
-    protected $size;
+    private $size;
 
     public function getId(): ?int
     {

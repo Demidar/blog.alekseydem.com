@@ -30,14 +30,14 @@ class ArticleRepository extends ServiceEntityRepository
         $this->queryModifier = $queryModifier;
     }
 
-    public function findArticleBySlug(string $slug, ?ArticleQueryModifierParams $modifierParams = null): ?Article
+    public function findArticleBySlug(string $slug, ?ArticleQueryModifierParams $modifierParams = null, ?string $alias = 'a'): ?Article
     {
-        $qb = $this->createQueryBuilder('a')
-            ->andWhere('a.slug = :slug')
+        $qb = $this->createQueryBuilder($alias)
+            ->andWhere("$alias.slug = :slug")
             ->setParameter('slug', $slug)
         ;
 
-        $this->queryModifier->applyModifier($qb, $modifierParams, 'a');
+        $this->queryModifier->applyModifier($qb, $modifierParams, $alias);
 
         return $this->applyHints($qb->getQuery(), $modifierParams)->getOneOrNullResult();
     }

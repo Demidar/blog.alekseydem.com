@@ -18,6 +18,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class Comment
 {
+    use CloneableEntityTrait;
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

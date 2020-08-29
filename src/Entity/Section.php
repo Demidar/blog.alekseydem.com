@@ -6,6 +6,7 @@ use App\Repository\SectionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\PersistentCollection;
 use Gedmo\Mapping\Annotation as Gedmo;
 use App\Entity\Closure\SectionClosure;
 
@@ -17,6 +18,7 @@ use App\Entity\Closure\SectionClosure;
  */
 class Section
 {
+    use CloneableEntityTrait;
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -94,11 +96,6 @@ class Section
         $this->closures = new ArrayCollection();
     }
 
-    public function __toString(): string
-    {
-        return $this->getTitle() ?? '';
-    }
-
     public function getId(): ?int
     {
         return $this->id;
@@ -172,7 +169,7 @@ class Section
     }
 
     /**
-     * @return Collection|Article[]
+     * @return PersistentCollection|Article[]
      */
     public function getArticles(): Collection
     {

@@ -13,6 +13,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  */
 class Article
 {
+    use CloneableEntityTrait;
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

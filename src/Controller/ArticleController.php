@@ -10,6 +10,8 @@ use App\Repository\ModifierParams\CommentQueryModifierParams;
 use App\Repository\ModifierParams\SectionQueryModifierParams;
 use App\Service\Breadcrumbs;
 use App\Service\HierarchyBuilder;
+use DeepCopy\DeepCopy;
+use Doctrine\Common\Collections\Criteria;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
@@ -46,16 +48,23 @@ class ArticleController extends AbstractController
             'withImages' => true,
             'withSection' => true,
             'section' => new SectionQueryModifierParams([
+                /*
+                 * this relation is successfully joined, but erased in breadcrumbs forming.
+                 * EntityManager will replace this join to a plain section without articles.
+                 * So, I'll clone this below.
+                 */
                 'withArticles' => true,
                 'articles' => new ArticleQueryModifierParams([
                     'findExceptSlugs' => [$slug],
                     'withImages' => true
                 ])
             ])
-        ]));
+        ]), 'a');
         if (!$article) {
             throw new NotFoundHttpException();
         }
+
+        $clonedArticle = clone $article;
 
         $commentsHierarchy = $this->hierarchyBuilder->buildCommentsHierarchy($article->getComments());
 
@@ -74,7 +83,7 @@ class ArticleController extends AbstractController
         }
 
         return $this->render('article/article.html.twig', [
-            'article' => $article,
+            'article' => $clonedArticle,
             'comments' => $commentsHierarchy,
             'breadcrumbs' => $breadcrumbs,
             'createCommentForm' => $createCommentFormView
