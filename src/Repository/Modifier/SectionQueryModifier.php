@@ -20,14 +20,14 @@ class SectionQueryModifier
             return;
         }
         if ($modifier->withParent) {
-            $qb->addSelect('s_parent')
-                ->leftJoin("$alias.parent", 's_parent');
+            $qb->addSelect("{$alias}_parent")
+                ->leftJoin("$alias.parent", "{$alias}_parent");
         }
         if ($modifier->withArticles) {
-            $qb->addSelect('s_articles')
-                ->leftJoin("$alias.articles", 's_articles');
+            $qb->addSelect("{$alias}_articles")
+                ->leftJoin("$alias.articles", "{$alias}_articles");
             if ($modifier->articles) {
-                $this->articleQueryModifier->applyModifier($qb, $modifier->articles, 's_articles');
+                $this->articleQueryModifier->applyModifier($qb, $modifier->articles, "{$alias}_articles");
             }
         }
         if ($modifier->findExceptIds) {

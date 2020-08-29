@@ -7,6 +7,7 @@ use App\Form\CommentFormType;
 use App\Repository\ArticleRepository;
 use App\Repository\ModifierParams\ArticleQueryModifierParams;
 use App\Repository\ModifierParams\CommentQueryModifierParams;
+use App\Repository\ModifierParams\SectionQueryModifierParams;
 use App\Service\Breadcrumbs;
 use App\Service\HierarchyBuilder;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -41,7 +42,16 @@ class ArticleController extends AbstractController
                 'orderByField'=> 'createdAt',
                 'orderDirection' => 'DESC'
             ]),
-            'withOwner' => true
+            'withOwner' => true,
+            'withImages' => true,
+            'withSection' => true,
+            'section' => new SectionQueryModifierParams([
+                'withArticles' => true,
+                'articles' => new ArticleQueryModifierParams([
+                    'findExceptSlugs' => [$slug],
+                    'withImages' => true
+                ])
+            ])
         ]));
         if (!$article) {
             throw new NotFoundHttpException();

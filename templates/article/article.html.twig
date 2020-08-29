@@ -35,6 +35,11 @@
         </div>
     </div>
     <div class="delimiter"></div>
+    {% if article.section.articles %}
+        <h3 class="text text__title">{{ "article.read-related-articles"|trans }}:</h3>
+        {% include 'partial/_article-list.html.twig' with {articles: article.section.articles} only %}
+    {% endif %}
+    <div class="delimiter"></div>
     {% include 'partial/comment/_list-hierarchy.html.twig' with {
         'comments': comments, 'canComment': createCommentForm ? true : false
     } only %}

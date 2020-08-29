@@ -13,19 +13,19 @@ class CommentQueryModifier
             return;
         }
         if ($modifier->withOwner) {
-            $qb->addSelect('c_owner')
-                ->leftJoin("$alias.owner", 'c_owner');
+            $qb->addSelect("{$alias}_owner")
+                ->leftJoin("$alias.owner", "{$alias}_owner");
         }
         if ($modifier->withParent) {
-            $qb->addSelect('c_parent')
-                ->leftJoin("$alias.parent", 'c_parent');
+            $qb->addSelect("{$alias}_parent")
+                ->leftJoin("$alias.parent", "{$alias}_parent");
         }
         if ($modifier->withArticle) {
-            $qb->addSelect('c_article')
-                ->leftJoin("$alias.article", 'c_article');
+            $qb->addSelect("{$alias}_article")
+                ->leftJoin("$alias.article", "{$alias}_article");
         }
         if ($modifier->orderByField) {
-            $qb->addOrderBy("$alias.{$modifier->orderByField}", $modifier->orderDirection ?: 'ASC');
+            $qb->addOrderBy("$alias.{$modifier->orderByField}", $modifier->orderDirection ?: "ASC");
         }
     }
 }

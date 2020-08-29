@@ -63,6 +63,7 @@ article:
   created-at: Написан
   updated-at: Обновлен
   section: Раздел
+  read-related-articles: Связанные статьи
 comment:
   created-at: Написан
   updated-at: Обновлен

@@ -2,14 +2,14 @@
 
 namespace App\Repository\ModifierParams;
 
-use App\Repository\Modifier\UserQueryModifier;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ArticleQueryModifierParams implements TranslatableQueryModifierParams
 {
     public ?bool $withOwner;
-    public ?UserQueryModifier $owner;
+    public ?UserQueryModifierParams $owner;
     public ?bool $withSection;
+    public ?SectionQueryModifierParams $section;
     public ?bool $withComments;
     public ?bool $withImages;
     public ?string $orderByField;
@@ -21,6 +21,8 @@ class ArticleQueryModifierParams implements TranslatableQueryModifierParams
     public ?string $locale;
     public ?int $limit;
     public ?int $offset;
+    /** @var string[]|null */
+    public ?array $findExceptSlugs;
 
     public function __construct(array $modifiersArray = null)
     {
@@ -28,6 +30,7 @@ class ArticleQueryModifierParams implements TranslatableQueryModifierParams
             'withOwner' => null,
             'owner' => null,
             'withSection' => null,
+            'section' => null,
             'withComments' => null,
             'withImages' => null,
             'comments' => null,
@@ -37,7 +40,8 @@ class ArticleQueryModifierParams implements TranslatableQueryModifierParams
             'fallback' => null,
             'locale' => null,
             'limit' => null,
-            'offset' => null
+            'offset' => null,
+            'findExceptSlugs' => null
         ])->resolve($modifiersArray);
         foreach ($options as $key => $value) {
             $this->$key = $value;

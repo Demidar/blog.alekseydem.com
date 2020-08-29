@@ -13,8 +13,8 @@ class UserQueryModifier
             return;
         }
         if ($modifierParams->withPhoto) {
-            $qb->addSelect('u_photo')
-                ->leftJoin("$alias.photo", 'u_photo');
+            $qb->addSelect("{$alias}_photo")
+                ->leftJoin("$alias.photo", "{$alias}_photo");
         }
     }
 }

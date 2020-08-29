@@ -9,13 +9,16 @@ class ArticleQueryModifier
 {
     private $commentQueryModifier;
     private $userQueryModifier;
+    private $sectionQueryModifier;
 
     public function __construct(
         CommentQueryModifier $commentQueryModifier,
-        UserQueryModifier $userQueryModifier
+        UserQueryModifier $userQueryModifier,
+        SectionQueryModifier $sectionQueryModifier
     ) {
         $this->commentQueryModifier = $commentQueryModifier;
         $this->userQueryModifier = $userQueryModifier;
+        $this->sectionQueryModifier = $sectionQueryModifier;
     }
 
     public function applyModifier(QueryBuilder $qb, ?ArticleQueryModifierParams $modifier, string $alias): void
@@ -35,30 +38,36 @@ class ArticleQueryModifier
             $qb->addOrderBy("$alias.{$modifier->orderByField}", $modifier->orderDirection ?: 'ASC');
         }
         if ($modifier->withSection) {
-            $qb->addSelect('a_section')
-                ->leftJoin("$alias.section", 'a_section');
+            $qb->addSelect("{$alias}_section")
+                ->leftJoin("$alias.section", "{$alias}_section");
         }
         if ($modifier->withOwner) {
-            $qb->addSelect('a_owner')
-                ->leftJoin("$alias.owner", 'a_owner');
+            $qb->addSelect("{$alias}_owner")
+                ->leftJoin("$alias.owner", "{$alias}_owner");
         }
         if ($modifier->withComments) {
-            $qb->addSelect('a_comments')
-                ->leftJoin("$alias.comments", 'a_comments');
+            $qb->addSelect("{$alias}_comments")
+                ->leftJoin("$alias.comments", "{$alias}_comments");
         }
         if ($modifier->withImages) {
-            $qb->addSelect(['a_images', 'a_image_references'])
-                ->leftJoin("$alias.images", 'a_image_references')
-                ->leftJoin('a_image_references.image', 'a_images');
+            $qb->addSelect(["{$alias}_images", "{$alias}_image_references"])
+                ->leftJoin("$alias.images", "{$alias}_image_references")
+                ->leftJoin("{$alias}_image_references.image", "{$alias}_images");
         }
         if ($modifier->limit) {
             $qb->setMaxResults($modifier->limit);
         }
+        if ($modifier->findExceptSlugs) {
+            $qb->andWhere($qb->expr()->notIn("$alias.slug", $modifier->findExceptSlugs));
+        }
         if ($modifier->comments) {
-            $this->commentQueryModifier->applyModifier($qb, $modifier->comments, 'a_comments');
+            $this->commentQueryModifier->applyModifier($qb, $modifier->comments, "{$alias}_comments");
         }
         if ($modifier->owner) {
-            $this->userQueryModifier->applyModifier($qb, $modifier->owner, 'a_owner');
+            $this->userQueryModifier->applyModifier($qb, $modifier->owner, "{$alias}_owner");
+        }
+        if ($modifier->section) {
+            $this->sectionQueryModifier->applyModifier($qb, $modifier->section, "{$alias}_section");
         }
     }
 }
