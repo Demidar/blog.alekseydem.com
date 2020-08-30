@@ -56,10 +56,8 @@ class SectionType extends AbstractType
                 'choices' => $this->sectionRepository->findSections(new SectionQueryModifierParams([
                     'findExceptIds' => [$section->getId()]
                 ])),
-                'choice_value' => static function (?Section $entity) {
-                    return $entity ? $entity->getId() : '';
-                },
-                'choice_name' => ChoiceList::fieldName($this, 'title')
+                'choice_value' => 'id',
+                'choice_label' => 'title'
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'form.submit'
