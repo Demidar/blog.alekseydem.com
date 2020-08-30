@@ -22,7 +22,7 @@ class ImageReference
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Image::class, inversedBy="imageReferences")
+     * @ORM\ManyToOne(targetEntity=Image::class, inversedBy="imageReferences", fetch="EAGER")
      * @ORM\JoinColumn(nullable=false)
      */
     private $image;

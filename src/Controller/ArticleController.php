@@ -45,12 +45,12 @@ class ArticleController extends AbstractController
             'withOwner' => true,
             'withImages' => true,
             'withSection' => true,
+            /*
+             * this relation is successfully joined, but erased in breadcrumbs forming.
+             * EntityManager will replace this join to a plain section without articles.
+             * So, I'll clone this below.
+             */
             'section' => new SectionQueryModifierParams([
-                /*
-                 * this relation is successfully joined, but erased in breadcrumbs forming.
-                 * EntityManager will replace this join to a plain section without articles.
-                 * So, I'll clone this below.
-                 */
                 'withArticles' => new ArticleJoinConditionParams([
                     'findExceptSlugs' => [$slug]
                 ]),

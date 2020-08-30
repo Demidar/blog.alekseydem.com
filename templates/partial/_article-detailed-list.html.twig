@@ -10,6 +10,10 @@
                 {% else %}
                     <span>{{'section.root'|trans()}}</span>
                 {% endif %}
+                <span class="text text_faded">{{ "article.created-at"|trans }}: {{ article.createdAt|format_datetime() }}</span>
+                {% if article.createdAt != article.updatedAt %}
+                    <span class="text text_faded">, {{ "article.updated-at"|trans }}: {{ article.updatedAt|format_datetime() }}</span>
+                {% endif %}
             </div>
             <div class="entity-list__container entity-list__container_horizontal">
                 {% if article.images is not empty %}

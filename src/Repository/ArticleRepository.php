@@ -46,8 +46,6 @@ class ArticleRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('a')
             ->andWhere('a.id = :id')
-            ->addSelect('s')
-            ->leftJoin('a.section', 's')
             ->setParameter('id', $id)
         ;
 

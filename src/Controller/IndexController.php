@@ -34,11 +34,14 @@ class IndexController extends AbstractController
     public function index(): Response
     {
         $articles = $this->articleRepository->findArticles(new ArticleQueryModifierParams([
-            'withImages' => true,
+            // slow perfomance
+            // 'withImages' => true,
             'withSection' => true,
+            'orderByField' => 'createdAt',
             'orderDirection' => 'DESC',
             'limit' => 10
         ]));
+
         return $this->render('index/index.html.twig', [
             'articles' => $articles
         ]);

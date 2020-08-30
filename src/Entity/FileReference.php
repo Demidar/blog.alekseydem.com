@@ -22,7 +22,7 @@ class FileReference
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=File::class, inversedBy="fileReferences")
+     * @ORM\ManyToOne(targetEntity=File::class, inversedBy="fileReferences", fetch="EAGER")
      * @ORM\JoinColumn(nullable=false)
      */
     private $file;
