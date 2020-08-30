@@ -2,12 +2,14 @@
 
 namespace App\Repository\ModifierParams;
 
+use App\Repository\JoinConditionParams\ArticleJoinConditionParams;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SectionQueryModifierParams implements TranslatableQueryModifierParams
 {
     public ?bool $withParent;
-    public ?bool $withArticles;
+    /** @var bool|null|ArticleJoinConditionParams */
+    public $withArticles;
     public ?ArticleQueryModifierParams $articles;
     public ?bool $fallback;
     public ?string $locale;

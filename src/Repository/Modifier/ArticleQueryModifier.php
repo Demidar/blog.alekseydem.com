@@ -57,9 +57,6 @@ class ArticleQueryModifier
         if ($modifier->limit) {
             $qb->setMaxResults($modifier->limit);
         }
-        if ($modifier->findExceptSlugs) {
-            $qb->andWhere($qb->expr()->notIn("$alias.slug", $modifier->findExceptSlugs));
-        }
         if ($modifier->comments) {
             $this->commentQueryModifier->applyModifier($qb, $modifier->comments, "{$alias}_comments");
         }

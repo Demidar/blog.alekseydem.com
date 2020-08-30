@@ -21,8 +21,6 @@ class ArticleQueryModifierParams implements TranslatableQueryModifierParams
     public ?string $locale;
     public ?int $limit;
     public ?int $offset;
-    /** @var string[]|null */
-    public ?array $findExceptSlugs;
 
     public function __construct(array $modifiersArray = null)
     {
@@ -41,7 +39,6 @@ class ArticleQueryModifierParams implements TranslatableQueryModifierParams
             'locale' => null,
             'limit' => null,
             'offset' => null,
-            'findExceptSlugs' => null
         ])->resolve($modifiersArray);
         foreach ($options as $key => $value) {
             $this->$key = $value;

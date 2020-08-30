@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\Comment;
 use App\Form\CommentFormType;
 use App\Repository\ArticleRepository;
+use App\Repository\CommentRepository;
+use App\Repository\JoinConditionParams\ArticleJoinConditionParams;
 use App\Repository\ModifierParams\ArticleQueryModifierParams;
 use App\Repository\ModifierParams\CommentQueryModifierParams;
 use App\Repository\ModifierParams\SectionQueryModifierParams;
@@ -20,15 +22,18 @@ class ArticleController extends AbstractController
     private $articleRepository;
     private $breadcrumbs;
     private $hierarchyBuilder;
+    private $commentRepository;
 
     public function __construct(
         ArticleRepository $articleRepository,
+        CommentRepository $commentRepository,
         HierarchyBuilder $hierarchyBuilder,
         Breadcrumbs $breadcrumbs
     ) {
         $this->articleRepository = $articleRepository;
         $this->breadcrumbs = $breadcrumbs;
         $this->hierarchyBuilder = $hierarchyBuilder;
+        $this->commentRepository = $commentRepository;
     }
 
     /**
@@ -37,11 +42,6 @@ class ArticleController extends AbstractController
     public function article($slug)
     {
         $article = $this->articleRepository->findArticleBySlug($slug, new ArticleQueryModifierParams([
-            'withComments' => true,
-            'comments' => new CommentQueryModifierParams([
-                'orderByField'=> 'createdAt',
-                'orderDirection' => 'DESC'
-            ]),
             'withOwner' => true,
             'withImages' => true,
             'withSection' => true,
@@ -51,9 +51,10 @@ class ArticleController extends AbstractController
                  * EntityManager will replace this join to a plain section without articles.
                  * So, I'll clone this below.
                  */
-                'withArticles' => true,
+                'withArticles' => new ArticleJoinConditionParams([
+                    'findExceptSlugs' => [$slug]
+                ]),
                 'articles' => new ArticleQueryModifierParams([
-                    'findExceptSlugs' => [$slug],
                     'withImages' => true
                 ])
             ])
@@ -64,7 +65,14 @@ class ArticleController extends AbstractController
 
         $clonedArticle = clone $article;
 
-        $commentsHierarchy = $this->hierarchyBuilder->buildCommentsHierarchy($article->getComments());
+        // the fetching of comments is separated for perfomance
+        $comments = $this->commentRepository->findCommentsByArticle($article->getId(), new CommentQueryModifierParams([
+            'orderByField'=> 'createdAt',
+            'orderDirection' => 'DESC'
+        ]));
+
+
+        $commentsHierarchy = $this->hierarchyBuilder->buildCommentsHierarchy($comments);
 
         $breadcrumbs = $this->breadcrumbs->getBreadcrumbsForArticle($article);
 
