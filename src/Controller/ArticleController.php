@@ -10,8 +10,6 @@ use App\Repository\ModifierParams\CommentQueryModifierParams;
 use App\Repository\ModifierParams\SectionQueryModifierParams;
 use App\Service\Breadcrumbs;
 use App\Service\HierarchyBuilder;
-use DeepCopy\DeepCopy;
-use Doctrine\Common\Collections\Criteria;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
@@ -59,7 +57,7 @@ class ArticleController extends AbstractController
                     'withImages' => true
                 ])
             ])
-        ]), 'a');
+        ]));
         if (!$article) {
             throw new NotFoundHttpException();
         }

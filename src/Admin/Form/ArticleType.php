@@ -58,12 +58,8 @@ class ArticleType extends AbstractType
                 'label' => 'form.attached-section',
                 'class' => Section::class,
                 'choices' => $this->sectionRepository->findSections(),
-                'choice_value' => static function (?Section $entity) {
-                    return $entity ? $entity->getId() : '';
-                },
-                'choice_name' => static function (?Section $entity) {
-                    return $entity ? $entity->getTitle() : '';
-                }
+                'choice_value' => 'id',
+                'choice_label' => 'title',
             ])
             ->add('owner', EntityType::class, [
                 'required' => false,
