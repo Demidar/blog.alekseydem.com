@@ -5,12 +5,11 @@ namespace App\Admin\Form;
 use App\Entity\Section;
 use App\Repository\ModifierParams\SectionQueryModifierParams;
 use App\Repository\SectionRepository;
+use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\ChoiceList\ChoiceList;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -45,7 +44,7 @@ class SectionType extends AbstractType
                 'required' => false,
                 'label' => 'form.slug'
             ])
-            ->add('text', TextareaType::class, [
+            ->add('text', CKEditorType::class, [
                 'required' => false,
                 'label' => 'form.text.section'
             ])
