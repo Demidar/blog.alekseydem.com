@@ -4,7 +4,7 @@ namespace App\Service\Section;
 
 use App\Exception\NotFoundException;
 use App\Model\SectionPage;
-use App\Repository\Interfaces\SectionQueryingInterface;
+use App\Repository\Interfaces\SectionSourceInterface;
 use App\Repository\ModifierParams\ArticleQueryModifierParams;
 use App\Repository\ModifierParams\SectionQueryModifierParams;
 use App\Service\Breadcrumbs;
@@ -12,12 +12,12 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SectionFactory
 {
-    private SectionQueryingInterface $sectionRepository;
+    private SectionSourceInterface $sectionRepository;
     private Breadcrumbs $breadcrumbs;
     private TranslatorInterface $translator;
 
     public function __construct(
-        SectionQueryingInterface $sectionRepository,
+        SectionSourceInterface $sectionRepository,
         Breadcrumbs $breadcrumbs,
         TranslatorInterface $translator
     ) {

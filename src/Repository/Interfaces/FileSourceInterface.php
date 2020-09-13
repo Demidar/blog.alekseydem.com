@@ -7,7 +7,7 @@ use App\Entity\File;
 use App\Repository\ModifierParams\FileQueryModifierParams;
 use Doctrine\ORM\Query;
 
-interface FileQueryingInterface
+interface FileSourceInterface
 {
     public function findFileById(int $id, ?FileQueryModifierParams $modifier = null): ?File;
 

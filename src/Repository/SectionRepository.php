@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Section;
-use App\Repository\Interfaces\SectionQueryingInterface;
+use App\Repository\Interfaces\SectionSourceInterface;
 use App\Repository\Modifier\SectionQueryModifier;
 use App\Repository\ModifierParams\SectionQueryModifierParams;
 use App\Repository\RepoTrait\TranslatableTrait;
@@ -18,7 +18,7 @@ use Gedmo\Tree\Entity\Repository\ClosureTreeRepository;
  * @method Section[]    findAll()
  * @method Section[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class SectionRepository extends ClosureTreeRepository implements SectionQueryingInterface
+class SectionRepository extends ClosureTreeRepository implements SectionSourceInterface
 {
     use TranslatableTrait;
 

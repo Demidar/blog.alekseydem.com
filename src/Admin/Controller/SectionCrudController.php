@@ -4,7 +4,7 @@ namespace App\Admin\Controller;
 
 use App\Entity\Section;
 use App\Admin\Form\SectionType;
-use App\Repository\Interfaces\SectionQueryingInterface;
+use App\Repository\Interfaces\SectionSourceInterface;
 use App\Repository\ModifierParams\SectionQueryModifierParams;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -23,7 +23,7 @@ class SectionCrudController extends AbstractCrudController
     private $paginator;
 
     public function __construct(
-        SectionQueryingInterface $sectionRepository,
+        SectionSourceInterface $sectionRepository,
         EntityManagerInterface $entityManager,
         PaginatorInterface $paginator
     ) {

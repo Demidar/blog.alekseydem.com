@@ -3,7 +3,7 @@
 namespace App\Admin\Form;
 
 use App\Entity\Section;
-use App\Repository\Interfaces\SectionQueryingInterface;
+use App\Repository\Interfaces\SectionSourceInterface;
 use App\Repository\ModifierParams\SectionQueryModifierParams;
 use App\Repository\SectionRepository;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
@@ -19,7 +19,7 @@ class SectionType extends AbstractType
 {
     private $sectionRepository;
 
-    public function __construct(SectionQueryingInterface $sectionRepository)
+    public function __construct(SectionSourceInterface $sectionRepository)
     {
         $this->sectionRepository = $sectionRepository;
     }

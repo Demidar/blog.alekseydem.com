@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\FileReference;
-use App\Repository\Interfaces\FileReferenceQueryingInterface;
+use App\Repository\Interfaces\FileReferenceSourceInterface;
 use App\Repository\Modifier\FileReferenceQueryModifier;
 use App\Repository\ModifierParams\FileReferenceQueryModifierParams;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -17,7 +17,7 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method FileReference[]    findAll()
  * @method FileReference[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class FileReferenceRepository extends ServiceEntityRepository implements FileReferenceQueryingInterface
+class FileReferenceRepository extends ServiceEntityRepository implements FileReferenceSourceInterface
 {
     private FileReferenceQueryModifier $queryModifier;
 

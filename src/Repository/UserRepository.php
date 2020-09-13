@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\User;
-use App\Repository\Interfaces\UserQueryingInterface;
+use App\Repository\Interfaces\UserSourceInterface;
 use App\Repository\Modifier\UserQueryModifier;
 use App\Repository\ModifierParams\UserQueryModifierParams;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -19,7 +19,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @method User[]    findAll()
  * @method User[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface, UserQueryingInterface
+class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface, UserSourceInterface
 {
     private UserQueryModifier $queryModifier;
 

@@ -5,7 +5,7 @@ namespace App\Admin\Controller;
 use App\Admin\Form\CommentType;
 use App\Entity\Comment;
 use App\Repository\CommentQuerying;
-use App\Repository\Interfaces\CommentQueryingInterface;
+use App\Repository\Interfaces\CommentSourceInterface;
 use App\Repository\ModifierParams\CommentQueryModifierParams;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -21,7 +21,7 @@ class CommentCrudController extends AbstractCrudController
     private $entityManager;
 
     public function __construct(
-        CommentQueryingInterface $commentRepository,
+        CommentSourceInterface $commentRepository,
         PaginatorInterface $paginator,
         EntityManagerInterface $entityManager
     ) {

@@ -6,8 +6,8 @@ use App\Entity\Article;
 use App\Entity\Comment;
 use App\Entity\User;
 use App\Repository\CommentQuerying;
-use App\Repository\Interfaces\CommentQueryingInterface;
-use App\Repository\Interfaces\UserQueryingInterface;
+use App\Repository\Interfaces\CommentSourceInterface;
+use App\Repository\Interfaces\UserSourceInterface;
 use App\Repository\UserRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -22,8 +22,8 @@ class CommentType extends AbstractType
     private $userRepository;
 
     public function __construct(
-        CommentQueryingInterface $commentRepository,
-        UserQueryingInterface $userRepository
+        CommentSourceInterface $commentRepository,
+        UserSourceInterface $userRepository
     ) {
         $this->commentRepository = $commentRepository;
         $this->userRepository = $userRepository;

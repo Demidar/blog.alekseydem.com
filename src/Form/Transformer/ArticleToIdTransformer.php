@@ -4,7 +4,7 @@ namespace App\Form\Transformer;
 
 use App\Entity\Article;
 use App\Repository\ArticleRepository;
-use App\Repository\Interfaces\ArticleQueryingInterface;
+use App\Repository\Interfaces\ArticleSourceInterface;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 
@@ -13,7 +13,7 @@ class ArticleToIdTransformer implements DataTransformerInterface
     private $articleRepository;
 
     public function __construct(
-        ArticleQueryingInterface $articleRepository
+        ArticleSourceInterface $articleRepository
     ) {
         $this->articleRepository = $articleRepository;
     }

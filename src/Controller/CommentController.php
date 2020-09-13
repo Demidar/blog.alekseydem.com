@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Comment;
 use App\Form\CommentFormType;
-use App\Repository\Interfaces\CommentQueryingInterface;
+use App\Repository\Interfaces\CommentSourceInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,7 +24,7 @@ class CommentController extends AbstractController
     private $commentRepository;
 
     public function __construct(
-        CommentQueryingInterface $commentRepository,
+        CommentSourceInterface $commentRepository,
         EntityManagerInterface $entityManager,
         TranslatorInterface $translator
     ) {

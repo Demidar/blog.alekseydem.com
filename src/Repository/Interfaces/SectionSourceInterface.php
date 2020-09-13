@@ -7,7 +7,7 @@ use App\Entity\Section;
 use App\Repository\ModifierParams\SectionQueryModifierParams;
 use Doctrine\ORM\Query;
 
-interface SectionQueryingInterface
+interface SectionSourceInterface
 {
     /**
      * parent::getPath() with applying translation hints

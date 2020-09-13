@@ -5,7 +5,7 @@ namespace App\Admin\Controller;
 use App\Admin\Form\FileType;
 use App\Entity\File;
 use App\Repository\FileRepository;
-use App\Repository\Interfaces\FileQueryingInterface;
+use App\Repository\Interfaces\FileSourceInterface;
 use App\Service\UploaderHelper;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -26,7 +26,7 @@ class FileCrudController extends AbstractCrudController
     private $uploaderHelper;
 
     public function __construct(
-        FileQueryingInterface $fileRepository,
+        FileSourceInterface $fileRepository,
         PaginatorInterface $paginator,
         EntityManagerInterface $entityManager,
         UploaderHelper $uploaderHelper

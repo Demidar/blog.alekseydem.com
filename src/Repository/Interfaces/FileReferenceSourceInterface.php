@@ -7,7 +7,7 @@ use App\Entity\FileReference;
 use App\Repository\ModifierParams\FileReferenceQueryModifierParams;
 use Doctrine\ORM\Query;
 
-interface FileReferenceQueryingInterface
+interface FileReferenceSourceInterface
 {
     public function findFileReferenceById(int $id, ?FileReferenceQueryModifierParams $modifier = null): ?FileReference;
 

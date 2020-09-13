@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Form\LanguageSwitcherFormType;
 use App\Repository\ArticleQuerying;
-use App\Repository\Interfaces\ArticleQueryingInterface;
+use App\Repository\Interfaces\ArticleSourceInterface;
 use App\Repository\ModifierParams\ArticleQueryModifierParams;
 use Doctrine\Common\Collections\Criteria;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,7 +24,7 @@ class IndexController extends AbstractController
     private $articleRepository;
 
     public function __construct(
-        ArticleQueryingInterface $articleRepository
+        ArticleSourceInterface $articleRepository
     ) {
         $this->articleRepository = $articleRepository;
     }

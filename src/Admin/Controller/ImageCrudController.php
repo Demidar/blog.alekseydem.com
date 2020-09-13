@@ -5,7 +5,7 @@ namespace App\Admin\Controller;
 use App\Admin\Form\ImageType;
 use App\Entity\Image;
 use App\Repository\ImageRepository;
-use App\Repository\Interfaces\ImageQueryingInterface;
+use App\Repository\Interfaces\ImageSourceInterface;
 use App\Service\UploaderHelper;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -26,7 +26,7 @@ class ImageCrudController extends AbstractCrudController
     private $uploaderHelper;
 
     public function __construct(
-        ImageQueryingInterface $imageRepository,
+        ImageSourceInterface $imageRepository,
         PaginatorInterface $paginator,
         EntityManagerInterface $entityManager,
         UploaderHelper $uploaderHelper

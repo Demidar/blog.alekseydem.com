@@ -7,8 +7,8 @@ use App\Admin\Form\ImageReferenceArticleType;
 use App\Repository\ArticleQuerying;
 use App\Repository\ImageReferenceArticleRepository;
 use App\Repository\ImageRepository;
-use App\Repository\Interfaces\ArticleQueryingInterface;
-use App\Repository\Interfaces\ImageQueryingInterface;
+use App\Repository\Interfaces\ArticleSourceInterface;
+use App\Repository\Interfaces\ImageSourceInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,8 +27,8 @@ class ImageReferenceArticleCrudController extends AbstractController
 
     public function __construct(
         ImageReferenceArticleRepository $imageReferenceArticleRepository,
-        ArticleQueryingInterface $articleRepository,
-        ImageQueryingInterface $imageRepository,
+        ArticleSourceInterface $articleRepository,
+        ImageSourceInterface $imageRepository,
         EntityManagerInterface $entityManager
     ) {
         $this->imageReferenceArticleRepository = $imageReferenceArticleRepository;

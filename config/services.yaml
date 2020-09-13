@@ -45,11 +45,12 @@ services:
         arguments:
             $uploadPath: '%app.upload_path%'
 
-    App\Repository\Interfaces\ArticleQueryingInterface: '@App\Repository\ArticleRepository'
-    App\Repository\Interfaces\CommentQueryingInterface: '@App\Repository\CommentRepository'
-    App\Repository\Interfaces\FileQueryingInterface: '@App\Repository\FileRepository'
-    App\Repository\Interfaces\FileReferenceQueryingInterface: '@App\Repository\FileReferenceRepository'
-    App\Repository\Interfaces\ImageQueryingInterface: '@App\Repository\ImageRepository'
-    App\Repository\Interfaces\ImageReferenceQueryingInterface: '@App\Repository\ImageReferenceRepository'
-    App\Repository\Interfaces\SectionQueryingInterface: '@App\Repository\SectionRepository'
-    App\Repository\Interfaces\UserQueryingInterface: '@App\Repository\UserRepository'
+    # not mandatory, but defined explicitly
+    App\Repository\Interfaces\ArticleSourceInterface: '@App\Repository\ArticleRepository'
+    App\Repository\Interfaces\CommentSourceInterface: '@App\Repository\CommentRepository'
+    App\Repository\Interfaces\FileSourceInterface: '@App\Repository\FileRepository'
+    App\Repository\Interfaces\FileReferenceSourceInterface: '@App\Repository\FileReferenceRepository'
+    App\Repository\Interfaces\ImageSourceInterface: '@App\Repository\ImageRepository'
+    App\Repository\Interfaces\ImageReferenceSourceInterface: '@App\Repository\ImageReferenceRepository'
+    App\Repository\Interfaces\SectionSourceInterface: '@App\Repository\SectionRepository'
+    App\Repository\Interfaces\UserSourceInterface: '@App\Repository\UserRepository'

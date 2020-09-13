@@ -13,7 +13,7 @@ use Doctrine\ORM\Query;
  * @method Comment[]    findAll()
  * @method Comment[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-interface CommentQueryingInterface
+interface CommentSourceInterface
 {
     public function findCommentById(int $id, ?CommentQueryModifierParams $modifier = null): ?Comment;
 

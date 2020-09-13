@@ -7,7 +7,7 @@ use App\Entity\Article;
 use App\Repository\ModifierParams\ArticleQueryModifierParams;
 use Doctrine\ORM\Query;
 
-interface ArticleQueryingInterface
+interface ArticleSourceInterface
 {
     public function findArticleBySlug(string $slug, ?ArticleQueryModifierParams $modifierParams = null): ?Article;
 

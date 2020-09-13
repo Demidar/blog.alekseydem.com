@@ -5,8 +5,8 @@ namespace App\Admin\Form;
 use App\Entity\Article;
 use App\Entity\Section;
 use App\Entity\User;
-use App\Repository\Interfaces\SectionQueryingInterface;
-use App\Repository\Interfaces\UserQueryingInterface;
+use App\Repository\Interfaces\SectionSourceInterface;
+use App\Repository\Interfaces\UserSourceInterface;
 use App\Repository\SectionRepository;
 use App\Repository\UserRepository;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
@@ -23,8 +23,8 @@ class ArticleType extends AbstractType
     private $userRepository;
 
     public function __construct(
-        SectionQueryingInterface $sectionRepository,
-        UserQueryingInterface $userRepository
+        SectionSourceInterface $sectionRepository,
+        UserSourceInterface $userRepository
     ) {
         $this->sectionRepository = $sectionRepository;
         $this->userRepository = $userRepository;

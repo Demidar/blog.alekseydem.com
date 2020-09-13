@@ -7,7 +7,7 @@ use App\Entity\Image;
 use App\Repository\ModifierParams\ImageQueryModifierParams;
 use Doctrine\ORM\Query;
 
-interface ImageQueryingInterface
+interface ImageSourceInterface
 {
     public function findImageById(int $id, ?ImageQueryModifierParams $modifier = null): ?Image;
 

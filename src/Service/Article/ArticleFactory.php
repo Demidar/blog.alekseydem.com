@@ -6,8 +6,8 @@ use App\Entity\Comment;
 use App\Exception\NotFoundException;
 use App\Form\CommentFormType;
 use App\Model\ArticlePage;
-use App\Repository\Interfaces\ArticleQueryingInterface;
-use App\Repository\Interfaces\CommentQueryingInterface;
+use App\Repository\Interfaces\ArticleSourceInterface;
+use App\Repository\Interfaces\CommentSourceInterface;
 use App\Repository\ModifierParams\ArticleQueryModifierParams;
 use App\Repository\ModifierParams\CommentQueryModifierParams;
 use App\Service\Breadcrumbs;
@@ -20,8 +20,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ArticleFactory
 {
-    private ArticleQueryingInterface $articleRepository;
-    private CommentQueryingInterface $commentRepository;
+    private ArticleSourceInterface $articleRepository;
+    private CommentSourceInterface $commentRepository;
     private Security $security;
     private FormFactoryInterface $formFactory;
     private UrlGeneratorInterface $urlGenerator;
@@ -30,8 +30,8 @@ class ArticleFactory
     private TranslatorInterface $translator;
 
     public function __construct(
-        ArticleQueryingInterface $articleRepository,
-        CommentQueryingInterface $commentRepository,
+        ArticleSourceInterface $articleRepository,
+        CommentSourceInterface $commentRepository,
         Security $security,
         FormFactoryInterface $formFactory,
         UrlGeneratorInterface $urlGenerator,

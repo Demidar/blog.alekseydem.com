@@ -6,7 +6,7 @@ use App\Entity\User;
 use App\Repository\ModifierParams\UserQueryModifierParams;
 use Doctrine\ORM\Query;
 
-interface UserQueryingInterface
+interface UserSourceInterface
 {
     public function findUserById(int $id, ?UserQueryModifierParams $modifierParams): ?User;
 
