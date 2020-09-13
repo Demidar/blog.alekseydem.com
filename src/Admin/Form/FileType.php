@@ -4,6 +4,7 @@ namespace App\Admin\Form;
 
 use App\Entity\File;
 use App\Entity\User;
+use App\Repository\Interfaces\UserQueryingInterface;
 use App\Repository\UserRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -15,7 +16,7 @@ class FileType extends AbstractType
 {
     private $userRepository;
 
-    public function __construct(UserRepository $userRepository)
+    public function __construct(UserQueryingInterface $userRepository)
     {
         $this->userRepository = $userRepository;
     }

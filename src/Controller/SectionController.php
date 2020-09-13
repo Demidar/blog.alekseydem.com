@@ -2,51 +2,38 @@
 
 namespace App\Controller;
 
-use App\Repository\ArticleRepository;
-use App\Repository\ModifierParams\ArticleQueryModifierParams;
-use App\Repository\ModifierParams\SectionQueryModifierParams;
-use App\Repository\SectionRepository;
-use App\Service\Breadcrumbs;
+use App\Exception\NotFoundException;
+use App\Service\Section\SectionFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 class SectionController extends AbstractController
 {
-    private $sectionRepository;
-    private $breadcrumbs;
+    private $sectionFactory;
 
     public function __construct(
-        SectionRepository $sectionRepository,
-        Breadcrumbs $breadcrumbs
+        SectionFactory $sectionFactory
     ) {
-        $this->sectionRepository = $sectionRepository;
-        $this->breadcrumbs = $breadcrumbs;
+        $this->sectionFactory = $sectionFactory;
     }
 
     /**
      * @Route("/{_locale<%app.supported_locales%>}/section/{slug}", name="section")
      */
-    public function section($slug)
+    public function section($slug): Response
     {
-        $section = $this->sectionRepository->findSectionBySlug($slug, new SectionQueryModifierParams([
-            'withArticles' => true,
-            'articles' => new ArticleQueryModifierParams([
-                'withImages' => true
-            ])
-        ]));
-        if (!$section) {
-            throw new NotFoundHttpException();
+        try {
+            $sectionPage = $this->sectionFactory->createSectionPageBySlug($slug);
+        } catch (NotFoundException $e) {
+            throw new NotFoundHttpException($e->getMessage());
         }
 
-        $sectionChildren = $this->sectionRepository->findChildren($section->getId());
-
-        $breadcrumbs = $this->breadcrumbs->getBreadcrumbsForSection($section);
-
         return $this->render('section/section.html.twig', [
-            'section' => $section,
-            'sectionChildren' => $sectionChildren,
-            'breadcrumbs' => $breadcrumbs
+            'section' => $sectionPage->section,
+            'sectionChildren' => $sectionPage->children,
+            'breadcrumbs' => $sectionPage->breadcrumbs
         ]);
     }
 }

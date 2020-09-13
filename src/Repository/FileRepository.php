@@ -3,11 +3,11 @@
 namespace App\Repository;
 
 use App\Entity\File;
+use App\Repository\Interfaces\FileQueryingInterface;
 use App\Repository\Modifier\FileQueryModifier;
 use App\Repository\ModifierParams\FileQueryModifierParams;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
-use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -16,13 +16,20 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method File[]    findAll()
  * @method File[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class FileRepository extends ServiceEntityRepository
+class FileRepository extends ServiceEntityRepository implements FileQueryingInterface
 {
-    private $queryModifier;
+    private FileQueryModifier $queryModifier;
 
-    public function __construct(ManagerRegistry $registry, FileQueryModifier $queryModifier)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, File::class);
+    }
+
+    /**
+     * @required
+     */
+    public function setQueryModifier(FileQueryModifier $queryModifier): void
+    {
         $this->queryModifier = $queryModifier;
     }
 

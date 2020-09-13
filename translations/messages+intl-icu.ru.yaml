@@ -64,6 +64,9 @@ article:
   updated-at: Обновлен
   section: Раздел
   read-related-articles: Связанные статьи
+  slug-not-found: 'Статья по адресу "{slug}" не найдена.'
+section:
+  slug-not-found: 'Раздел по адресу "{slug}" не найден.'
 comment:
   created-at: Написан
   updated-at: Обновлен

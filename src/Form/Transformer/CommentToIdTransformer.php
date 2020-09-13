@@ -3,7 +3,8 @@
 namespace App\Form\Transformer;
 
 use App\Entity\Comment;
-use App\Repository\CommentRepository;
+use App\Repository\CommentQuerying;
+use App\Repository\Interfaces\CommentQueryingInterface;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 
@@ -12,7 +13,7 @@ class CommentToIdTransformer implements DataTransformerInterface
     private $commentRepository;
 
     public function __construct(
-        CommentRepository $commentRepository
+        CommentQueryingInterface $commentRepository
     ) {
         $this->commentRepository = $commentRepository;
     }

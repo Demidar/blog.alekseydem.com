@@ -4,7 +4,8 @@ namespace App\Admin\Controller;
 
 use App\Admin\Form\ArticleType;
 use App\Entity\Article;
-use App\Repository\ArticleRepository;
+use App\Repository\ArticleQuerying;
+use App\Repository\Interfaces\ArticleQueryingInterface;
 use App\Repository\ModifierParams\ArticleQueryModifierParams;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,7 +22,7 @@ class ArticleCrudController extends AbstractCrudController
     private $paginator;
 
     public function __construct(
-        ArticleRepository $articleRepository,
+        ArticleQueryingInterface $articleRepository,
         PaginatorInterface $paginator
     ) {
         $this->articleRepository = $articleRepository;

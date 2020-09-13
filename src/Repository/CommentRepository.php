@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Comment;
+use App\Repository\Interfaces\CommentQueryingInterface;
 use App\Repository\Modifier\CommentQueryModifier;
 use App\Repository\ModifierParams\CommentQueryModifierParams;
 use App\Repository\RepoTrait\TranslatableTrait;
@@ -16,7 +17,7 @@ use Gedmo\Tree\Entity\Repository\ClosureTreeRepository;
  * @method Comment[]    findAll()
  * @method Comment[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class CommentRepository extends ClosureTreeRepository
+class CommentRepository extends ClosureTreeRepository implements CommentQueryingInterface
 {
     use TranslatableTrait;
 

@@ -6,7 +6,7 @@ use App\Repository\AbstractFileRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=AbstractFileRepository::class)
+ * @ORM\Entity()
  * @ORM\Table(name="file")
  *
  * @ORM\InheritanceType("SINGLE_TABLE")

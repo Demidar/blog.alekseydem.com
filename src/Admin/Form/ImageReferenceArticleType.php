@@ -5,6 +5,7 @@ namespace App\Admin\Form;
 use App\Entity\ImageReferenceArticle;
 use App\Form\ImageSelectorType;
 use App\Repository\ImageRepository;
+use App\Repository\Interfaces\ImageQueryingInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -14,7 +15,7 @@ class ImageReferenceArticleType extends AbstractType
 {
     private $imageRepository;
 
-    public function __construct(ImageRepository $imageRepository)
+    public function __construct(ImageQueryingInterface $imageRepository)
     {
         $this->imageRepository = $imageRepository;
     }

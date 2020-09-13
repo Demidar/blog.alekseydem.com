@@ -3,7 +3,7 @@
 namespace App\Controller\Partial;
 
 use App\Form\LanguageSwitcherFormType;
-use App\Repository\SectionRepository;
+use App\Repository\Interfaces\SectionQueryingInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -12,7 +12,7 @@ class LayoutController extends AbstractController
     private $sectionRepository;
 
     public function __construct(
-        SectionRepository $sectionRepository
+        SectionQueryingInterface $sectionRepository
     ) {
         $this->sectionRepository = $sectionRepository;
     }

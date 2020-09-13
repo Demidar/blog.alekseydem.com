@@ -44,7 +44,12 @@ services:
     App\Twig\AppExtension:
         arguments:
             $uploadPath: '%app.upload_path%'
-    App\Repository\SectionRepository:
-        arguments:
-            - '@Doctrine\ORM\EntityManagerInterface'
-            - '@App\Repository\ArticleRepository'
+
+    App\Repository\Interfaces\ArticleQueryingInterface: '@App\Repository\ArticleRepository'
+    App\Repository\Interfaces\CommentQueryingInterface: '@App\Repository\CommentRepository'
+    App\Repository\Interfaces\FileQueryingInterface: '@App\Repository\FileRepository'
+    App\Repository\Interfaces\FileReferenceQueryingInterface: '@App\Repository\FileReferenceRepository'
+    App\Repository\Interfaces\ImageQueryingInterface: '@App\Repository\ImageRepository'
+    App\Repository\Interfaces\ImageReferenceQueryingInterface: '@App\Repository\ImageReferenceRepository'
+    App\Repository\Interfaces\SectionQueryingInterface: '@App\Repository\SectionRepository'
+    App\Repository\Interfaces\UserQueryingInterface: '@App\Repository\UserRepository'

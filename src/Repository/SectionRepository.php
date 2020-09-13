@@ -3,12 +3,12 @@
 namespace App\Repository;
 
 use App\Entity\Section;
+use App\Repository\Interfaces\SectionQueryingInterface;
 use App\Repository\Modifier\SectionQueryModifier;
 use App\Repository\ModifierParams\SectionQueryModifierParams;
 use App\Repository\RepoTrait\TranslatableTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
-use Doctrine\ORM\QueryBuilder;
 use Gedmo\Tree\Entity\MappedSuperclass\AbstractClosure;
 use Gedmo\Tree\Entity\Repository\ClosureTreeRepository;
 
@@ -18,7 +18,7 @@ use Gedmo\Tree\Entity\Repository\ClosureTreeRepository;
  * @method Section[]    findAll()
  * @method Section[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class SectionRepository extends ClosureTreeRepository
+class SectionRepository extends ClosureTreeRepository implements SectionQueryingInterface
 {
     use TranslatableTrait;
 

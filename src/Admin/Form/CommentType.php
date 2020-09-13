@@ -5,7 +5,9 @@ namespace App\Admin\Form;
 use App\Entity\Article;
 use App\Entity\Comment;
 use App\Entity\User;
-use App\Repository\CommentRepository;
+use App\Repository\CommentQuerying;
+use App\Repository\Interfaces\CommentQueryingInterface;
+use App\Repository\Interfaces\UserQueryingInterface;
 use App\Repository\UserRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -20,8 +22,8 @@ class CommentType extends AbstractType
     private $userRepository;
 
     public function __construct(
-        CommentRepository $commentRepository,
-        UserRepository $userRepository
+        CommentQueryingInterface $commentRepository,
+        UserQueryingInterface $userRepository
     ) {
         $this->commentRepository = $commentRepository;
         $this->userRepository = $userRepository;
@@ -68,7 +70,7 @@ class CommentType extends AbstractType
                 'required' => false,
                 'label' => 'form.owner.comment',
                 'class' => User::class,
-                'choices' => $this->userRepository->findAll(),
+                'choices' => $this->userRepository->findUsers(),
                 'choice_value' => static function (?User $entity) {
                     return $entity ? $entity->getId() : '';
                 },

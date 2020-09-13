@@ -11,7 +11,7 @@ class HierarchyBuilder
      * @param Comment[] $comments
      * @return CommentsHierarchy[]
      */
-    public function buildCommentsHierarchy($comments, $parentCommentId = null)
+    public function buildCommentsHierarchy($comments, $parentCommentId = null): array
     {
         $result = [];
         foreach ($comments as $comment) {

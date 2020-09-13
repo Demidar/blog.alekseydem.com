@@ -5,7 +5,7 @@ namespace App\Service;
 use App\Entity\Article;
 use App\Entity\Section;
 use App\Model\Link;
-use App\Repository\SectionRepository;
+use App\Repository\Interfaces\SectionQueryingInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -18,7 +18,7 @@ class Breadcrumbs
     public function __construct(
         UrlGeneratorInterface $urlGenerator,
         TranslatorInterface $translator,
-        SectionRepository $sectionRepository
+        SectionQueryingInterface $sectionRepository
     ) {
         $this->urlGenerator = $urlGenerator;
         $this->translator = $translator;

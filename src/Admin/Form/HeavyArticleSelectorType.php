@@ -4,7 +4,8 @@ namespace App\Admin\Form;
 
 use App\Admin\Form\Transformer\ArticleToObjectTransformer;
 use App\Entity\Article;
-use App\Repository\ArticleRepository;
+use App\Repository\ArticleQuerying;
+use App\Repository\Interfaces\ArticleQueryingInterface;
 use App\Repository\ModifierParams\ArticleQueryModifierParams;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -22,7 +23,7 @@ class HeavyArticleSelectorType extends AbstractType
 
     public function __construct(
         ArticleToObjectTransformer $articleToObjectTransformer,
-        ArticleRepository $articleRepository
+        ArticleQueryingInterface $articleRepository
     ) {
         $this->articleToObjectTransformer = $articleToObjectTransformer;
         $this->articleRepository = $articleRepository;

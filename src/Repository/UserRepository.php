@@ -3,7 +3,11 @@
 namespace App\Repository;
 
 use App\Entity\User;
+use App\Repository\Interfaces\UserQueryingInterface;
+use App\Repository\Modifier\UserQueryModifier;
+use App\Repository\ModifierParams\UserQueryModifierParams;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
@@ -15,11 +19,50 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @method User[]    findAll()
  * @method User[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
+class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface, UserQueryingInterface
 {
+    private UserQueryModifier $queryModifier;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, User::class);
+    }
+
+    /**
+     * @required
+     */
+    public function setQueryModifier(UserQueryModifier $queryModifier)
+    {
+        $this->queryModifier = $queryModifier;
+    }
+
+    public function findUserById(int $id, ?UserQueryModifierParams $modifierParams): ?User
+    {
+        $qb = $this->createQueryBuilder('u')
+            ->andWhere('u.id = :id')
+            ->setParameter('id', $id)
+        ;
+
+        $this->queryModifier->applyModifier($qb, $modifierParams, 'u');
+
+        return $qb->getQuery()->getOneOrNullResult();
+    }
+
+    /**
+     * @return User[]
+     */
+    public function findUsers(?UserQueryModifierParams $modifierParams = null): array
+    {
+        return $this->getUsersQuery($modifierParams)->getResult();
+    }
+
+    public function getUsersQuery(?UserQueryModifierParams $modifierParams = null): Query
+    {
+        $qb = $this->createQueryBuilder('u');
+
+        $this->queryModifier->applyModifier($qb, $modifierParams, 'u');
+
+        return $qb->getQuery();
     }
 
     /**
@@ -35,33 +78,4 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->_em->persist($user);
         $this->_em->flush();
     }
-
-    // /**
-    //  * @return User[] Returns an array of User objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('u.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?User
-    {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

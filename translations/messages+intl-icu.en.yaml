@@ -64,6 +64,9 @@ article:
   updated-at: Updated
   section: Section
   read-related-articles: Related articles
+  slug-not-found: 'Article with slug "{slug}" not found.'
+section:
+  slug-not-found: 'Section with slug "{slug}" not found.'
 comment:
   created-at: Written
   updated-at: Updated

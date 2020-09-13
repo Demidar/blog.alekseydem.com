@@ -3,6 +3,7 @@
 namespace App\Repository\Modifier;
 
 use App\Repository\ModifierParams\ArticleQueryModifierParams;
+use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\QueryBuilder;
 
 class ArticleQueryModifier
@@ -33,6 +34,9 @@ class ArticleQueryModifier
                     return "$alias.$field";
                 }, $modifier->select)
             );
+        }
+        if ($modifier->findExceptSlugs) {
+            $qb->andWhere((new Expr)->notIn("$alias.slug", $modifier->findExceptSlugs));
         }
         if ($modifier->orderByField) {
             $qb->addOrderBy("$alias.{$modifier->orderByField}", $modifier->orderDirection ?: 'ASC');

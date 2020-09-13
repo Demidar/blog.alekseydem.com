@@ -5,6 +5,8 @@ namespace App\Admin\Form;
 use App\Entity\Article;
 use App\Entity\Section;
 use App\Entity\User;
+use App\Repository\Interfaces\SectionQueryingInterface;
+use App\Repository\Interfaces\UserQueryingInterface;
 use App\Repository\SectionRepository;
 use App\Repository\UserRepository;
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
@@ -21,8 +23,8 @@ class ArticleType extends AbstractType
     private $userRepository;
 
     public function __construct(
-        SectionRepository $sectionRepository,
-        UserRepository $userRepository
+        SectionQueryingInterface $sectionRepository,
+        UserQueryingInterface $userRepository
     ) {
         $this->sectionRepository = $sectionRepository;
         $this->userRepository = $userRepository;
@@ -65,7 +67,7 @@ class ArticleType extends AbstractType
                 'required' => false,
                 'label' => 'form.owner.article',
                 'class' => User::class,
-                'choices' => $this->userRepository->findAll(),
+                'choices' => $this->userRepository->findUsers(),
                 'choice_value' => static function (?User $entity) {
                     return $entity ? $entity->getId() : '';
                 },

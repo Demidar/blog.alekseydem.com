@@ -3,13 +3,16 @@
 namespace App\Controller;
 
 use App\Form\LanguageSwitcherFormType;
-use App\Repository\ArticleRepository;
+use App\Repository\ArticleQuerying;
+use App\Repository\Interfaces\ArticleQueryingInterface;
 use App\Repository\ModifierParams\ArticleQueryModifierParams;
+use Doctrine\Common\Collections\Criteria;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -21,7 +24,7 @@ class IndexController extends AbstractController
     private $articleRepository;
 
     public function __construct(
-        ArticleRepository $articleRepository
+        ArticleQueryingInterface $articleRepository
     ) {
         $this->articleRepository = $articleRepository;
     }
@@ -56,7 +59,7 @@ class IndexController extends AbstractController
         $form->handleRequest($request);
 
         if (!($form->isSubmitted() && $form->isValid())) {
-            throw new BadRequestException('Language is not valid');
+            throw new BadRequestHttpException('Language is not valid');
         }
 
         $data = $form->getData();

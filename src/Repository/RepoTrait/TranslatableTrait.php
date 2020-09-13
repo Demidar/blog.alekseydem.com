@@ -6,10 +6,11 @@ use App\Repository\ModifierParams\TranslatableQueryModifierParams;
 use Doctrine\ORM\Query;
 use Gedmo\Translatable\Query\TreeWalker\TranslationWalker;
 use Gedmo\Translatable\TranslatableListener;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 trait TranslatableTrait
 {
-    protected function applyTranslatables(Query $query, TranslatableQueryModifierParams $modifier = null): Query
+    protected function applyTranslatables(Query $query, ?TranslatableQueryModifierParams $modifier = null): Query
     {
         if ($modifier) {
             $locale = $modifier->getLocale();

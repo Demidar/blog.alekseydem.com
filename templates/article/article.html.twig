@@ -1,4 +1,5 @@
 {# @var \App\Entity\Article article #}
+{# @var \App\Entity\Article[] attachedArticles #}
 {# @var \App\Model\Link[] breadcrumbs #}
 {# @var \App\Model\CommentsHierarchy[] comments #}
 {# @var \Symfony\Component\Form\FormView createCommentForm #}
@@ -35,9 +36,9 @@
         </div>
     </div>
     <div class="delimiter"></div>
-    {% if article.section.articles %}
+    {% if attachedArticles %}
         <h3 class="text text__title">{{ "article.read-related-articles"|trans }}:</h3>
-        {% include 'partial/_article-list.html.twig' with {articles: article.section.articles} only %}
+        {% include 'partial/_article-list.html.twig' with {articles: attachedArticles} only %}
     {% endif %}
     <div class="delimiter"></div>
     {% include 'partial/comment/_list-hierarchy.html.twig' with {

@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\ImageReference;
+use App\Repository\Interfaces\ImageReferenceQueryingInterface;
 use App\Repository\Modifier\ImageReferenceQueryModifier;
 use App\Repository\ModifierParams\ImageReferenceQueryModifierParams;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -16,7 +17,7 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method ImageReference[]    findAll()
  * @method ImageReference[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ImageReferenceRepository extends ServiceEntityRepository
+class ImageReferenceRepository extends ServiceEntityRepository implements ImageReferenceQueryingInterface
 {
     private ImageReferenceQueryModifier $queryModifier;
 

@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Image;
+use App\Repository\Interfaces\ImageQueryingInterface;
 use App\Repository\Modifier\ImageQueryModifier;
 use App\Repository\ModifierParams\ImageQueryModifierParams;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -16,13 +17,20 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Image[]    findAll()
  * @method Image[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ImageRepository extends ServiceEntityRepository
+class ImageRepository extends ServiceEntityRepository implements ImageQueryingInterface
 {
-    private $queryModifier;
+    private ImageQueryModifier $queryModifier;
 
-    public function __construct(ManagerRegistry $registry, ImageQueryModifier $queryModifier)
+    public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Image::class);
+    }
+
+    /**
+     * @required
+     */
+    public function setQueryModifier(ImageQueryModifier $queryModifier): void
+    {
         $this->queryModifier = $queryModifier;
     }
 

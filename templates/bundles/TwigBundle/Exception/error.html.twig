@@ -3,11 +3,10 @@
 {% trans_default_domain 'errors' %}
 {% block body %}
     <div class="error-page">
-        <h1 class="error-page__title">{{ '404'|trans }}</h1>
+        <h1 class="error-page__title">{{ 'error'|trans }}</h1>
 
         <p class="error-page__description">
-            <p>{{ exception.message }}</p>
-            <p>{{ '404.description'|trans({'alternativePath': path('homepage')})|raw }}</p>
+            <p>{{ 'error.description'|trans({'alternativePath': path('homepage')})|raw }}</p>
         </p>
     </div>
 {% endblock %}

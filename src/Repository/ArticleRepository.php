@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Article;
+use App\Repository\Interfaces\ArticleQueryingInterface;
 use App\Repository\Modifier\ArticleQueryModifier;
 use App\Repository\ModifierParams\ArticleQueryModifierParams;
 use App\Repository\RepoTrait\TranslatableTrait;
@@ -16,7 +17,7 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Article[]    findAll()
  * @method Article[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ArticleRepository extends ServiceEntityRepository
+class ArticleRepository extends ServiceEntityRepository implements ArticleQueryingInterface
 {
     use TranslatableTrait;
 
